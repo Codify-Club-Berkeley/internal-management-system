@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a react query client
+// https://tanstack.com/query/v4/docs/react/guides/ssr#using-the-app-directory-in-nextjs-13
 const queryClient = new QueryClient();
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,12 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ClerkProvider>
-        <html lang="en">
-          <body className={inter.className}>{children}</body>
-        </html>
-      </ClerkProvider>
-    </QueryClientProvider>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }
