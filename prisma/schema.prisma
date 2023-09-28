@@ -53,4 +53,5 @@ enum Role {
   EXEC
   PL
   USER
+  APPLICANT // If we ever want to also store applicants in the DB
 }
