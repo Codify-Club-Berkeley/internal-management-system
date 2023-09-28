@@ -12,26 +12,52 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profile   Profile?
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String?
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now()) // For debugging purposes
+  updatedAt      DateTime  @updatedAt
+  profile        Profile?
+  projects       Project[] // The projects a member is part of
+  dietaryRestrId String?
 }
 
 model Profile {
+  id             String         @id @default(uuid())
+  bio            String?
+  linkedInURL    String?
+  githubUsername String?
+  phoneNum       String?
+  joinedYear     String? // The year they joined formatted as Fall YYYY or Spring YYYY
+  graduationYear String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
+  dietaryRestr   DietaryRestr[] // The dietary restrictions they have
+  user           User           @relation(fields: [userId], references: [id])
+  userId         String         @unique
+  createdAt      DateTime       @default(now()) // For debugging purposes
+  updatedAt      DateTime       @updatedAt
+}
+
+model Project {
   id          String   @id @default(uuid())
-  bio         String?
-  linkedInURL String?
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @unique
-  createdAt   DateTime @default(now())
+  title       String
+  description String?
+  members     User[]
+  createdAt   DateTime @default(now()) // For debugging purposes
   updatedAt   DateTime @updatedAt
 }
 
+// EXEC have access to everything
+// PLs have access to their projects and can add members to the project
+// Users have access to their profile and projects they are part of
 enum Role {
-  ADMIN
+  EXEC
+  PL
   USER
+}
+
+model DietaryRestr {
+  id    String    @id @default(uuid())
+  name  String    @unique
+  users Profile[] // The users with said restriction
 }
