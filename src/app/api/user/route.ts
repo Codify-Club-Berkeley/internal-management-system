@@ -4,6 +4,26 @@
 import { NextResponse, NextRequest } from "next/server";
 
 // Todo sample request to show how the route handler works, delete later
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     description: Returns the current user
+ *     parameters:
+ *      - in: path
+ *        name: name
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Success, user exists
+ *         content:
+ *          application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ */
 export async function GET() {
   const sampleUser = {
     name: "John Doe",
@@ -11,6 +31,15 @@ export async function GET() {
   return NextResponse.json({ user: sampleUser }, { status: 200 });
 }
 
+/**
+ * @swagger
+ * /api/user:
+ *   post:
+ *     description: Returns the hello world
+ *     responses:
+ *       200:
+ *         description: hello world
+ */
 // Todo sample request to show how the route handler works, delete later
 // Simply returns the user that was sent in the request body
 export async function POST(request: NextRequest) {
