@@ -49,6 +49,7 @@ model Project {
 // EXEC have access to everything
 // PLs have access to their projects and can add members to the project
 // Users have access to their profile and projects they are part of
+// The User model supports many roles
 enum Role {
   EXEC
   PL
