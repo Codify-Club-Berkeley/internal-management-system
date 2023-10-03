@@ -1,4 +1,4 @@
-// /api/user/[id] route
+// api/user/[id] route
 
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
