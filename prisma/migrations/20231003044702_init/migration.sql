@@ -1,15 +1,15 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('EXEC', 'PL', 'USER');
+CREATE TYPE "Role" AS ENUM ('EXEC', 'PL', 'USER', 'APPLICANT');
 
 -- CreateTable
 CREATE TABLE "User" (
     "id" STRING NOT NULL,
     "email" STRING NOT NULL,
     "name" STRING,
-    "role" "Role" NOT NULL DEFAULT 'USER',
+    "roles" "Role"[] DEFAULT ARRAY['USER']::"Role"[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "dietaryRestrId" STRING,
+    "dietaryRestrId" STRING[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

@@ -15,6 +15,8 @@ export default authMiddleware({
     "/api/user/validate",
     "/roster",
   ],
+
+
 });
 
 export const config = {
