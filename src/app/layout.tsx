@@ -2,11 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// Create a react query client
-// https://tanstack.com/query/v4/docs/react/guides/ssr#using-the-app-directory-in-nextjs-13
-const queryClient = new QueryClient();
+import TanStackProvider from "./components/providers/TanstackProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +19,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <TanStackProvider>{children}</TanStackProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
