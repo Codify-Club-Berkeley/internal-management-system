@@ -6,8 +6,17 @@ import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
   // "/" will be accessible to all users
-  // TODO make api routes private after demonstration
-  publicRoutes: ["/", "/dashboard", "/api/user", "/api/user/id", "/api-doc"],
+  // TODO make routes private in production
+  publicRoutes: [
+    "/",
+    "/dashboard",
+    "/api/user",
+    "/api-doc",
+    "/api/user/validate",
+    "/roster",
+  ],
+
+
 });
 
 export const config = {
