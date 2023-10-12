@@ -12,9 +12,10 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(uuid())
+  id             String    @id // Use the clerk id not a uuid
   email          String    @unique
-  name           String?
+  firstName      String
+  lastName       String
   roles          Role[]    @default([USER])
   createdAt      DateTime  @default(now()) // For debugging purposes
   updatedAt      DateTime  @updatedAt
