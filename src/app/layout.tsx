@@ -2,7 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import TanStackProvider from "./components/providers/TanstackProvider";
+import Providers from "./components/providers/Providers";
+import { NextUIProvider } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <TanStackProvider>{children}</TanStackProvider>
-        </body>
-      </html>
+      <NextUIProvider>
+        <html lang="en">
+          <body className={inter.className}>
+            <Providers>{children}</Providers>
+          </body>
+        </html>
+      </NextUIProvider>
     </ClerkProvider>
   );
 }

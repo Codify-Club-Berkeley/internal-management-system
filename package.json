@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.24.1",
+    "@nextui-org/react": "^2.1.13",
+    "@nextui-org/system": "^2.0.10",
+    "@nextui-org/theme": "^2.1.9",
     "@prisma/client": "5.3.1",
     "@tanstack/react-query": "^4.35.3",
     "@tanstack/react-query-devtools": "^4.36.1",
@@ -20,6 +23,7 @@
     "axios": "^1.5.1",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
+    "framer-motion": "^10.16.4",
     "ky": "^1.0.1",
     "next": "13.5.2",
     "next-swagger-doc": "^0.4.0",
