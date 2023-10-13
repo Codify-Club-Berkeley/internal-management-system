@@ -31,6 +31,7 @@ export async function GET() {
   return NextResponse.json({ user: sampleUser }, { status: 200 });
 }
 
+// Create a new user
 /**
  * @swagger
  * /api/user:

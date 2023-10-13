@@ -4,36 +4,39 @@
 // If the user does not have a berkeley email or is not authorized to make an account,
 // then their account is deleted and they are redirected to the home page
 
-import { useEffect, useState, useDebugValue } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 
 // TODO verify if the sign up / sign in redirects are based on if the user is created for the first time,
 // TODO or if it is based on if they clicked sign up / sign in
 
 export default function ProfileValidate() {
+  const { signOut } = useClerk();
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["validate"],
     queryFn: async () => {
       const response = await axios.get(
         "http://localhost:3000/api/user/validate",
       );
-      console.log(response.data);
-      return response.data;
+      return response.data.data;
     },
   });
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
 
-  if (!isLoading) {
+  if (!isLoading && !data) {
+    return <div className="App">No data!</div>;
   }
 
-  return (
-    <div>
-      <h1>got data!</h1>
-      <h2>{JSON.stringify(data)}</h2>
-    </div>
-  );
+  if (data == "invalid") {
+    signOut();
+    redirect("/");
+  }
+
+  // If the data is loaded, redirect to the user's profile page
+  redirect("/profile/" + data);
 }
