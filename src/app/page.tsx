@@ -7,15 +7,16 @@ import {
   UserButton,
   SignOutButton,
 } from "@clerk/nextjs";
+import SignInPrompt from "./sign-in/SignInPrompt";
 
 export default function Home() {
   return (
-    <div>
+    <div className="h-screen flex items-center justify-center ">
       <SignedIn>
-        <UserButton afterSignOutUrl="localhost:3000" />
+        <h1>signed in</h1>
       </SignedIn>
       <SignedOut>
-        <SignInButton />
+        <SignInPrompt />
       </SignedOut>
     </div>
   );

@@ -1,14 +1,10 @@
-// Roster view page
-// Query all users, and then filter them with dropdowns on the client side.
 import React from "react";
-import ky from "ky";
-import { UserButton } from "@clerk/nextjs";
+import RosterTable from "./RosterTable";
 
-export default async function Page() {
+export default function Page() {
   return (
-    <div>
-      <UserButton />
-      <h1>roster</h1>
+    <div className="dark">
+      <RosterTable />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import Providers from "./components/providers/Providers";
-import { NextUIProvider } from "@nextui-org/react";
+import NavigationBar from "./components/navigation/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <NextUIProvider>
-        <html lang="en">
-          <body className={inter.className}>
-            <Providers>{children}</Providers>
-          </body>
-        </html>
-      </NextUIProvider>
+      <html lang="en" className="h-full bg-black">
+        <body className="h-full bg-black">
+          <Providers>
+            <NavigationBar />
+            {children}
+          </Providers>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
