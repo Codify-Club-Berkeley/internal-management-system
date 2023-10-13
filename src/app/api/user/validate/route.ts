@@ -1,6 +1,9 @@
 // Process a user after sign in
 // If the user already exists, return the user's slug from their profile
 // If the user does not already exist, validate if the user is allowed to create an account
+// Process a user after sign in
+// If the user already exists, return the user's slug from their profile
+// If the user does not already exist, validate if the user is allowed to create an account
 // If the user is allowed to create an account, create the account
 // Return either the user's slug, or the string "invalid"
 
