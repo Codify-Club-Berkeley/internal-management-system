@@ -14,8 +14,7 @@ datasource db {
 model User {
   id                  String               @id // Use the clerk id not a uuid
   email               String               @unique
-  // Todo the slug should be unique and non optional
-  slug                String? // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
+  slug                String               @unique // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
   firstName           String?
   lastName            String?
   roles               Role[]               @default([USER])
@@ -23,7 +22,7 @@ model User {
   updatedAt           DateTime             @updatedAt
   projects            Project[] // The projects a member is part of
   bio                 String?
-  linkedInURL         String?
+  linkedInUrl         String?
   githubUsername      String?
   phoneNum            String?
   joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
@@ -33,7 +32,7 @@ model User {
 
 model Project {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @unique
   description String?
   members     User[]
   createdAt   DateTime @default(now()) // For debugging purposes

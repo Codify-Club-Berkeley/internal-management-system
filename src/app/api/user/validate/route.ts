@@ -1,6 +1,9 @@
 // Process a user after sign in
 // If the user already exists, return the user's slug from their profile
 // If the user does not already exist, validate if the user is allowed to create an account
+// Process a user after sign in
+// If the user already exists, return the user's slug from their profile
+// If the user does not already exist, validate if the user is allowed to create an account
 // If the user is allowed to create an account, create the account
 // Return either the user's slug, or the string "invalid"
 
@@ -18,8 +21,12 @@ type ValidateResponse = {
 
 /**
  * @swagger
- * /api/user/validate
- *
+ * /api/user/validate:
+ *  get:
+ *    description: Validates a user's email address from their clerk sign in and creates a user if they are allowed to create an account. Returns the user's slug if successful, or the string "invalid" if unsuccessful
+ *    responses:
+ *       200:
+ *         description: Success, user exists
  */
 export async function GET(
   req: NextRequest,
@@ -29,9 +36,14 @@ export async function GET(
 
   // If not signed in, redirect to sign in page
   if (!user) {
-    return NextResponse.json({
-      data: "invalid",
-    });
+    return NextResponse.json(
+      {
+        data: "invalid",
+      },
+      {
+        status: 400,
+      },
+    );
   }
 
   // Validate that the user has a berkeley.edu email address
@@ -40,9 +52,14 @@ export async function GET(
 
   // Remove the if false statement to enable email validation
   if (false && emailDomain !== "berkeley.edu") {
-    return NextResponse.json({
-      data: "invalid",
-    });
+    return NextResponse.json(
+      {
+        data: "invalid",
+      },
+      {
+        status: 400,
+      },
+    );
   }
 
   // Check if the user already exists in our database
@@ -54,9 +71,14 @@ export async function GET(
 
   // If the user exists, get their slug from their profile
   if (existingUser) {
-    return NextResponse.json({
-      data: existingUser.slug,
-    });
+    return NextResponse.json(
+      {
+        data: existingUser.slug,
+      },
+      {
+        status: 200,
+      },
+    );
   }
 
   // Shouldn't ever happen, but just so typescript doesn't complain
@@ -79,9 +101,12 @@ export async function GET(
     },
   });
 
-  return NextResponse.json({
-    data: createdUser.slug,
-  });
-
-  // return NextResponse.redirect(new URL("/roster", req.url).href);
+  return NextResponse.json(
+    {
+      data: createdUser.slug,
+    },
+    {
+      status: 400,
+    },
+  );
 }

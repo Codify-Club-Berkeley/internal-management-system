@@ -1,21 +1,19 @@
-// /api/user route
-// Should only be used for post requests to create a new user
-// All other requests should be made to /api/user/[id]
 import { NextResponse, NextRequest } from "next/server";
+import { PrismaClient, User } from "@prisma/client";
+const prisma = new PrismaClient();
 
-// Todo sample request to show how the route handler works, delete later
 /**
  * @swagger
  * /api/user:
  *   get:
- *     description: Returns the current user
+ *     description: Returns all users
  *     parameters:
  *      - in: path
  *        name: name
  *        required: true
  *     responses:
  *       200:
- *         description: Success, user exists
+ *         description: This schema is not accurate, I am just leaving it here as reference for when I properly fill out the rest of the swagger documentation
  *         content:
  *          application/json:
  *           schema:
@@ -24,9 +22,10 @@ import { NextResponse, NextRequest } from "next/server";
  *               name:
  *                 type: string
  */
-export async function GET() {
-  const sampleUser = {
-    name: "John Doe",
-  };
-  return NextResponse.json({ user: sampleUser }, { status: 200 });
+export async function GET(): Promise<NextResponse<User[]>> {
+  // Get all users
+  const users: User[] = await prisma.user.findMany();
+
+  // Return the users
+  return NextResponse.json(users, { status: 200 });
 }

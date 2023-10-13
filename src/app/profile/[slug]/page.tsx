@@ -10,8 +10,16 @@ export default function Page({ params }: { params: { slug: string } }) {
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
       await axios.put(
-        "http://localhost:3000/api/user/user_2WgCdUQmElgScEox4Gks81h82mn?linkedInURL=https://www.linkedin.com/in/aidan-sunbury/&phoneNum=9254515546",
+        "http://localhost:3000/api/user/user_2WgCdUQmElgScEox4Gks81h82mn?linkedInUrl=https://www.linkedin.com/in/aidan-sunbury/&phoneNum=9254515546",
       );
+    },
+  });
+
+  const { mutate: createProj } = useMutation({
+    mutationFn: async () => {
+      await axios.post("/api/projects", {
+        title: "test proj 2",
+      });
     },
   });
 
@@ -27,6 +35,15 @@ export default function Page({ params }: { params: { slug: string } }) {
       >
         {" "}
         <h1>hi</h1>
+      </button>
+      <br />
+      <button
+        onClick={() => {
+          createProj();
+        }}
+      >
+        {" "}
+        <h1>hi 2</h1>
       </button>
     </div>
   );
