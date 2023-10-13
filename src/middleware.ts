@@ -8,15 +8,14 @@ export default authMiddleware({
   // "/" will be accessible to all users
   // TODO make routes private in production
   publicRoutes: [
-    "/",
+    "/profile/validate",
     "/dashboard",
     "/api/user",
     "/api-doc",
     "/api/user/validate",
     "/roster",
+    "/api/user/[id]",
   ],
-
-
 });
 
 export const config = {

@@ -181,14 +181,14 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/clerk-react@4.25.1(react@18.2.0):
-    resolution: {integrity: sha512-+RtK6RNWVlT6jFeOlomi6PM2pDOETyi13zSKL/IgrJ68LV8qrtQikrP0n5v0i0YRDvpjB5lpBF0VgmpAJEGNxQ==}
+  /@clerk/clerk-react@4.26.4(react@18.2.0):
+    resolution: {integrity: sha512-JpOju2V0NnH2MPLmyaDmcF2pI5N/2v1F+CRBaocD/gXsDEXrfi0sYZWYR7TeViu9fh1dxu7OvEH8dSb2eesk5A==}
     engines: {node: '>=14'}
     peerDependencies:
       react: '>=16'
     dependencies:
-      '@clerk/shared': 0.23.0(react@18.2.0)
-      '@clerk/types': 3.52.0
+      '@clerk/shared': 0.24.4(react@18.2.0)
+      '@clerk/types': 3.55.0
       react: 18.2.0
       tslib: 2.4.1
     dev: false
@@ -216,7 +216,7 @@ packages:
       react-dom: ^17.0.2 || ^18.0.0-0
     dependencies:
       '@clerk/backend': 0.29.2
-      '@clerk/clerk-react': 4.25.1(react@18.2.0)
+      '@clerk/clerk-react': 4.26.4(react@18.2.0)
       '@clerk/clerk-sdk-node': 4.12.7
       '@clerk/types': 3.52.0
       next: 13.5.2(react-dom@18.2.0)(react@18.2.0)
@@ -226,8 +226,8 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/shared@0.23.0(react@18.2.0):
-    resolution: {integrity: sha512-/1QPDnXexJCdND00hjgq7ATz35SY+oUVVWGEXjh/Gl+dQyXTeRZRsA5k6TCj+42A39j14xSgq6MQJHgbb7M6Jg==}
+  /@clerk/shared@0.24.4(react@18.2.0):
+    resolution: {integrity: sha512-yrJfyjQYB7LJNjjotF0uO1EmlCQkX2M26jrZfEvQ52WIMtE+GMQVvD3bgi/PlJRlCdB+Fuei8A9Q4eTGWchl/w==}
     peerDependencies:
       react: '>=16'
     dependencies:
@@ -239,6 +239,13 @@ packages:
 
   /@clerk/types@3.52.0:
     resolution: {integrity: sha512-AzPFyTcVdmMAEmP0Of2DzQ7M/XyBIYL5cNNKYaEZ+0f0T2xxFC4HIDIQqY1GjwDs6MBiHl2nPf2C06pQpOVWbQ==}
+    engines: {node: '>=14'}
+    dependencies:
+      csstype: 3.1.1
+    dev: false
+
+  /@clerk/types@3.55.0:
+    resolution: {integrity: sha512-yaDuKt760JDVazrxB12tHcdOmOSwusEYhsyI627Uj+jF9mNOVP+bBxGjv36zr/otoAH0aboHkNoZuS/E7AkmqA==}
     engines: {node: '>=14'}
     dependencies:
       csstype: 3.1.1
@@ -1562,18 +1569,6 @@ packages:
     engines: {node: '>= 12.0.0'}
     dev: true
 
-  /commander@9.5.0:
-    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
-    engines: {node: ^12.20.0 || >=14}
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /comment-parser@1.4.0:
-    resolution: {integrity: sha512-QLyTNiZ2KDOibvFPlZ6ZngVsZ/0gYnE6uTXi5aoDg8ed3AkJAz4sEje3Y8a29hQ1s6A99MZXe47fLAXQ1rTqaw==}
-    engines: {node: '>= 12.0.0'}
-    dev: true
-
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -1581,7 +1576,6 @@ packages:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
     dev: false
-
 
   /copy-anything@3.0.5:
     resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
@@ -1595,40 +1589,6 @@ packages:
     dependencies:
       toggle-selection: 1.0.6
     dev: false
-
-  /core-js-pure@3.33.0:
-    resolution: {integrity: sha512-FKSIDtJnds/YFIEaZ4HszRX7hkxGpNKM7FC9aJ9WLJbSd3lD4vOltFuVIBLR8asSx9frkTSqL0dw90SKQxgKrg==}
-    requiresBuild: true
-    dev: false
-
-  /cosmiconfig@6.0.0:
-    resolution: {integrity: sha512-xb3ZL6+L8b9JLLCx3ZdoZy4+2ECphCMo2PwqgP1tlfVq6M6YReyzBJtvWWtbDSpNr9hn96pkCiZqUcFEc+54Qg==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@types/parse-json': 4.0.0
-      import-fresh: 3.3.0
-      parse-json: 5.2.0
-      path-type: 4.0.0
-      yaml: 1.10.2
-    dev: false
-
-  /crc-32@1.2.2:
-    resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
-    engines: {node: '>=0.8'}
-    hasBin: true
-    dev: false
-
-  /cross-spawn@7.0.3:
-    resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
-    engines: {node: '>= 8'}
-    dependencies:
-      path-key: 3.1.1
-      shebang-command: 2.0.0
-      which: 2.0.2
-
-  /css.escape@1.5.1:
-    resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
-
 
   /core-js-pure@3.33.0:
     resolution: {integrity: sha512-FKSIDtJnds/YFIEaZ4HszRX7hkxGpNKM7FC9aJ9WLJbSd3lD4vOltFuVIBLR8asSx9frkTSqL0dw90SKQxgKrg==}

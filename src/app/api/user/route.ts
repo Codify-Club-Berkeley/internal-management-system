@@ -30,19 +30,3 @@ export async function GET() {
   };
   return NextResponse.json({ user: sampleUser }, { status: 200 });
 }
-
-/**
- * @swagger
- * /api/user:
- *   post:
- *     description: Returns the hello world
- *     responses:
- *       200:
- *         description: hello world
- */
-// Todo sample request to show how the route handler works, delete later
-// Simply returns the user that was sent in the request body
-export async function POST(request: NextRequest) {
-  const data = await request.json();
-  return NextResponse.json({ data: data }, { status: 200 });
-}
