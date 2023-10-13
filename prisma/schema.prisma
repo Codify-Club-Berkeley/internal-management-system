@@ -12,21 +12,16 @@ datasource db {
 }
 
 model User {
-  id        String    @id // Use the clerk id not a uuid
-  email     String    @unique
+  id                  String               @id // Use the clerk id not a uuid
+  email               String               @unique
   // Todo the slug should be unique and non optional
-  slug      String? // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
-  firstName String?
-  lastName  String?
-  roles     Role[]    @default([USER])
-  createdAt DateTime  @default(now()) // For debugging purposes
-  updatedAt DateTime  @updatedAt
-  profile   Profile?
-  projects  Project[] // The projects a member is part of
-}
-
-model Profile {
-  id                  String               @id @default(uuid())
+  slug                String? // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
+  firstName           String?
+  lastName            String?
+  roles               Role[]               @default([USER])
+  createdAt           DateTime             @default(now()) // For debugging purposes
+  updatedAt           DateTime             @updatedAt
+  projects            Project[] // The projects a member is part of
   bio                 String?
   linkedInURL         String?
   githubUsername      String?
@@ -34,10 +29,6 @@ model Profile {
   joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
   graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
   dietaryRestrictions DietaryRestriction[]
-  user                User                 @relation(fields: [userId], references: [id])
-  userId              String               @unique
-  createdAt           DateTime             @default(now()) // For debugging purposes
-  updatedAt           DateTime             @updatedAt
 }
 
 model Project {
