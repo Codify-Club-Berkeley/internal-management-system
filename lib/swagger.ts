@@ -6,11 +6,12 @@ export const getApiDocs = async () => {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "Next Swagger API Example",
+        title: "Internal Management System API Spec",
         version: "1.0",
       },
       components: {
         securitySchemes: {
+          // Todo delete this, or investigate if we can use it with clerk
           BearerAuth: {
             type: "http",
             scheme: "bearer",

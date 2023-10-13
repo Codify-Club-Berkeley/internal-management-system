@@ -1,11 +1,13 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, User } from "@prisma/client";
+import { updateUserValidator } from "../../../../../lib/validators";
 const prisma = new PrismaClient();
 
-// Either returns the user with the given id or null if the user does not exist
 /**
  * @swagger
  * /api/user/{id}:
+ *  get:
+ *   description: Returns the user with the given id if it exists
  *
  */
 export async function GET(
@@ -30,55 +32,56 @@ export async function GET(
   return NextResponse.json(user, { status: 200 });
 }
 
-// Updates the user with the given id
 /**
  * @swagger
  * /api/user/{id}:
+ *  put:
+ *  description: Updates the user with the given id
  *
  */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } },
-): Promise<NextResponse<User | null>> {
-  // Todo set up input validation with zod or valibot
+): Promise<NextResponse<User | null | any>> {
+  // Todo add the ability to update a user's roles
 
-  // Get the current user
-  const user: User | null = await prisma.user.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+  // Todo, add authentication to make sure that the user is allowed to update the user with the given id
+  // Only admins or the user themselves should be allowed to update the user's data
 
-  // If the user does not exist, return a 400 error
-  if (!user) {
-    return NextResponse.json(user, {
+  const body = await request.json();
+
+  try {
+    // Validate the request body
+    updateUserValidator.parse(body);
+
+    // Get the current user
+    const user: User | null = await prisma.user.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+
+    // If the user does not exist, return a 400 error
+    if (!user) {
+      return NextResponse.json(user, {
+        status: 400,
+      });
+    }
+
+    // Update the user
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: params.id,
+      },
+      data: body,
+    });
+
+    // Return the updated user
+    return NextResponse.json(updatedUser, { status: 200 });
+  } catch (error) {
+    // If the user was not updated successfully, return the error with a 400 status code
+    return NextResponse.json(error, {
       status: 400,
     });
   }
-
-  // Get the search params from the request
-  const searchParams = request.nextUrl.searchParams;
-  let updatedData: any = {};
-
-  // Add all of the search params to the updated data object so it can be passed to the prisma client
-  // Looks something like this
-  // {
-  //   linkedInURL: 'https://www.linkedin.com/in/aidan-sunbury/',
-  //   phoneNum: '9254515546'
-  // }
-  searchParams.forEach((value, key) => {
-    updatedData[key] = value;
-  });
-
-  // Update the user
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: params.id,
-    },
-    // https://nextjs.org/docs/app/api-reference/functions/next-request#nexturl
-    data: updatedData,
-  });
-
-  // Return the updated user
-  return NextResponse.json(updatedUser, { status: 200 });
 }
