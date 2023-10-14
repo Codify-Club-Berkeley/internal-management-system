@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -11,37 +11,76 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
+import { User, Project } from "@prisma/client";
 
-export default function RosterTable() {
+// Todo pass in the filters as a prop
+export default function RosterTable({ filters }) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["allUsers"],
     queryFn: async () => {
       const response = await axios.get("/api/user");
-      return response.data;
+      return response.data; // todo figure out why I can't say as [User, Project[]][]
+      // todo Also contemplate why I didn't just use trpc for this project
     },
   });
-  if (isLoading) {
-    return <div className="App">Loading...</div>;
-  }
+
+  // The filtered users are an array of indices of the users
+  const [filtered, setFiltered] = useState<Set<number>>(new Set<number>());
+
+  // Every time the filters change, we want to re evaluate which users to show
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    const filteredUsers = new Set<number>();
+    const filtersSet = new Set(filters);
+
+    // Iterate through the users and see if they are on the projects
+    for (let i = 0; i < data.length; i++) {
+      const user = data[i];
+      // If the user is on any of the projects, then add them to the filtered list
+      for (let j = 0; j < user[1].length; j++) {
+        const project = user[1][j];
+        if (filtersSet.has(project.title)) {
+          filteredUsers.add(i);
+          break;
+        }
+      }
+    }
+    console.log(filters.size);
+    setFiltered(filteredUsers);
+  }, [filters]);
+
   return (
     <Table aria-label="Example static collection table" isStriped={true}>
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
         <TableColumn>PHONE NUMBER</TableColumn>
+        <TableColumn>PROJECTS</TableColumn>
       </TableHeader>
-      <TableBody>
-        {data.map((user: User, index: number) => (
-          <TableRow key={index}>
-            <TableCell>
-              {user.firstName} {user.lastName}
-            </TableCell>
-            <TableCell>{user.email}</TableCell>
+      <TableBody emptyContent={<p>...loading</p>}>
+        {!isLoading &&
+          data
+            .filter(
+              (item, index: number) => filtered.has(index) || filters.size == 0, // If the size of the filters is 0, then we want to show all users
+            )
+            .map((tup: any, index: number) => (
+              <TableRow key={index}>
+                <TableCell>
+                  {tup[0].firstName} {tup[0].lastName}
+                </TableCell>
+                <TableCell>{tup[0].email}</TableCell>
 
-            <TableCell>{user.phoneNum}</TableCell>
-          </TableRow>
-        ))}
+                <TableCell>{tup[0].phoneNum}</TableCell>
+                <TableCell>
+                  {tup[1].map((project: any) => (
+                    <p key={project.id}>{project.title}</p>
+                  ))}
+                </TableCell>
+              </TableRow>
+            ))}
       </TableBody>
     </Table>
   );

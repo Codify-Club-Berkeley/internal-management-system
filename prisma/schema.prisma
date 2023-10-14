@@ -29,6 +29,7 @@ model User {
   graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
   dietaryRestrictions DietaryRestriction[]
   profilePictureUrl   String?
+  profilePictureKey   String?
 }
 
 model Project {
@@ -39,6 +40,7 @@ model Project {
   createdAt         DateTime @default(now()) // For debugging purposes
   updatedAt         DateTime @updatedAt
   projectPictureUrl String?
+  projectPictureKey String?
 }
 
 // EXEC have access to everything

@@ -1,6 +1,9 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs";
+import { UTApi } from "uploadthing/server";
+
+export const utapi = new UTApi();
 const prisma = new PrismaClient();
 
 const f = createUploadthing();
@@ -25,15 +28,24 @@ export const ourFileRouter = {
       const { userId } = metadata;
 
       try {
-        // todo figure out if we need to store the file key or just the url
+        // Get the original user record so that we can delete the old profile image if it exists
+        const oldUserData = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        // Update the user record with the new profile image
         await prisma.user.update({
           where: { id: userId },
           data: {
-            linkedInUrl: file.url,
+            profilePictureUrl: file.url,
+            profilePictureKey: file.key,
           },
         });
 
-        // todo add error handling and delete the old file
+        // Delete the old profile from uploadthing if it exists
+        if (oldUserData.profilePictureKey) {
+          await utapi.deleteFiles(oldUserData.profilePictureKey);
+        }
       } catch (e) {
         console.error(e);
       }
