@@ -15,6 +15,7 @@ export default authMiddleware({
     "/api/user/validate",
     "/roster",
     "/api/user/[id]",
+    "/",
   ],
 });
 
