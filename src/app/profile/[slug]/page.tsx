@@ -4,6 +4,7 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { UploadButton } from "../../../utils/uploadthing";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const queryClient = useQueryClient();
@@ -45,6 +46,18 @@ export default function Page({ params }: { params: { slug: string } }) {
         {" "}
         <h1>hi 2</h1>
       </button>
+      <UploadButton
+        endpoint="profileImageUploader"
+        onClientUploadComplete={(res) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
     </div>
   );
 }

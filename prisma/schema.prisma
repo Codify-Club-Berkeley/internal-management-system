@@ -28,15 +28,17 @@ model User {
   joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
   graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
   dietaryRestrictions DietaryRestriction[]
+  profilePictureUrl   String?
 }
 
 model Project {
-  id          String   @id @default(uuid())
-  title       String   @unique
-  description String?
-  members     User[]
-  createdAt   DateTime @default(now()) // For debugging purposes
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(uuid())
+  title             String   @unique
+  description       String?
+  members           User[]
+  createdAt         DateTime @default(now()) // For debugging purposes
+  updatedAt         DateTime @updatedAt
+  projectPictureUrl String?
 }
 
 // EXEC have access to everything
