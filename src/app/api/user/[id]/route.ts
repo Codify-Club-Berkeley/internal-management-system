@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
  *   description: Returns the user with the given id if it exists
  *
  */
+// todo allow you to get a user by the slug like you had before you were an idiot and deleted it
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },

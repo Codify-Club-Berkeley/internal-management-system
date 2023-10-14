@@ -8,7 +8,7 @@ export default function Page() {
   // If filters in an empty array, then show everything
   // Otherwise, it will be an array of strings that are the project names
   // only show the users that are on those projects
-  const [filters, setFilters] = React.useState([]);
+  const [filters, setFilters] = React.useState(new Set<string>());
 
   const handleSelectionChange = (newSelection: any) => {
     setFilters(newSelection);
@@ -21,9 +21,13 @@ export default function Page() {
   );
   return (
     <div className="dark">
-      <RosterFilters filters={filters} setFilters={handleSelectionChange} />
-      <RosterTable filters={filters} />
-      <div>{selectedValue}</div>
+      <div className="flex flex-row p-4 place-content-between px-12">
+        <h1 className="text-4xl font-bold">Roster</h1>
+        <RosterFilters filters={filters} setFilters={handleSelectionChange} />
+      </div>
+      <div className="px-12">
+        <RosterTable filters={filters} />
+      </div>
     </div>
   );
 }

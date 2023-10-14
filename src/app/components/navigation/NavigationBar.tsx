@@ -12,12 +12,23 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import CodifyLogo from "../../../../assets/Codify Berkeley.png";
+import { User } from "@prisma/client";
 
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
+
+  const { data } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async () => {
+      const response = await axios.get("/api/user/me");
+      return response.data as User;
+    },
+  });
 
   // Only load the Nav bar if someone is signed in
   if (isLoaded && !isSignedIn) return null;
@@ -41,7 +52,7 @@ export default function NavigationBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/profile">
+          <Link color="foreground" href={"/profile/" + data?.slug}>
             Profile
           </Link>
         </NavbarItem>

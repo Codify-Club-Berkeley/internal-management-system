@@ -17,7 +17,7 @@ export default function RosterFilters({
   filters,
   setFilters,
 }: {
-  filters: string[];
+  filters: Set<string>;
   setFilters: () => any;
 }) {
   const { data, isLoading, isError } = useQuery({
@@ -29,9 +29,9 @@ export default function RosterFilters({
   });
 
   return (
-    <Popover placement="bottom" showArrow offset={10}>
+    <Popover placement="bottom" offset={10}>
       <PopoverTrigger>
-        <Button>Open Popover</Button>
+        <Button>Filter</Button>
       </PopoverTrigger>
       <PopoverContent className="bg-black">
         <Listbox

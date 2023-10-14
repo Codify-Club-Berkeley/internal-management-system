@@ -11,10 +11,8 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
-import { User, Project } from "@prisma/client";
 
-// Todo pass in the filters as a prop
-export default function RosterTable({ filters }) {
+export default function RosterTable({ filters }: { filters: Set<string> }) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["allUsers"],
     queryFn: async () => {
@@ -50,7 +48,7 @@ export default function RosterTable({ filters }) {
     }
     console.log(filters.size);
     setFiltered(filteredUsers);
-  }, [filters]);
+  }, [filters, data]);
 
   return (
     <Table aria-label="Example static collection table" isStriped={true}>
@@ -69,7 +67,7 @@ export default function RosterTable({ filters }) {
             .map((tup: any, index: number) => (
               <TableRow key={index}>
                 <TableCell>
-                  {tup[0].firstName} {tup[0].lastName}
+                  {tup[0].firstName + " " + tup[0].lastName}
                 </TableCell>
                 <TableCell>{tup[0].email}</TableCell>
 
