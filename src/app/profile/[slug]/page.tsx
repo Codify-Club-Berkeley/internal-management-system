@@ -78,11 +78,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       <div className="flex flex-row">
         <div className="flex flex-1 flex-col p-4">
           <div className="flex flex-row mb-3 ">
-            <img
-              src={data.profilePictureUrl}
-              alt="no profile picture uploaded"
-              className="rounded-full w-36 h-36"
-            />
+            {data.profilePictureUrl && (
+              <img
+                src={data?.profilePictureUrl}
+                alt="no profile picture uploaded"
+                className="rounded-full w-36 h-36"
+              />
+            )}
             <div className="flex flex-col ml-5">
               <h1 className="text-3xl mb-2">
                 {data.firstName + " " + data.lastName}
