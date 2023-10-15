@@ -7,20 +7,32 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/user/{id}:
  *  get:
- *   description: Returns the user with the given id if it exists
+ *   description: Returns the user with the given id if it exists, can also use the profile slug
  *
  */
-// todo allow you to get a user by the slug like you had before you were an idiot and deleted it
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<User | null>> {
-  // Get the current user
-  const user: User | null = await prisma.user.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+  // If the identifier starts with user_, the it is an ID, otherwise it is a slug
+  const isId = params.id.startsWith("user_");
+  let user: User | null;
+
+  if (isId) {
+    // Get the current user by the id
+    user = await prisma.user.findUnique({
+      where: {
+        id: params.id,
+      },
+    });
+  } else {
+    // Get the current user by the slug
+    user = await prisma.user.findUnique({
+      where: {
+        slug: params.id,
+      },
+    });
+  }
 
   // If the user does not exist, return a 400 error
   if (!user) {
