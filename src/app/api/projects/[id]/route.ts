@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Project } from "@prisma/client";
-import { updateProjectValidator } from "../../../../../lib/validators";
+import { updateProjectValidator } from "@/lib/validators";
 import { z } from "zod";
 const prisma = new PrismaClient();
 

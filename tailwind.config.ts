@@ -15,9 +15,38 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        // Colors that are consistent regardless of theme
+      },
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      prefix: "nextui", // prefix for themes variables
+      addCommonColors: true, // override common colors (e.g. "blue", "green", "pink").
+      defaultTheme: "dark", // default theme from the themes object
+      defaultExtendTheme: "dark", // default theme to extend on custom themes
+      layout: {}, // common layout tokens (applied to all themes)
+      themes: {
+        // Theme specific colors
+        light: {
+          layout: {}, // light theme layout tokens
+          colors: {
+            primary: "#5702C0",
+            secondary: "#712EB5",
+          }, // light theme colors
+        },
+        dark: {
+          layout: {}, // dark theme layout tokens
+          colors: {
+            primary: "#6E26C0",
+            secondary: "##9353D3",
+          }, // dark theme colors
+        },
+        // ... custom themes
+      },
+    }),
+  ],
 };
 export default config;

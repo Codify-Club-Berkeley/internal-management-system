@@ -10,7 +10,9 @@ import {
   TableColumn,
   TableRow,
   TableCell,
+  User,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function RosterTable({ filters }: { filters: Set<string> }) {
   const { data, isLoading, isError } = useQuery({
@@ -51,14 +53,14 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
   }, [filters, data]);
 
   return (
-    <Table aria-label="Example static collection table" isStriped={true}>
+    <Table aria-label="Members Roster" isStriped={true}>
       <TableHeader>
         <TableColumn>NAME</TableColumn>
         <TableColumn>EMAIL</TableColumn>
         <TableColumn>PHONE NUMBER</TableColumn>
         <TableColumn>PROJECTS</TableColumn>
       </TableHeader>
-      <TableBody emptyContent={<p>...loading</p>}>
+      <TableBody emptyContent={<p>loading...</p>}>
         {!isLoading &&
           data
             .filter(
@@ -67,7 +69,16 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
             .map((tup: any, index: number) => (
               <TableRow key={index}>
                 <TableCell>
-                  {tup[0].firstName + " " + tup[0].lastName}
+                  <User
+                    name={tup[0].firstName + " " + tup[0].lastName}
+                    description={
+                      <Link href={"/profile/" + tup[0].slug}> Profile </Link>
+                    }
+                    avatarProps={{
+                      src: tup[0].profilePictureUrl,
+                      alt: "Profile Picture",
+                    }}
+                  />
                 </TableCell>
                 <TableCell>{tup[0].email}</TableCell>
 

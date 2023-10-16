@@ -30,6 +30,8 @@ model User {
   dietaryRestrictions DietaryRestriction[]
   profilePictureUrl   String?
   profilePictureKey   String?
+  major               String?
+  pronouns            String?
 }
 
 model Project {
