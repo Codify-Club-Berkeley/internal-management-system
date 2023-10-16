@@ -34,7 +34,7 @@ export default function NavigationBar() {
   if (isLoaded && !isSignedIn) return null;
 
   return (
-    <Navbar>
+    <Navbar className="bg-primary">
       <NavbarBrand>
         <Link href="/">
           <Image

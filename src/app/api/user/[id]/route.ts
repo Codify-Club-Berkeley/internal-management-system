@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, User } from "@prisma/client";
-import { updateUserValidator } from "../../../../../lib/validators";
+import { updateUserValidator } from "@/lib/validators";
 const prisma = new PrismaClient();
 
 /**
@@ -67,6 +67,7 @@ export async function PUT(
     // Validate the request body
     updateUserValidator.parse(body);
 
+    // Todo determine if this DB call is necessary
     // Get the current user
     const user: User | null = await prisma.user.findUnique({
       where: {

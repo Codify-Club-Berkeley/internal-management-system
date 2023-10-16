@@ -1,8 +1,8 @@
 "use client";
 
 // The page in which you view a user's profile.
-import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UploadButton } from "../../../utils/uploadthing";
 import { User } from "@prisma/client";
@@ -12,16 +12,15 @@ import ProfileDataTable from "./ProfileDataTable";
 
 export default function Page({ params }: { params: { slug: string } }) {
   // If the user is the owner of the profile, they can edit it
-  const [isOwner, setIsOwner] = React.useState(false);
-  const queryClient = useQueryClient();
+  const [isOwner, setIsOwner] = useState(false);
 
-  // const { mutate: createProj } = useMutation({
-  //   mutationFn: async () => {
-  //     await axios.post("/api/projects", {
-  //       title: "test proj 2",
-  //     });
-  //   },
-  // });
+  // Keeps track of if the profile is being edited
+  const [editing, setEditing] = useState(false);
+
+  // Keeps track of if we are in the process of submitting the form
+  // It will be set to true when the user attempts to submit the form and will remain true until the form is
+  // done submitting or the submission fails
+  const [submitting, setSubmitting] = useState(false);
 
   // Call the user of the slug in the url
   // Returns null if the user doesn't exist
@@ -43,7 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   });
 
   // If the user is logged in, check if they are the owner of the profile
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentUser && data) {
       setIsOwner(currentUser.id === data.id);
     }
@@ -62,38 +61,69 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <div>
       {/* Button that when triggers the given API call in the mutation function */}
-      {/* <UploadButton
-        endpoint="profileImageUploader"
-        onClientUploadComplete={(res) => {
-          // Do something with the response
-          console.log("Files: ", res);
-          alert("Upload Completed");
-        }}
-        onUploadError={(error: Error) => {
-          // Do something with the error.
-          alert(`ERROR! ${error.message}`);
-        }}
-      /> */}
+
       {/**Todo make this mobile responsive */}
       <div className="flex flex-row">
         <div className="flex flex-1 flex-col p-4">
           <div className="flex flex-row mb-3 ">
-            {data.profilePictureUrl && (
-              <img
-                src={data?.profilePictureUrl}
-                alt="no profile picture uploaded"
-                className="rounded-full w-36 h-36"
-              />
-            )}
+            <div className="flex flex-col">
+              {data.profilePictureUrl && (
+                <img
+                  src={data?.profilePictureUrl}
+                  alt="no profile picture uploaded"
+                  className="rounded-full w-36 h-36"
+                />
+              )}
+              {editing && (
+                <UploadButton
+                  endpoint="profileImageUploader"
+                  className="ut-button:color-primary pt-4"
+                  onClientUploadComplete={(res) => {
+                    // Do something with the response
+                    alert("Upload Completed");
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              )}
+            </div>
             <div className="flex flex-col ml-5">
               <h1 className="text-3xl mb-2">
                 {data.firstName + " " + data.lastName}
               </h1>
               <h2 className="text-xl">{data.roles[0]}</h2>
-              {isOwner && <Button className="mt-2">Edit Profile</Button>}
+              {/* If the use is the owner of the profile, display an edit profile button */}
+              {isOwner && editing ? (
+                <Button
+                  className="mt-2"
+                  onPress={() => {
+                    setSubmitting(true);
+                  }}
+                >
+                  Save Changes
+                </Button>
+              ) : (
+                <Button
+                  className="mt-2"
+                  onPress={() => {
+                    setEditing(!editing);
+                  }}
+                >
+                  Edit Profile
+                </Button>
+              )}
             </div>
           </div>
-          <ProfileDataTable userData={data} />
+          <ProfileDataTable
+            userData={data}
+            editing={editing}
+            setEditing={setEditing}
+            submitting={submitting}
+            setSubmitting={setSubmitting}
+            currentUser={currentUser}
+          />
         </div>
         <div className="flex flex-1 flex-col p-4"></div>
       </div>

@@ -33,7 +33,7 @@ export default function RosterFilters({
       <PopoverTrigger>
         <Button>Filter</Button>
       </PopoverTrigger>
-      <PopoverContent className="bg-black">
+      <PopoverContent className="bg-background">
         <Listbox
           aria-label="Multiple selection example"
           variant="flat"
