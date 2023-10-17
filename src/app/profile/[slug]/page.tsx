@@ -95,25 +95,26 @@ export default function Page({ params }: { params: { slug: string } }) {
               </h1>
               <h2 className="text-xl">{data.roles[0]}</h2>
               {/* If the use is the owner of the profile, display an edit profile button */}
-              {isOwner && editing ? (
-                <Button
-                  className="mt-2"
-                  onPress={() => {
-                    setSubmitting(true);
-                  }}
-                >
-                  Save Changes
-                </Button>
-              ) : (
-                <Button
-                  className="mt-2"
-                  onPress={() => {
-                    setEditing(!editing);
-                  }}
-                >
-                  Edit Profile
-                </Button>
-              )}
+              {isOwner &&
+                (isOwner && editing ? (
+                  <Button
+                    className="mt-2"
+                    onPress={() => {
+                      setSubmitting(true);
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                ) : (
+                  <Button
+                    className="mt-2"
+                    onPress={() => {
+                      setEditing(!editing);
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                ))}
             </div>
           </div>
           <ProfileDataTable

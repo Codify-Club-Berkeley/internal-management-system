@@ -11,8 +11,10 @@ import {
   TableRow,
   TableCell,
   User,
+  Button,
 } from "@nextui-org/react";
 import Link from "next/link";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 
 export default function RosterTable({ filters }: { filters: Set<string> }) {
   const { data, isLoading, isError } = useQuery({
@@ -56,7 +58,18 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
     <Table aria-label="Members Roster" isStriped={true}>
       <TableHeader>
         <TableColumn>NAME</TableColumn>
-        <TableColumn>EMAIL</TableColumn>
+        <TableColumn>
+          EMAIL{" "}
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={() => {
+              console.log("copying");
+            }}
+          >
+            <ContentCopyOutlinedIcon fontSize="small" />
+          </Button>
+        </TableColumn>
         <TableColumn>PHONE NUMBER</TableColumn>
         <TableColumn>PROJECTS</TableColumn>
       </TableHeader>

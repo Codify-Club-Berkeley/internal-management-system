@@ -22,14 +22,7 @@ export async function POST(
     // Validate the request body
     createProjectValidator.parse(body);
 
-    // Make sure the request has a body with a project title
-    if (!body.title) {
-      return NextResponse.json(null, {
-        status: 400,
-      });
-    }
-
-    // Get the current user
+    // Create the project
     const project: Project | null = await prisma.project.create({
       data: body,
     });
