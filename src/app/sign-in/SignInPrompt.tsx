@@ -18,7 +18,14 @@ export default function SignInPrompt() {
           router.push("/sign-in");
         }}
       >
-        Sign In or Sign Up
+        Sign In
+      </Button>
+      <Button
+        onPress={() => {
+          router.push("/sign-up");
+        }}
+      >
+        Sign Up
       </Button>
     </div>
   );

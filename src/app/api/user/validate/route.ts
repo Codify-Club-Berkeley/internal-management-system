@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { redirect } from "next/dist/server/api-utils";
 import { currentUser } from "@clerk/nextjs";
 import { clerkClient } from "@clerk/nextjs";
-import { PrismaClient, Profile, User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import axios from "axios";
 const prisma = new PrismaClient();
 
@@ -88,7 +88,9 @@ export async function GET(
     });
   }
 
-  const slug = user.firstName.toLowerCase() + user.lastName.toLowerCase();
+  // Todo make sure this only gets the first name and last name, not the middle name
+  let slug = user.firstName.toLowerCase() + user.lastName.toLowerCase();
+  slug = slug.replace(/\s/g, "");
 
   // Create the user
   const createdUser: User = await prisma.user.create({

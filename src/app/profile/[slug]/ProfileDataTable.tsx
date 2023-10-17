@@ -39,6 +39,7 @@ export default function ProfileDataTable({
   setSubmitting: (submitting: boolean) => void;
   currentUser: User;
 }) {
+  // Updates the forms data every time there is a change
   const [formData, setFormData] = useState(
     displayData
       .map((row) => row.prismaName)
@@ -116,11 +117,10 @@ export default function ProfileDataTable({
                     }
                   />
                 ) : (
-                  <div className="flex flex-row">
+                  <div className="flex flex-row place-content-between">
                     <h1 className="text-xl">{userData[row.prismaName]}</h1>{" "}
                     <Button
                       isIconOnly
-                      className="bg-opacity-0"
                       onPress={() => {
                         copy(userData[row.prismaName]);
                       }}

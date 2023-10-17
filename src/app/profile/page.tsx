@@ -18,9 +18,7 @@ export default function ProfileValidate() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["validate"],
     queryFn: async () => {
-      const response = await axios.get(
-        "http://localhost:3000/api/user/validate",
-      );
+      const response = await axios.get("/api/user/validate");
       return response.data.data;
     },
   });

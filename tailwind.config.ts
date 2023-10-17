@@ -16,7 +16,7 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        // Colors that are consistent regardless of theme
+        codifyLavender: "#E6E6FA",
       },
     },
   },
