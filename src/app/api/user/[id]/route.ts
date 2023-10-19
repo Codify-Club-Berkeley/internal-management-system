@@ -58,22 +58,24 @@ export async function PUT(
 ): Promise<NextResponse<User | null | any>> {
   // Todo add the ability to update a user's roles
 
-  // Todo, add authentication to make sure that the user is allowed to update the user with the given id
-  // Only admins or the user themselves should be allowed to update the user's data
-
   const body = await request.json();
 
   try {
     // Validate the request body
     updateUserValidator.parse(body);
 
-    // Todo determine if this DB call is necessary
     // Get the current user
     const user: User | null = await prisma.user.findUnique({
       where: {
         id: params.id,
       },
     });
+
+    // If the current user has the same id as the request, allow the update, otherwise return an unauthorized error
+    // Todo also allow admins to update a user's data
+    if (user?.id !== params.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     // If the user does not exist, return a 400 error
     if (!user) {
@@ -95,7 +97,7 @@ export async function PUT(
   } catch (error) {
     // If the user was not updated successfully, return the error with a 400 status code
     return NextResponse.json(error, {
-      status: 400,
+      status: 405,
     });
   }
 }

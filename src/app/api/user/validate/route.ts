@@ -57,7 +57,7 @@ export async function GET(
         data: "invalid",
       },
       {
-        status: 400,
+        status: 401,
       },
     );
   }

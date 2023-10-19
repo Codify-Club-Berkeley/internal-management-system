@@ -62,7 +62,7 @@ export default function NavigationBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <UserButton afterSignOutUrl={process.env.SITE_URL} />
+          <UserButton afterSignOutUrl={process.env.NEXT_PUBLIC_SITE_URL} />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

@@ -4,7 +4,6 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
-  UserButton,
   SignOutButton,
 } from "@clerk/nextjs";
 import SignInPrompt from "./sign-in/SignInPrompt";
