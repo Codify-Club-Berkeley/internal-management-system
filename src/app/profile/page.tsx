@@ -23,7 +23,7 @@ export default function ProfileValidate() {
     },
   });
   if (isLoading) {
-    return <div className="App">Loading...</div>;
+    return <div className="App">Fetching User...</div>;
   }
 
   if (!isLoading && !data) {
@@ -31,6 +31,7 @@ export default function ProfileValidate() {
   }
 
   if (data == "invalid") {
+    console.log("invalid user");
     signOut();
     redirect("/");
   }

@@ -15,6 +15,9 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import copy from "copy-to-clipboard";
 
 export default function RosterTable({ filters }: { filters: Set<string> }) {
   const { data, isLoading, isError } = useQuery({
@@ -50,7 +53,6 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
         }
       }
     }
-    console.log(filters.size);
     setFiltered(filteredUsers);
   }, [filters, data]);
 
@@ -64,7 +66,7 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
             isIconOnly
             variant="light"
             onPress={() => {
-              console.log("copying");
+              copy("hello");
             }}
           >
             <ContentCopyOutlinedIcon fontSize="small" />
@@ -85,7 +87,18 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
                   <User
                     name={tup[0].firstName + " " + tup[0].lastName}
                     description={
-                      <Link href={"/profile/" + tup[0].slug}> Profile </Link>
+                      <>
+                        <Link href={"/profile/" + tup[0].slug}>
+                          {" "}
+                          <AccountBoxIcon fontSize="small" />
+                        </Link>
+                        <Link
+                          href={"https://github.com/" + tup[0].githubUsername}
+                          target="_blank"
+                        >
+                          <GitHubIcon fontSize="small" />
+                        </Link>
+                      </>
                     }
                     avatarProps={{
                       src: tup[0].profilePictureUrl,

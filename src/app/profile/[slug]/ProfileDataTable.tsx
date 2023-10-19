@@ -44,7 +44,7 @@ export default function ProfileDataTable({
     displayData
       .map((row) => row.prismaName)
       .reduce((acc, key) => {
-        if (userData.hasOwnProperty(key)) {
+        if (userData.hasOwnProperty(key) && userData[key] !== null) {
           acc[key] = userData[key];
         }
         return acc;
@@ -80,7 +80,6 @@ export default function ProfileDataTable({
   useEffect(() => {
     // Send the update to the API
     submitData(formData);
-    console.log("Submitting data: ", formData);
 
     // Set submitting to false
     setSubmitting(false);
