@@ -22,7 +22,7 @@ export default function Page() {
   return (
     <div className="dark">
       <div className="flex flex-row p-4 place-content-between px-12">
-        <h1 className="text-4xl font-bold">Roster</h1>
+        <h1 className="text-2xl font-bold">Roster</h1>
         <RosterFilters filters={filters} setFilters={handleSelectionChange} />
       </div>
       <div className="px-12">
