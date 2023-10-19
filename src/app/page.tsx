@@ -15,13 +15,6 @@ import { useUser } from "@clerk/nextjs";
 
 import { User } from "@prisma/client";
 
-const handleCardPress = (projectId: unknown) => {
-  // Route to the project's specific page
-   // idk how to make an API call
-  const router = useRouter();
-  router.push(`/project/${projectId}`);
-};
-
 export default function Home() {
   return (
     <div className="container">
@@ -31,12 +24,7 @@ export default function Home() {
           <ProjectCard
             teamName="Team 1"
             imageUrl="/path-to-image.jpg"
-            onPress={() => handleCardPress(1)}
-          />
-          <ProjectCard
-            teamName="Team 2"
-            imageUrl="/path-to-image.jpg"
-            onPress={() => handleCardPress(2)}
+            projectTitle="ims"
           />
         </div>
       </SignedIn>

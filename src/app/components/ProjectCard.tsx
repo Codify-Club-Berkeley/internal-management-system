@@ -5,12 +5,14 @@ import {
   CardFooter,
   CardHeader,
   Image,
+  Link,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
   teamName: string;
   imageUrl: string;
-  onPress: () => void;
+  projectTitle: string;
 }
 
 const cardStyle = {
@@ -20,25 +22,23 @@ const cardStyle = {
 const ProjectCard: React.FC<ProjectCardProps> = ({
   teamName,
   imageUrl,
-  onPress,
+  projectTitle,
 }) => {
-  return (
+  const router = useRouter();
 
+  return (
     <Card
       shadow="sm"
       isPressable
-      onPress={() => console.log("item pressed")}
+      onPress={() => router.push(`/project/${projectTitle}`)}
       style={cardStyle}
     >
       {/* <CardHeader>{teamName}</CardHeader> */}
       <CardBody>
         <img src={imageUrl} alt={teamName} width={100} height={100} />
       </CardBody>
-      <CardFooter>
-        Project Name
-      </CardFooter>
+      <CardFooter>Project Name</CardFooter>
     </Card>
-
   );
 };
 
