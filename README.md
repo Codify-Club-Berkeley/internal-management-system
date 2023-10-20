@@ -1,7 +1,6 @@
 # Codify Internal Management System
 
-The IMS is a custom internal tool built and maintained by Codify to help us manage our project, education program, and applications. 
-
+The IMS is a custom internal tool built and maintained by Codify to help us manage our project, education program, and applications.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -43,3 +42,7 @@ To format code with prettier, run:
 ```bash
 pnpx prettier . --write
 ```
+
+## API documentation
+
+The Swagger API documentation is automatically generated according to the swagger annotations on each of the API routes. The information in the documentation may not be up to date. It can be accessed at the path /api-docs
