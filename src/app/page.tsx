@@ -4,14 +4,11 @@ import React from "react";
 import {
   SignedIn,
   SignedOut,
-  SignInButton,
-  SignOutButton,
 } from "@clerk/nextjs";
 import SignInPrompt from "./sign-in/SignInPrompt";
 import ProjectCard from "./components/ProjectCard";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-
 import { User } from "@prisma/client";
 
 export default function Home() {
