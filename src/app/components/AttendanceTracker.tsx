@@ -15,7 +15,7 @@ const AttendanceTracker: React.FC = () => {
     // Add more dates
   ];
 
-  const members: string[] = ["Member 1", "Member 2", "Member 3"];
+  const members: string[] = ["Member 1", "Member 2", "Member 3",];
 
   const initialAttendanceData: (string | null)[] = members.map(() => null); // Initialize to null
 
@@ -68,7 +68,7 @@ const AttendanceTracker: React.FC = () => {
                   : attendance[dateIndex][memberIndex] === "Excused Absence"
                   ? "gray"
                   : attendance[dateIndex][memberIndex] === "Unexcused Absence"
-                  ? "lightcoral"
+                  ? "indianred"
                   : "inherit", // Default background color
             }}
           >
@@ -92,8 +92,9 @@ const AttendanceTracker: React.FC = () => {
     );
   };
 
+
   return (
-    <div className="p-4 bg-black rounded-lg shadow-md">
+    <div className="p-4 bg-black rounded-lg shadow-md inline-block">
       <Button onClick={markAllAsPresent}>Mark All as Present</Button>
 
       <table>
