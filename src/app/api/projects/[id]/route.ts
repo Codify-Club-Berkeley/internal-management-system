@@ -4,8 +4,6 @@ import { updateProjectValidator } from "@/lib/validators";
 import { z } from "zod";
 const prisma = new PrismaClient();
 
-// Todo implement get by id, and put by id
-
 /**
  * @swagger
  * /api/projects/{id}:
