@@ -20,7 +20,8 @@ model User {
   roles               Role[]               @default([USER])
   createdAt           DateTime             @default(now()) // For debugging purposes
   updatedAt           DateTime             @updatedAt
-  projects            Project[] // The projects a member is part of
+  projects            Project[]            @relation("Project Member") // The projects a member is part of
+  leading             Project[]            @relation("Project Lead") // The projects a member is leading
   bio                 String?
   linkedInUrl         String?
   githubUsername      String?
@@ -38,7 +39,8 @@ model Project {
   id                String   @id @default(uuid())
   title             String   @unique
   description       String?
-  members           User[]
+  members           User[]   @relation("Project Member")
+  leads             User[]   @relation("Project Lead")
   createdAt         DateTime @default(now()) // For debugging purposes
   updatedAt         DateTime @updatedAt
   projectPictureUrl String?
