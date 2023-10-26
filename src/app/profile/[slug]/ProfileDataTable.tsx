@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
   Table,
@@ -15,33 +16,51 @@ import {
 import { User } from "@prisma/client";
 import copy from "copy-to-clipboard";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 
-const formSchema = z.object({
-  email: z.string().email(),
-  github: z.string(),
-  // gradYear: z.number().int().min(2021).max(2100),
-  // linkedin: z.string().url(),
-  // phone: z.string().min(10).max(10),
-});
-
-type FormSchema = z.infer<typeof formSchema>;
+type DataRow = {
+  displayName: string;
+  prismaName: string;
+  editable: boolean;
+};
 
 // Email, GH username, Grad year, Member Since, LinkedIn, Phone Number
 export default function ProfileDataTable({
   userData,
+  editing,
+  setEditing,
+  submitting,
+  setSubmitting,
   currentUser,
 }: {
   userData: User;
+  editing: boolean;
+  setEditing: (editing: boolean) => void;
+  submitting: boolean;
+  setSubmitting: (submitting: boolean) => void;
   currentUser: User;
 }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<FormSchema>();
+  // Updates the forms data every time there is a change
+  const [formData, setFormData] = useState(
+    displayData
+      .map((row) => row.prismaName)
+      .reduce((acc, key) => {
+        if (userData.hasOwnProperty(key) && userData[key] !== null) {
+          acc[key] = userData[key];
+        }
+        return acc;
+      }, {}),
+  );
+
+  const handleValueChange = (key, newValue) => {
+    // Create a copy of the existing formData
+    const updatedFormData = { ...formData };
+
+    // Update the specific key with the new value
+    updatedFormData[key] = newValue;
+
+    // Update the state with the new formData
+    setFormData(updatedFormData);
+  };
 
   const queryClient = useQueryClient();
   const { mutate: submitData } = useMutation({
@@ -57,76 +76,92 @@ export default function ProfileDataTable({
     },
   });
 
-  // Todo
-  const onSubmit = async (data: FormSchema) => {
-    // TODO: submit to server
-    // ...
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
-    reset();
-  };
+  // When the user data is submitted, validate it and send the update to the API
+  useEffect(() => {
+    // Send the update to the API
+    submitData(formData);
+
+    // Set submitting to false
+    setSubmitting(false);
+
+    // Set editing to false
+    setEditing(false);
+  }, [submitting]);
 
   return (
     <div className="bg-content1">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Button className="mt-2" type="submit">
-          Submit
-        </Button>
-        <Table
-          aria-label="Example static collection table"
-          isStriped={false}
-          hideHeader
-          removeWrapper
-        >
-          <TableHeader>
-            {/* Simply necessary for the component to function properly, not shown */}
-            <TableColumn>Items</TableColumn>
-            <TableColumn>Values</TableColumn>
-          </TableHeader>
-          <TableBody>
-            <TableRow
-              key={"Email"}
-              className="flex border-1 border-divider h-16"
-            >
+      <Table
+        aria-label="Example static collection table"
+        isStriped={false}
+        hideHeader
+        removeWrapper
+      >
+        <TableHeader>
+          {/* Simply necessary for the component to function properly, not shown */}
+          <TableColumn>Items</TableColumn>
+          <TableColumn>Values</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {displayData.map((row, index) => (
+            <TableRow key={index} className="flex border-1 border-divider h-16">
               <TableCell className="border-1 w-1/3">
-                <h1 className="text-xl">Email</h1>
+                <h1 className="text-xl">{row.displayName + ":"}</h1>
               </TableCell>
               <TableCell className="border-1 w-2/3">
-                <Input {...register("email")} type="email" />
-                {errors.email && (
-                  <p className="text-red-500">{`${errors.email.message}`}</p>
+                {editing && row.editable ? (
+                  <Input
+                    value={formData[row.prismaName]}
+                    onValueChange={(newValue) =>
+                      handleValueChange(row.prismaName, newValue)
+                    }
+                  />
+                ) : (
+                  <div className="flex flex-row place-content-between">
+                    <h1 className="text-xl">{userData[row.prismaName]}</h1>{" "}
+                    <Button
+                      isIconOnly
+                      onPress={() => {
+                        copy(userData[row.prismaName]);
+                      }}
+                    >
+                      <ContentCopyOutlinedIcon />
+                    </Button>
+                  </div>
                 )}
               </TableCell>
             </TableRow>
-            <TableRow
-              key={"GitHub"}
-              className="flex border-1 border-divider h-16"
-            >
-              <TableCell className="border-1 w-1/3">
-                <h1 className="text-xl">GitHub Username</h1>
-              </TableCell>
-              <TableCell className="border-1 w-2/3">
-                <Input {...register("github")} type="email" />
-                {errors.github && (
-                  <p className="text-red-500">{`${errors.github.message}`}</p>
-                )}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </form>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
 
-// {/* ) : (
-//                   <div className="flex flex-row place-content-between">
-//                     <h1 className="text-xl">{userData["email"]}</h1>{" "}
-//                     <Button
-//                       isIconOnly
-//                       onPress={() => {
-//                         copy(userData["email"]);
-//                       }}
-//                     >
-//                       <ContentCopyOutlinedIcon />
-//                     </Button> */}
+// This array controls the order in which the data fields are displayed
+const displayData: DataRow[] = [
+  {
+    displayName: "Email",
+    prismaName: "email",
+    editable: false,
+  },
+  {
+    displayName: "Phone Number",
+    prismaName: "phoneNum",
+    editable: true,
+  },
+  {
+    displayName: "GitHub Username",
+    prismaName: "githubUsername",
+    editable: true,
+  },
+  {
+    displayName: "Graduation Year",
+    prismaName: "graduationYear",
+    editable: true,
+  },
+  {
+    displayName: "LinkedIn",
+    prismaName: "linkedInUrl",
+    editable: true,
+  },
+];

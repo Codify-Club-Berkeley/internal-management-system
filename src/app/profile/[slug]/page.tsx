@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   <Button
                     className="mt-2"
                     onPress={() => {
-                      setEditing(!editing);
+                      setSubmitting(true);
                     }}
                   >
                     Save Changes
@@ -117,7 +117,14 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ))}
             </div>
           </div>
-          <ProfileDataTable userData={data} currentUser={currentUser} />
+          <ProfileDataTable
+            userData={data}
+            editing={editing}
+            setEditing={setEditing}
+            submitting={submitting}
+            setSubmitting={setSubmitting}
+            currentUser={currentUser}
+          />
         </div>
         <div className="flex flex-1 flex-col p-4"></div>
       </div>
