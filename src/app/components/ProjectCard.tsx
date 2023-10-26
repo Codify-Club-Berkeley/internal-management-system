@@ -15,10 +15,6 @@ interface ProjectCardProps {
   projectTitle: string;
 }
 
-const cardStyle = {
-  margin: "16px", // Add margin around the card
-};
-
 const ProjectCard: React.FC<ProjectCardProps> = ({
   teamName,
   imageUrl,
@@ -31,7 +27,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       shadow="sm"
       isPressable
       onPress={() => router.push(`/project/${projectTitle}`)}
-      style={cardStyle}
+      className="m-4"
     >
       {/* <CardHeader>{teamName}</CardHeader> */}
       <CardBody>
