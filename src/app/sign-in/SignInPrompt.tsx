@@ -19,7 +19,16 @@ export default function SignInPrompt() {
           router.push("/sign-in");
         }}
       >
-        Sign In or Sign Up
+        Sign In
+      </Button>
+
+      <Button
+        className="mb-2"
+        onPress={() => {
+          router.push("/sign-up");
+        }}
+      >
+        Sign Up
       </Button>
     </div>
   );
