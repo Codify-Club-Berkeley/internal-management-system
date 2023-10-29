@@ -2,14 +2,14 @@ import { z } from "zod";
 
 // Request body validators for API routes
 
-// PUT /api/projects/{id}
+// PATCH  /api/projects/{id}
 export const updateProjectValidator = z.object({
   title: z.string().optional(),
   addUsers: z.array(z.string()).optional(),
   removeUsers: z.array(z.string()).optional(),
 });
 
-// POST /api/projects
+// PATCH /api/projects
 export const createProjectValidator = z.object({
   title: z.string(),
   description: z.string().optional(),

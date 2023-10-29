@@ -47,6 +47,12 @@ model Project {
   projectPictureKey String?
 }
 
+model Meeting {
+  id    String   @id @default(uuid())
+  title String
+  date  DateTime
+}
+
 // EXEC have access to everything
 // PLs have access to their projects and can add members to the project
 // Users have access to their profile and projects they are part of

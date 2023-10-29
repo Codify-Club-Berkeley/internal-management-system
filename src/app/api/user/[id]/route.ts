@@ -48,11 +48,11 @@ export async function GET(
 /**
  * @swagger
  * /api/user/{id}:
- *  put:
+ *  patch:
  *  description: Updates the user with the given id
  *
  */
-export async function PUT(
+export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<User | null | any>> {

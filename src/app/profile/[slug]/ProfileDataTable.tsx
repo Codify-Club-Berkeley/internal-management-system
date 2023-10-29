@@ -66,7 +66,7 @@ export default function ProfileDataTable({
   const { mutate: submitData } = useMutation({
     mutationFn: async (formData) => {
       await console.log("Submitting data: ", formData);
-      await axios.put("/api/user/" + currentUser.id, formData);
+      await axios.patch("/api/user/" + currentUser.id, formData);
     },
     onSuccess: () => {
       // Refetch the current user's data to update the UI
