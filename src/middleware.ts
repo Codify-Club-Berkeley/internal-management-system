@@ -16,7 +16,7 @@ export default authMiddleware({
     "/roster",
     "/api/user/[id]",
     "/",
-    "/api/user/me",
+    "/api/user/elaineshu",
     "/api/uploadthing", // For some reason, this route complains when not public, so we just check authentication in the route
   ],
 });

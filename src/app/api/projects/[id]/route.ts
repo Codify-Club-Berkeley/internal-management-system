@@ -16,9 +16,13 @@ export async function GET(
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Project | null>> {
   // Get the current Project
+  // Include the members of the project
   const project: Project | null = await prisma.project.findUnique({
     where: {
       id: params.id,
+    },
+    include: {
+      members: true,
     },
   });
 
@@ -36,19 +40,18 @@ export async function GET(
 /**
  * @swagger
  * /api/projects/{id}:
- *  put:
+ *  patch:
  *   description: Updates a project
  *
  */
-
-export async function PUT(
+export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Project | null | any>> {
   // Given a project name, a list of userIDs to add, and a list of userIDs to remove
   // Update the project with the given id
 
-  // Only admins or the project owner should be allowed to update the project's data
+  // Todo only admins or the project owner should be allowed to update the project's data
 
   const body = await request.json();
   try {

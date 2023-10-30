@@ -15,7 +15,7 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<Project | any>> {
   // Todo, add authentication to make sure that the user is allowed create projects
-  // Only admins should be allowed to create a new project
+  // Todo only admins should be allowed to create a new project
 
   const body = await request.json();
   try {
