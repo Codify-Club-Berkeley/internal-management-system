@@ -67,3 +67,15 @@ pnpx prettier . --write
 ## API documentation
 
 The Swagger API documentation is automatically generated according to the swagger annotations on each of the API routes. The information in the documentation may not be up to date. It can be accessed at the path /api-docs
+
+## Database Migrations
+
+We currently only get access to one free database through Cockroach DB, meaning our production and development databases are the same for the time being. In other words, don't delete any data or tables from the database unless you are sure we don't need it. To run a database migration, run:
+
+```bash
+pnpx prisma migrate dev --name <migration-name>
+```
+
+And it will add a new migration to the migrations folder. Committing changes to the schema will not automatically run migrations, so make sure to run this command before pushing to GitHub.
+
+Also, keep in mind that regardless of what branch you are on, running a migration will update the same single database we are using, possibly creating breaking changes in other branches. If you are deleting any data, or making major changes to the schema, make sure to communicate with the rest of the team to make sure you don't break anything.

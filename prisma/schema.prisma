@@ -33,24 +33,36 @@ model User {
   profilePictureKey   String?
   major               String?
   pronouns            String?
+  meetingsPresent     Meeting[]            @relation("Present")
+  meetingsAbsent      Meeting[]            @relation("Absent")
+  meetingsExcused     Meeting[]            @relation("Excused")
 }
 
 model Project {
-  id                String   @id @default(uuid())
-  title             String   @unique
+  id                String    @id @default(uuid())
+  title             String    @unique
   description       String?
-  members           User[]   @relation("Project Member")
-  leads             User[]   @relation("Project Lead")
-  createdAt         DateTime @default(now()) // For debugging purposes
-  updatedAt         DateTime @updatedAt
+  members           User[]    @relation("Project Member")
+  leads             User[]    @relation("Project Lead")
+  createdAt         DateTime  @default(now()) // For debugging purposes
+  updatedAt         DateTime  @updatedAt
   projectPictureUrl String?
   projectPictureKey String?
+  meetings          Meeting[]
 }
 
 model Meeting {
-  id    String   @id @default(uuid())
-  title String
-  date  DateTime
+  id        String   @id @default(uuid())
+  title     String
+  start     DateTime
+  end       DateTime
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+  present   User[]   @relation("Present")
+  absent    User[]   @relation("Absent")
+  excused   User[]   @relation("Excused")
+
+  @@index([projectId])
 }
 
 // EXEC have access to everything
