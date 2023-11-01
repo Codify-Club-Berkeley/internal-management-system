@@ -26,3 +26,10 @@ export const updateUserValidator = z.object({
   githubUsername: z.string().optional(),
   phoneNum: z.string().optional(),
 });
+
+// POST /api/meeing
+export const createMeetingValidator = z.object({
+  title: z.string(),
+  start: z.string().datetime(),
+  end: z.string().datetime(),
+});
