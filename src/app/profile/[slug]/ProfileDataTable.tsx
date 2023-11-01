@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
   Table,
@@ -12,133 +12,158 @@ import {
   TableCell,
   Input,
   Button,
+  Select,
+  SelectItem,
+  toIterator,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import copy from "copy-to-clipboard";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import { useProfileStore } from "./pageState";
+import { useForm, Path, set } from "react-hook-form";
+import { z } from "zod";
+import { updateUserValidator } from "@/lib/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type DataRow = {
   displayName: string;
-  prismaName: string;
+  prismaName: Path<UpdateUserSchema>; // This needs the types from User
   editable: boolean;
+  // If the data is a select input, it will have these value, otherwise it will be a text input
+  selectKeys?: string[];
 };
 
+type UpdateUserSchema = z.infer<typeof updateUserValidator>;
+
 // Email, GH username, Grad year, Member Since, LinkedIn, Phone Number
-export default function ProfileDataTable({
-  userData,
-  editing,
-  setEditing,
-  submitting,
-  setSubmitting,
-  currentUser,
-}: {
-  userData: User;
-  editing: boolean;
-  setEditing: (editing: boolean) => void;
-  submitting: boolean;
-  setSubmitting: (submitting: boolean) => void;
-  currentUser: User;
-}) {
-  // Updates the forms data every time there is a change
-  const [formData, setFormData] = useState(
-    displayData
-      .map((row) => row.prismaName)
-      .reduce((acc, key) => {
-        if (userData.hasOwnProperty(key) && userData[key] !== null) {
-          acc[key] = userData[key];
-        }
-        return acc;
-      }, {}),
-  );
+export default function ProfileDataTable({ userData }: { userData: User }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateUserSchema>({
+    resolver: zodResolver(updateUserValidator),
+  });
 
-  const handleValueChange = (key, newValue) => {
-    // Create a copy of the existing formData
-    const updatedFormData = { ...formData };
+  // Get the editing and submitting state from the shared store
+  const { editing, setEditing, submitting, setSubmitting } = useProfileStore();
 
-    // Update the specific key with the new value
-    updatedFormData[key] = newValue;
-
-    // Update the state with the new formData
-    setFormData(updatedFormData);
-  };
+  useEffect(() => {
+    // Every time the form submits, one of two functions are called depending on if the form is valid
+    handleSubmit(
+      // Success
+      (data: UpdateUserSchema) => {
+        console.log("Submitting data: ", data);
+        submitData(data);
+        setEditing(false);
+      },
+      // Failure
+      () => {
+        console.log("Invalid Input");
+      },
+    )();
+    setSubmitting(false);
+    console.log("Submitting: ", submitting);
+  }, [handleSubmit, setEditing, setSubmitting, submitting]);
 
   const queryClient = useQueryClient();
   const { mutate: submitData } = useMutation({
-    mutationFn: async (formData) => {
-      await console.log("Submitting data: ", formData);
-      await axios.patch("/api/user/" + currentUser.id, formData);
+    mutationFn: async (formData: UpdateUserSchema) => {
+      await axios.patch("/api/user/" + userData.id, formData);
     },
     onSuccess: () => {
       // Refetch the current user's data to update the UI
       queryClient.invalidateQueries({
-        queryKey: ["profile: " + currentUser.slug],
+        queryKey: ["profile: " + userData.slug],
       });
+
+      console.log("Success");
     },
   });
 
-  // When the user data is submitted, validate it and send the update to the API
-  useEffect(() => {
-    // Send the update to the API
-    submitData(formData);
-
-    // Set submitting to false
-    setSubmitting(false);
-
-    // Set editing to false
-    setEditing(false);
-  }, [submitting]);
-
   return (
     <div className="bg-content1">
-      <Table
-        aria-label="Example static collection table"
-        isStriped={false}
-        hideHeader
-        removeWrapper
-      >
-        <TableHeader>
-          {/* Simply necessary for the component to function properly, not shown */}
-          <TableColumn>Items</TableColumn>
-          <TableColumn>Values</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {displayData.map((row, index) => (
-            <TableRow key={index} className="flex border-1 border-divider h-16">
-              <TableCell className="border-1 w-1/3">
-                <h1 className="text-xl">{row.displayName + ":"}</h1>
-              </TableCell>
-              <TableCell className="border-1 w-2/3">
-                {editing && row.editable ? (
-                  <Input
-                    value={formData[row.prismaName]}
-                    onValueChange={(newValue) =>
-                      handleValueChange(row.prismaName, newValue)
-                    }
-                  />
-                ) : (
-                  <div className="flex flex-row place-content-between">
-                    <h1 className="text-xl">{userData[row.prismaName]}</h1>{" "}
-                    <Button
-                      isIconOnly
-                      onPress={() => {
-                        copy(userData[row.prismaName]);
-                      }}
-                    >
-                      <ContentCopyOutlinedIcon />
-                    </Button>
-                  </div>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <form>
+        <Table
+          aria-label="Example static collection table"
+          isStriped={false}
+          hideHeader
+          removeWrapper
+        >
+          <TableHeader>
+            {/* Simply necessary for the component to function properly, not shown */}
+            <TableColumn>Items</TableColumn>
+            <TableColumn>Values</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {displayData.map((row: DataRow, index: number) => (
+              <TableRow
+                key={row.displayName}
+                className="flex border-1 border-divider h-20"
+              >
+                <TableCell className="border-1 w-1/3">
+                  <h1 className="text-xl">{row.displayName + ":"}</h1>
+                </TableCell>
+                <TableCell className="border-1 w-2/3">
+                  {/* Todo pass the editing */}
+                  {editing && row.editable ? (
+                    row.selectKeys !== undefined ? (
+                      <Select
+                        label={row.prismaName}
+                        {...register(row.prismaName)}
+                        defaultSelectedKeys={[userData[row.prismaName]]}
+                      >
+                        {row.selectKeys.map((value: string) => (
+                          <SelectItem key={value}>{value}</SelectItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      <Input
+                        isInvalid={
+                          typeof errors[row.prismaName] !== "undefined"
+                        }
+                        errorMessage={errors[row.prismaName]?.message}
+                        {...register(row.prismaName)}
+                        defaultValue={String(userData[row.prismaName])}
+                      />
+                    )
+                  ) : (
+                    <div className="flex flex-row place-content-between">
+                      <h1 className="text-xl">
+                        {String(userData[row.prismaName])}
+                      </h1>{" "}
+                      <Button
+                        isIconOnly
+                        onPress={() => {
+                          copy(String(userData[row.prismaName]));
+                        }}
+                      >
+                        <ContentCopyOutlinedIcon />
+                      </Button>
+                    </div>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </form>
     </div>
   );
 }
 
 // This array controls the order in which the data fields are displayed
 const displayData: DataRow[] = [
+  {
+    displayName: "First Name",
+    prismaName: "firstName",
+    editable: true,
+  },
+  {
+    displayName: "Last Name",
+    prismaName: "lastName",
+    editable: true,
+  },
   {
     displayName: "Email",
     prismaName: "email",
@@ -158,10 +183,33 @@ const displayData: DataRow[] = [
     displayName: "Graduation Year",
     prismaName: "graduationYear",
     editable: true,
+    selectKeys: [
+      "Spring 2024",
+      "Fall 2024",
+      "Spring 2025",
+      "Fall 2025",
+      "Spring 2026",
+      "Fall 2026",
+      "Spring 2027",
+      "Fall 2027",
+      "Spring 2028",
+      "Fall 2028",
+    ],
   },
   {
     displayName: "LinkedIn",
     prismaName: "linkedInUrl",
     editable: true,
+  },
+  {
+    displayName: "Major(s)",
+    prismaName: "major",
+    editable: true,
+  },
+  {
+    displayName: "Pronouns",
+    prismaName: "pronouns",
+    editable: true,
+    selectKeys: ["He/Him", "She/Her", "They/Them", "Other"],
   },
 ];
