@@ -9,18 +9,14 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import { Button } from "@nextui-org/react";
 import ProfileDataTable from "./ProfileDataTable";
+import { useProfileStore } from "./pageState";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  // Get the editing and submitting state from the shared store
+  const { editing, setEditing, submitting, setSubmitting } = useProfileStore();
+
   // If the user is the owner of the profile, they can edit it
   const [isOwner, setIsOwner] = useState(false);
-
-  // Keeps track of if the profile is being edited
-  const [editing, setEditing] = useState(false);
-
-  // Keeps track of if we are in the process of submitting the form
-  // It will be set to true when the user attempts to submit the form and will remain true until the form is
-  // done submitting or the submission fails
-  const [submitting, setSubmitting] = useState(false);
 
   // Call the user of the slug in the url
   // Returns null if the user doesn't exist
@@ -117,14 +113,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ))}
             </div>
           </div>
-          <ProfileDataTable
-            userData={data}
-            editing={editing}
-            setEditing={setEditing}
-            submitting={submitting}
-            setSubmitting={setSubmitting}
-            currentUser={currentUser}
-          />
+          <ProfileDataTable userData={data} currentUser={currentUser} />
         </div>
         <div className="flex flex-1 flex-col p-4"></div>
       </div>

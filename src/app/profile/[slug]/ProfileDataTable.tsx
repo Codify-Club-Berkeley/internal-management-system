@@ -16,6 +16,7 @@ import {
 import { User } from "@prisma/client";
 import copy from "copy-to-clipboard";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import { useProfileStore } from "./pageState";
 
 type DataRow = {
   displayName: string;
@@ -26,19 +27,14 @@ type DataRow = {
 // Email, GH username, Grad year, Member Since, LinkedIn, Phone Number
 export default function ProfileDataTable({
   userData,
-  editing,
-  setEditing,
-  submitting,
-  setSubmitting,
   currentUser,
 }: {
   userData: User;
-  editing: boolean;
-  setEditing: (editing: boolean) => void;
-  submitting: boolean;
-  setSubmitting: (submitting: boolean) => void;
   currentUser: User;
 }) {
+  // Get the editing and submitting state from the shared store
+  const { editing, setEditing, submitting, setSubmitting } = useProfileStore();
+
   // Updates the forms data every time there is a change
   const [formData, setFormData] = useState(
     displayData
