@@ -16,18 +16,22 @@ export const createProjectValidator = z.object({
 });
 
 // PUT /api/user/{id}
-// Todo add more properties as we build out the user model
 // Todo add the ability to add roles to a user
 export const updateUserValidator = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  email: z.string().email().optional(),
+  // Regex for names that allows for hyphens, periods, and apostrophes
+  firstName: z.string().regex(/^[A-Za-z \-\.\']+$/),
+  lastName: z.string().regex(/^[A-Za-z \-\.\']+$/),
   bio: z.string().optional(),
   linkedInUrl: z.string().optional(),
   githubUsername: z.string().optional(),
-  phoneNum: z.string().optional(),
+  phoneNum: z.string().regex(/^[0-9]+$/),
+  pronouns: z.string().optional(),
+  graduationYear: z.string().optional(),
+  major: z.string().optional(),
 });
 
-// POST /api/meeing
+// POST /api/meeting
 export const createMeetingValidator = z.object({
   title: z.string(),
   start: z.string().datetime(),

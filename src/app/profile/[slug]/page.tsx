@@ -76,6 +76,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   className="ut-button:color-primary pt-4"
                   onClientUploadComplete={(res) => {
                     // Do something with the response
+                    // Todo replace with a toast message
                     alert("Upload Completed");
                   }}
                   onUploadError={(error: Error) => {
@@ -91,6 +92,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               </h1>
               <h2 className="text-xl">{data.roles[0]}</h2>
               {/* If the use is the owner of the profile, display an edit profile button */}
+              {/* todo Simply disable the button when profile is inactive */}
               {isOwner &&
                 (isOwner && editing ? (
                   <Button
@@ -113,7 +115,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ))}
             </div>
           </div>
-          <ProfileDataTable userData={data} currentUser={currentUser} />
+          <ProfileDataTable userData={data} />
         </div>
         <div className="flex flex-1 flex-col p-4"></div>
       </div>
