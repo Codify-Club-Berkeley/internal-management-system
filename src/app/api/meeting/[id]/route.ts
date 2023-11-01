@@ -6,8 +6,6 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null>> {
-  // If the identifier starts with meeting_, the it is an ID, otherwise it is a slug
-
   let meeting: Meeting | null;
 
   // Get the current meeting by the id
@@ -24,6 +22,6 @@ export async function GET(
     });
   }
 
-  // If the user exists, return the user with a 200 status code
+  // If the meeting exists, return the meeting with a 200 status code
   return NextResponse.json(meeting, { status: 200 });
 }
