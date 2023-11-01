@@ -8,6 +8,8 @@ export default authMiddleware({
   // "/" will be accessible to all users
   // TODO make routes private in production
   publicRoutes: [
+    "/api/meeting/9bc408d2-39bd-4d20-8eda-d1d2cdbda12a",
+    "/api/meeting",
     "/profile/validate",
     "/dashboard",
     "/api/user",
