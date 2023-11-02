@@ -29,6 +29,7 @@ export const updateUserValidator = z.object({
   pronouns: z.string().optional(),
   graduationYear: z.string().optional(),
   major: z.string().optional(),
+  dietaryRestrictions: z.string().optional(),
 });
 
 // POST /api/meeting
