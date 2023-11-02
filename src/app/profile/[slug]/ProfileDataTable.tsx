@@ -31,6 +31,7 @@ type DataRow = {
   editable: boolean;
   // If the data is a select input, it will have these value, otherwise it will be a text input
   selectKeys?: string[];
+  multiple?: boolean; // If the select input allows multiple values, this will be true
 };
 
 type UpdateUserSchema = z.infer<typeof updateUserValidator>;
@@ -112,6 +113,7 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
                         label={row.prismaName}
                         {...register(row.prismaName)}
                         defaultSelectedKeys={[userData[row.prismaName]]}
+                        selectionMode={row.multiple ? "multiple" : "single"}
                       >
                         {row.selectKeys.map((value: string) => (
                           <SelectItem key={value}>{value}</SelectItem>
@@ -211,5 +213,12 @@ const displayData: DataRow[] = [
     prismaName: "pronouns",
     editable: true,
     selectKeys: ["He/Him", "She/Her", "They/Them", "Other"],
+  },
+  {
+    displayName: "Dietary Restrictions",
+    prismaName: "dietaryRestrictions",
+    editable: true,
+    selectKeys: ["None", "Vegetarian", "Vegan", "Gluten Free"],
+    multiple: true,
   },
 ];

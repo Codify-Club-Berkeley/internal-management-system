@@ -2,67 +2,67 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "cockroachdb"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+    provider     = "cockroachdb"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model User {
-  id                  String               @id // Use the clerk id not a uuid
-  email               String               @unique
-  slug                String               @unique // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
-  firstName           String?
-  lastName            String?
-  roles               Role[]               @default([USER])
-  createdAt           DateTime             @default(now()) // For debugging purposes
-  updatedAt           DateTime             @updatedAt
-  projects            Project[]            @relation("Project Member") // The projects a member is part of
-  leading             Project[]            @relation("Project Lead") // The projects a member is leading
-  bio                 String?
-  linkedInUrl         String?
-  githubUsername      String?
-  phoneNum            String?
-  joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
-  graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
-  dietaryRestrictions DietaryRestriction[]
-  profilePictureUrl   String?
-  profilePictureKey   String?
-  major               String?
-  pronouns            String?
-  meetingsPresent     Meeting[]            @relation("Present")
-  meetingsAbsent      Meeting[]            @relation("Absent")
-  meetingsExcused     Meeting[]            @relation("Excused")
+    id                  String    @id // Use the clerk id not a uuid
+    email               String    @unique
+    slug                String    @unique // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
+    firstName           String?
+    lastName            String?
+    roles               Role[]    @default([USER])
+    createdAt           DateTime  @default(now()) // For debugging purposes
+    updatedAt           DateTime  @updatedAt
+    projects            Project[] @relation("Project Member") // The projects a member is part of
+    leading             Project[] @relation("Project Lead") // The projects a member is leading
+    bio                 String?
+    linkedInUrl         String?
+    githubUsername      String?
+    phoneNum            String?
+    joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
+    graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
+    profilePictureUrl   String?
+    profilePictureKey   String?
+    major               String?
+    pronouns            String?
+    dietaryRestrictions String? // A comma seperated list of dietary restrictions the possible values are stored on the frontend
+    meetingsPresent     Meeting[] @relation("Present")
+    meetingsAbsent      Meeting[] @relation("Absent")
+    meetingsExcused     Meeting[] @relation("Excused")
 }
 
 model Project {
-  id                String    @id @default(uuid())
-  title             String    @unique
-  description       String?
-  members           User[]    @relation("Project Member")
-  leads             User[]    @relation("Project Lead")
-  createdAt         DateTime  @default(now()) // For debugging purposes
-  updatedAt         DateTime  @updatedAt
-  projectPictureUrl String?
-  projectPictureKey String?
-  meetings          Meeting[]
+    id                String    @id @default(uuid())
+    title             String    @unique
+    description       String?
+    members           User[]    @relation("Project Member")
+    leads             User[]    @relation("Project Lead")
+    createdAt         DateTime  @default(now()) // For debugging purposes
+    updatedAt         DateTime  @updatedAt
+    projectPictureUrl String?
+    projectPictureKey String?
+    meetings          Meeting[]
 }
 
 model Meeting {
-  id        String   @id @default(uuid())
-  title     String
-  start     DateTime
-  end       DateTime
-  project   Project? @relation(fields: [projectId], references: [id])
-  projectId String?
-  present   User[]   @relation("Present")
-  absent    User[]   @relation("Absent")
-  excused   User[]   @relation("Excused")
+    id        String   @id @default(uuid())
+    title     String
+    start     DateTime
+    end       DateTime
+    project   Project? @relation(fields: [projectId], references: [id])
+    projectId String?
+    present   User[]   @relation("Present")
+    absent    User[]   @relation("Absent")
+    excused   User[]   @relation("Excused")
 
-  @@index([projectId])
+    @@index([projectId])
 }
 
 // EXEC have access to everything
@@ -70,18 +70,9 @@ model Meeting {
 // Users have access to their profile and projects they are part of
 // The User model supports many roles
 enum Role {
-  EXEC
-  PL
-  EDUCATION
-  USER
-  APPLICANT // If we ever want to also store applicants in the DB
-}
-
-enum DietaryRestriction {
-  VEGAN
-  VEGETARIAN
-  GLUTEN_FREE
-  DAIRY_FREE
-  NUT_FREE
-  OTHER
+    EXEC
+    PL
+    EDUCATION
+    USER
+    APPLICANT // If we ever want to also store applicants in the DB
 }
