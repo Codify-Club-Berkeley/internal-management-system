@@ -7,6 +7,8 @@ export const updateProjectValidator = z.object({
   title: z.string().optional(),
   addUsers: z.array(z.string()).optional(),
   removeUsers: z.array(z.string()).optional(),
+  addLeads: z.array(z.string()).optional(),
+  removeLeads: z.array(z.string()).optional(),
 });
 
 // PATCH /api/projects
