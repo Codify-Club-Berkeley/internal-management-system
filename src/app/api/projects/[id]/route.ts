@@ -69,6 +69,14 @@ export async function PATCH(
       ? body.removeUsers.map((userId: string) => ({ id: userId }))
       : [];
 
+      const addLeads = body.addLeads
+      ? body.addLeads.map((userId: string) => ({ id: userId }))
+      : [];
+
+    const removeLeads = body.removeLeads
+      ? body.removeLeads.map((userId: string) => ({ id: userId }))
+      : [];
+
     // Todo verify that the user is an admin or the project owner
 
     // Update the project
@@ -81,6 +89,10 @@ export async function PATCH(
         members: {
           connect: addUsers,
           disconnect: removeUsers,
+        },
+        leads: {
+          connect: addLeads,
+          disconnect: removeLeads,
         },
       },
     });
