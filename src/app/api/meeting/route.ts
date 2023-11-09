@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, Meeting } from "@prisma/client";
+import { PrismaClient, Meeting, User } from "@prisma/client";
 const prisma = new PrismaClient();
 import { createMeetingValidator } from "@/lib/validators";
 
@@ -15,8 +15,12 @@ import { createMeetingValidator } from "@/lib/validators";
  *         description: There was a problem with the request
  */
 
-export async function POST(request: NextRequest) {
-  // Get the body of the request
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse<Meeting | null | any>> {
+  
+  // TODO: Needs data validation
   const body = await request.json();
 
   try {
@@ -27,28 +31,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(meeting, { status: 200 });
   } catch (error) {
-    console.log("error");
+    console.error(error);
     return NextResponse.json(error, {
       status: 400,
-    });
-  }
-}
-
-export async function POST(request: NextRequest) {
-  // Get the body of the request
-  const body = await request.json();
-
-  try {
-    createMeetingValidator.parse(body);
-    const meeting = await prisma.meeting.create({
-      data: body,
-    });
-
-    return NextResponse.json(meeting, { status: 200 });
-  } catch (error) {
-    console.log("error");
-    return NextResponse.json(error, {
-      status: 400,
-    });
+    });  
   }
 }
