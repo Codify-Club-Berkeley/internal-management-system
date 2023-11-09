@@ -1,92 +1,82 @@
 import React from "react";
-import { Accordion, AccordionItem, Card } from "@nextui-org/react";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Card,
+  Listbox,
+  ListboxItem,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@nextui-org/react";
 import ProjectFlagsCard from "./ProjectFlagsCard";
 import MemberChips from "./MemberChips";
 import AddMemberDropdown from "./AddMemberDropdown";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { User, Project } from "@prisma/client";
 
 const ProjectManager = () => {
-  // Define the contents of the cards
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: async () => {
+      const response = await axios.get("/api/user");
+      return response.data as User[];
+    },
+  });
+  const {
+    data: projects,
+    isLoading: projectsLoading,
+    isError: projectsError,
+  } = useQuery({
+    queryKey: ["allProjects"],
+    queryFn: async () => {
+      const response = await axios.get("/api/projects");
+      return response.data as Project[];
+    },
+  });
 
-  const isInternal = true; // Set to true if it's an internal project
-  const isPaid = false; // Set to true if it's a client project
-
-  //list of members for a project, should be fetched from backend
-  const memberNames = ["Elaine", "Aidan", "Owen", "Cady"];
-
-  //list of all members in the club that can be added to oa team, should be fetched from backend
-  const allMembers = [
-    {
-      id: "000",
-      name: "Aidan",
-    },
-    {
-      id: "001",
-      name: "Elaine",
-    },
-    {
-      id: "010",
-      name: "Owen",
-    },
-    {
-      id: "011",
-      name: "Cady",
-    },
-    {
-      id: "100",
-      name: "Abby",
-    },
-    {
-      id: "101",
-      name: "Bob",
-    },
-  ];
-
-  const projectInfo = (
-    // Placeholder for project flags
-    <ul>
-      <li>Su23, Fa23, Sp24</li>
-      <li>6 members</li>
-    </ul>
-  );
-
-  const card2Content = (
-    // Placeholder for project members
-    <Card title="Members" className="p-4 bg-gray-500 ">
-      {"A project's team member cards will go here."}
-    </Card>
-  );
+  //need to be added to the database as a property for projects
+  const tags = ["client", "unpaid"];
 
   return (
     <Accordion selectionMode="multiple" variant="shadow">
-      <AccordionItem key="1" aria-label="Accordion 1" title="IMS">
-        <div className="flex">
-          <div>
-            <ProjectFlagsCard
-              tags={["internal", "unpaid", "fun", "collaborative"]}
-            />
-            {projectInfo}
-          </div>
-          <div className="mx-3"></div> {/* Horizontal spacing */}
-          <div>
-            <MemberChips memberNames={memberNames} membertoRemove="" />
-            <AddMemberDropdown allMembers={allMembers} />
-          </div>
-        </div>
-      </AccordionItem>
-
-      <AccordionItem key="2" aria-label="Accordion 2" title="Kopernicus">
-        <div className="flex">
-          <div>
-            <ProjectFlagsCard tags={["client", "paid"]} />
-            {projectInfo}
-          </div>
-          <div className="mx-3"></div> {/* Horizontal spacing */}
-          <div>
-            <MemberChips memberNames={memberNames} membertoRemove="" />
-            <AddMemberDropdown allMembers={allMembers} />
-          </div>
-        </div>
-      </AccordionItem>
+      {!projectsLoading &&
+        projects.map((project, index) => (
+          <AccordionItem
+            key={index}
+            aria-label={project.id}
+            title={project.title}
+          >
+            <div className="flex">
+              <div>
+                <ProjectFlagsCard tags={tags} />
+                <ul>
+                  <li>Project created at {project.createdAt}</li>
+                  <li>Project updated on {project.updatedAt}</li>
+                  <li>Other information</li>
+                </ul>
+              </div>
+              <div className="mx-3"></div> {/* Horizontal spacing */}
+              <div>
+                <MemberChips
+                  membersofProject={project.leads}
+                  membertoRemove=""
+                />
+                <MemberChips
+                  membersofProject={project.members}
+                  membertoRemove=""
+                />
+                <AddMemberDropdown allMembers={users} />
+              </div>
+            </div>
+          </AccordionItem>
+        ))}
     </Accordion>
   );
 };

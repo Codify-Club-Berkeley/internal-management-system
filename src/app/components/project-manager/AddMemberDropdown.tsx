@@ -6,14 +6,10 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
-
-interface memberInfo {
-  id: string;
-  name: string;
-}
+import { User } from "@prisma/client";
 
 const AddMemberDropdown: React.FC<{
-  allMembers: Array<memberInfo>;
+  allMembers: User[];
 }> = ({ allMembers }) => {
   return (
     <Dropdown>
@@ -24,7 +20,9 @@ const AddMemberDropdown: React.FC<{
         {allMembers.map((member, index) => (
           //should add an onPress event to this DropdownItem
           //when pressed, should add the selected member to the project team via backend
-          <DropdownItem key={index}>{member.name}</DropdownItem>
+          <DropdownItem key={index}>
+            {member.firstName}+{member.lastName}
+          </DropdownItem>
         ))}
       </DropdownMenu>
     </Dropdown>

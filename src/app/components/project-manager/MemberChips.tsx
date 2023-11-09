@@ -1,10 +1,15 @@
 import React from "react";
 import { Chip } from "@nextui-org/react";
+import { User } from "@prisma/client";
 
 const MemberChips: React.FC<{
-  memberNames: string[];
+  membersofProject: User[];
   membertoRemove: string;
-}> = ({ memberNames, membertoRemove }) => {
+}> = ({ membersofProject, membertoRemove }) => {
+  const memberNames = membersofProject.map((member, index) => {
+    const memberName = [member.firstName, member.lastName];
+    return memberName.join(" ");
+  });
   const [members, setMembers] = React.useState(memberNames);
 
   const handleClose = (membertoRemove: string) => {
