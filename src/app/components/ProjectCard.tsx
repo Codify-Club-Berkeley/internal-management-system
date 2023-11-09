@@ -1,4 +1,6 @@
 import React from "react";
+import { projectNameStringFormatter } from "../../utils/helpers";
+
 import {
   Card,
   CardBody,
@@ -10,13 +12,13 @@ import {
 import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
-  teamName: string;
+  // teamName: strxing;
   imageUrl: string;
   projectTitle: string;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
-  teamName,
+  // teamName,
   imageUrl,
   projectTitle,
 }) => {
@@ -30,9 +32,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       className="m-4"
     >
       <CardBody>
-        <img src={imageUrl} alt={teamName} width={100} height={100} />
+        <img
+          src={imageUrl}
+          alt={projectNameStringFormatter(projectTitle)}
+          width={100}
+          height={100}
+        />
       </CardBody>
-      <CardFooter>{teamName}</CardFooter>
+      <CardFooter>{projectNameStringFormatter(projectTitle)}</CardFooter>
     </Card>
   );
 };

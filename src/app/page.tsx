@@ -29,7 +29,6 @@ export default function Home() {
             <div>
               {currentUser.projects.map((project) => (
                 <ProjectCard
-                  teamName={project.title}
                   imageUrl={project.projectPictureUrl}
                   projectTitle={project.title}
                 />
