@@ -29,11 +29,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       onPress={() => router.push(`/project/${projectTitle}`)}
       className="m-4"
     >
-      {/* <CardHeader>{teamName}</CardHeader> */}
       <CardBody>
         <img src={imageUrl} alt={teamName} width={100} height={100} />
       </CardBody>
-      <CardFooter>Project Name</CardFooter>
+      <CardFooter>{teamName}</CardFooter>
     </Card>
   );
 };
