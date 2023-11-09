@@ -27,6 +27,11 @@ and, run the development server:
 ```bash
 pnpm dev
 ```
+To manually edit the information in the database, run 
+
+```bash
+pnpx prisma studio
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
