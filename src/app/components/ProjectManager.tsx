@@ -1,18 +1,52 @@
 import React from "react";
 import { Accordion, AccordionItem, Card } from "@nextui-org/react";
 import ProjectFlagsCard from "./ProjectFlagsCard";
+import MemberChips from "./MemberChips";
+import AddMemberDropdown from "./AddMemberDropdown";
 
 const ProjectManager = () => {
   // Define the contents of the cards
 
   const isInternal = true; // Set to true if it's an internal project
-  const isClient = false; // Set to true if it's a client project
+  const isPaid = false; // Set to true if it's a client project
 
-  const card1Content = (
+  //list of members for a project, should be fetched from backend
+  const memberNames = ["Elaine", "Aidan", "Owen", "Cady"];
+
+  //list of all members in the club that can be added to oa team, should be fetched from backend
+  const allMembers = [
+    {
+      key: "000",
+      label: "Aidan",
+    },
+    {
+      key: "001",
+      label: "Elaine",
+    },
+    {
+      key: "010",
+      label: "Owen",
+    },
+    {
+      key: "011",
+      label: "Cady",
+    },
+    {
+      key: "100",
+      label: "Abby",
+    },
+    {
+      key: "101",
+      label: "Bob",
+    },
+  ];
+
+  const projectInfo = (
     // Placeholder for project flags
-    <Card title="Flags" className="p-4 ">
-      {"A project's metadata flags will go here."}
-    </Card>
+    <ul>
+      <li>Su23, Fa23, Sp24</li>
+      <li>6 members</li>
+    </ul>
   );
 
   const card2Content = (
@@ -24,19 +58,31 @@ const ProjectManager = () => {
 
   return (
     <Accordion selectionMode="multiple" variant="shadow">
-      <AccordionItem key="1" aria-label="Accordion 1" title="Project 1">
+      <AccordionItem key="1" aria-label="Accordion 1" title="IMS">
         <div className="flex">
-          <ProjectFlagsCard isInternal={isInternal} isClient={isClient} />
+          <div>
+            <ProjectFlagsCard isInternal={true} isPaid={false} />
+            {projectInfo}
+          </div>
           <div className="mx-3"></div> {/* Horizontal spacing */}
-          {card2Content}
+          <div>
+            <MemberChips memberNames={memberNames} membertoRemove="" />
+            <AddMemberDropdown items={allMembers} />
+          </div>
         </div>
       </AccordionItem>
 
-      <AccordionItem key="2" aria-label="Accordion 2" title="Project 2">
+      <AccordionItem key="2" aria-label="Accordion 2" title="Kopernicus">
         <div className="flex">
-          <ProjectFlagsCard isInternal={isInternal} isClient={isClient} />
+          <div>
+            <ProjectFlagsCard isInternal={false} isPaid={true} />
+            {projectInfo}
+          </div>
           <div className="mx-3"></div> {/* Horizontal spacing */}
-          {card2Content}
+          <div>
+            <MemberChips memberNames={memberNames} membertoRemove="" />
+            <AddMemberDropdown items={allMembers} />
+          </div>
         </div>
       </AccordionItem>
     </Accordion>
