@@ -8,23 +8,23 @@ import {
 } from "@nextui-org/react";
 
 interface memberInfo {
-  key: string;
-  label: string;
+  id: string;
+  name: string;
 }
 
 const AddMemberDropdown: React.FC<{
-  items: Array<memberInfo>;
-}> = ({ items }) => {
+  allMembers: Array<memberInfo>;
+}> = ({ allMembers }) => {
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button variant="bordered">+ Add Member</Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Dynamic Actions" items={items}>
-        {items.map((item, index) => (
+      <DropdownMenu aria-label="Dynamic Actions" items={allMembers}>
+        {allMembers.map((member, index) => (
           //should add an onPress event to this DropdownItem
           //when pressed, should add the selected member to the project team via backend
-          <DropdownItem key={index}>{item.label}</DropdownItem>
+          <DropdownItem key={index}>{member.name}</DropdownItem>
         ))}
       </DropdownMenu>
     </Dropdown>

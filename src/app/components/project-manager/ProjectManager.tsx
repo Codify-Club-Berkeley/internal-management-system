@@ -16,28 +16,28 @@ const ProjectManager = () => {
   //list of all members in the club that can be added to oa team, should be fetched from backend
   const allMembers = [
     {
-      key: "000",
-      label: "Aidan",
+      id: "000",
+      name: "Aidan",
     },
     {
-      key: "001",
-      label: "Elaine",
+      id: "001",
+      name: "Elaine",
     },
     {
-      key: "010",
-      label: "Owen",
+      id: "010",
+      name: "Owen",
     },
     {
-      key: "011",
-      label: "Cady",
+      id: "011",
+      name: "Cady",
     },
     {
-      key: "100",
-      label: "Abby",
+      id: "100",
+      name: "Abby",
     },
     {
-      key: "101",
-      label: "Bob",
+      id: "101",
+      name: "Bob",
     },
   ];
 
@@ -61,13 +61,15 @@ const ProjectManager = () => {
       <AccordionItem key="1" aria-label="Accordion 1" title="IMS">
         <div className="flex">
           <div>
-            <ProjectFlagsCard isInternal={true} isPaid={false} />
+            <ProjectFlagsCard
+              tags={["internal", "unpaid", "fun", "collaborative"]}
+            />
             {projectInfo}
           </div>
           <div className="mx-3"></div> {/* Horizontal spacing */}
           <div>
             <MemberChips memberNames={memberNames} membertoRemove="" />
-            <AddMemberDropdown items={allMembers} />
+            <AddMemberDropdown allMembers={allMembers} />
           </div>
         </div>
       </AccordionItem>
@@ -75,13 +77,13 @@ const ProjectManager = () => {
       <AccordionItem key="2" aria-label="Accordion 2" title="Kopernicus">
         <div className="flex">
           <div>
-            <ProjectFlagsCard isInternal={false} isPaid={true} />
+            <ProjectFlagsCard tags={["client", "paid"]} />
             {projectInfo}
           </div>
           <div className="mx-3"></div> {/* Horizontal spacing */}
           <div>
             <MemberChips memberNames={memberNames} membertoRemove="" />
-            <AddMemberDropdown items={allMembers} />
+            <AddMemberDropdown allMembers={allMembers} />
           </div>
         </div>
       </AccordionItem>
