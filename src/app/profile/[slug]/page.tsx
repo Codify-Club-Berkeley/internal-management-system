@@ -57,18 +57,16 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      {/* Button that when triggers the given API call in the mutation function */}
-
       {/**Todo make this mobile responsive */}
       <div className="flex flex-row">
         <div className="flex flex-1 flex-col p-4">
-          <div className="flex flex-row mb-3 ">
+          <div className="mb-3 flex flex-row ">
             <div className="flex flex-col">
               {data.profilePictureUrl && (
                 <img
                   src={data?.profilePictureUrl}
                   alt="no profile picture uploaded"
-                  className="rounded-full w-36 h-36"
+                  className="h-36 w-36 rounded-full"
                 />
               )}
               {editing && (
@@ -89,8 +87,8 @@ export default function Page({ params }: { params: { slug: string } }) {
                 />
               )}
             </div>
-            <div className="flex flex-col ml-5">
-              <h1 className="text-3xl mb-2">
+            <div className="ml-5 flex flex-col">
+              <h1 className="mb-2 text-3xl">
                 {data.firstName + " " + data.lastName}
               </h1>
               <h2 className="text-xl">{data.roles[0]}</h2>
