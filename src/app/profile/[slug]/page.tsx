@@ -6,10 +6,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UploadButton } from "../../../utils/uploadthing";
 import { User } from "@prisma/client";
-import Image from "next/image";
 import { Button } from "@nextui-org/react";
 import ProfileDataTable from "./ProfileDataTable";
 import { useProfileStore } from "./pageState";
+import { toast } from "react-toastify";
+import { toastDefaultConfig } from "../../../utils/constants";
 
 export default function Page({ params }: { params: { slug: string } }) {
   // Get the editing and submitting state from the shared store
@@ -56,18 +57,16 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      {/* Button that when triggers the given API call in the mutation function */}
-
       {/**Todo make this mobile responsive */}
       <div className="flex flex-row">
         <div className="flex flex-1 flex-col p-4">
-          <div className="flex flex-row mb-3 ">
+          <div className="mb-3 flex flex-row ">
             <div className="flex flex-col">
               {data.profilePictureUrl && (
                 <img
                   src={data?.profilePictureUrl}
                   alt="no profile picture uploaded"
-                  className="rounded-full w-36 h-36"
+                  className="h-36 w-36 rounded-full"
                 />
               )}
               {editing && (
@@ -76,18 +75,20 @@ export default function Page({ params }: { params: { slug: string } }) {
                   className="ut-button:color-primary pt-4"
                   onClientUploadComplete={(res) => {
                     // Do something with the response
-                    // Todo replace with a toast message
-                    alert("Upload Completed");
+                    toast.success("Uploaded successfully!", toastDefaultConfig);
                   }}
                   onUploadError={(error: Error) => {
                     // Do something with the error.
-                    alert(`ERROR! ${error.message}`);
+                    toast.error(
+                      `Upload failed with error ${error.message}`,
+                      toastDefaultConfig,
+                    );
                   }}
                 />
               )}
             </div>
-            <div className="flex flex-col ml-5">
-              <h1 className="text-3xl mb-2">
+            <div className="ml-5 flex flex-col">
+              <h1 className="mb-2 text-3xl">
                 {data.firstName + " " + data.lastName}
               </h1>
               <h2 className="text-xl">{data.roles[0]}</h2>

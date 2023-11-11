@@ -22,7 +22,7 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import { useProfileStore } from "./pageState";
 import { useForm, Path, set } from "react-hook-form";
 import { z } from "zod";
-import { updateUserValidator } from "@/lib/validators";
+import { updateUserValidator } from "@/utils/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type DataRow = {

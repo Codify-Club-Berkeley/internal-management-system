@@ -35,8 +35,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <img
           src={imageUrl}
           alt={projectNameStringFormatter(projectTitle)}
-          width={100}
-          height={100}
+          className="h-40 w-40 place-self-center object-contain"
         />
       </CardBody>
       <CardFooter>{projectNameStringFormatter(projectTitle)}</CardFooter>
