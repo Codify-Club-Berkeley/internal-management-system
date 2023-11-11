@@ -5,6 +5,7 @@ import React from "react";
 // import ProjectCard from "./components/ProjectCard";
 import { projectNameStringFormatter } from "../../../utils/helpers";
 import AttendanceTracker from "../../components/AttendanceTracker";
+import { UploadButton } from "../../../utils/uploadthing";
 
 export default function Page({ params }: { params: { title: string } }) {
   // Query the project based on the title

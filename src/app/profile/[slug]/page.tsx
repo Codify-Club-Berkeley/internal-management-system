@@ -6,10 +6,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { UploadButton } from "../../../utils/uploadthing";
 import { User } from "@prisma/client";
-import Image from "next/image";
 import { Button } from "@nextui-org/react";
 import ProfileDataTable from "./ProfileDataTable";
 import { useProfileStore } from "./pageState";
+import { toast } from "react-toastify";
+import { toastDefaultConfig } from "../../../utils/constants";
 
 export default function Page({ params }: { params: { slug: string } }) {
   // Get the editing and submitting state from the shared store
@@ -76,12 +77,14 @@ export default function Page({ params }: { params: { slug: string } }) {
                   className="ut-button:color-primary pt-4"
                   onClientUploadComplete={(res) => {
                     // Do something with the response
-                    // Todo replace with a toast message
-                    alert("Upload Completed");
+                    toast.success("Uploaded successfully!", toastDefaultConfig);
                   }}
                   onUploadError={(error: Error) => {
                     // Do something with the error.
-                    alert(`ERROR! ${error.message}`);
+                    toast.error(
+                      `Upload failed with error ${error.message}`,
+                      toastDefaultConfig,
+                    );
                   }}
                 />
               )}

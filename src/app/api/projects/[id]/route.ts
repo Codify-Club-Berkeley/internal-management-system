@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Project } from "@prisma/client";
-import { updateProjectValidator } from "@/lib/validators";
+import { updateProjectValidator } from "@/utils/validators";
 import { z } from "zod";
 const prisma = new PrismaClient();
 
@@ -69,7 +69,7 @@ export async function PATCH(
       ? body.removeUsers.map((userId: string) => ({ id: userId }))
       : [];
 
-      const addLeads = body.addLeads
+    const addLeads = body.addLeads
       ? body.addLeads.map((userId: string) => ({ id: userId }))
       : [];
 
