@@ -50,6 +50,45 @@ export const ourFileRouter = {
         console.error(e);
       }
     }),
+
+  projectImangeUploader: f({ image: { maxFileSize: "4MB" } })
+    .middleware(async ({ req }) => {
+      // This code runs on your server before upload
+      const { userId } = auth();
+
+      if (!userId) {
+        throw new Error("You must be logged in to upload files");
+      }
+
+      return { userId: userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // Add the file to the database
+      const { userId } = metadata;
+
+      try {
+        // Get the original user record so that we can delete the old profile image if it exists
+        const oldProjectData = await prisma.project.findUnique({
+          where: { id: userId },
+        });
+
+        // Update the user record with the new profile image
+        await prisma.project.update({
+          where: { id: userId },
+          data: {
+            profilePictureUrl: file.url,
+            profilePictureKey: file.key,
+          },
+        });
+
+        // Delete the old profile from uploadthing if it exists
+        if (oldProjectData.profilePictureKey) {
+          await utapi.deleteFiles(oldProjectData.profilePictureKey);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
