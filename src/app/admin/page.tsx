@@ -2,8 +2,7 @@
 "use client";
 
 import React from "react";
-import ProjectManager from "./../components/ProjectManager";
-
+import ProjectManager from "./ProjectManager";
 
 export default function Page({ params }: { params: { title: string } }) {
   // Query the project based on the title
