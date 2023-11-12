@@ -3,7 +3,6 @@ import {
   Accordion,
   AccordionItem,
   Button,
-  Card,
   Listbox,
   ListboxItem,
   Popover,
@@ -26,9 +25,10 @@ const ProjectManager = () => {
     queryKey: ["allUsers"],
     queryFn: async () => {
       const response = await axios.get("/api/user");
-      return response.data as User[];
+      return response.data;
     },
   });
+
   const {
     data: projects,
     isLoading: projectsLoading,
@@ -36,57 +36,9 @@ const ProjectManager = () => {
   } = useQuery({
     queryKey: ["allProjects"],
     queryFn: async () => {
-      const response = await axios.get("/api/projects");
-      return response.data as Project[];
+      const response = await axios.get("/api/projects?members=true&leads=true");
+      return response.data;
     },
-  });
-
-  const [projectMembers, setProjectMembers] = useState<string[][]>([]);
-
-  const prisma = new PrismaClient();
-
-  useEffect(() => {
-    const fetchProjectMembers = async (projectId: string) => {
-      try {
-        const project = await prisma.project.findUnique({
-          where: { id: projectId },
-          include: { members: true, leads: true },
-        });
-
-        if (project) {
-          const memberName: string[] = project.members.map(
-            (member) => member.firstName + " " + member.lastName,
-          );
-          const leadName: string[] = project.leads.map(
-            (lead) => lead.firstName + " " + lead.lastName,
-          );
-
-          setProjectMembers((prev) => [...prev, leadName.concat(memberName)]);
-        } else {
-          console.log("Project not found.");
-        }
-      } catch (error) {
-        console.error("Error fetching project members:", error);
-      }
-    };
-
-    const fetchAllProjectMembers = async () => {
-      if (projects) {
-        // Reset projectMembers before fetching new data
-        setProjectMembers([]);
-        // Use Promise.all to await multiple promises concurrently
-        await Promise.all(
-          projects.map((project) => fetchProjectMembers(project.id)),
-        );
-      }
-    };
-
-    fetchAllProjectMembers();
-
-    //return () => {
-    // Cleanup function to disconnect Prisma client
-    //prisma.$disconnect();
-    //};
   });
 
   //need to be added to the database as a property for projects
@@ -113,7 +65,9 @@ const ProjectManager = () => {
               <div className="mx-3"></div> {/* Horizontal spacing */}
               <div>
                 <MemberChips
-                  membersofProject={projectMembers[index] || []}
+                  membersofProject={project.members.map((member: any) => {
+                    return member.firstName + " " + member.lastName;
+                  })}
                   membertoRemove=""
                 />
                 <AddMemberDropdown allMembers={users ? users : []} />
@@ -129,74 +83,3 @@ const ProjectManager = () => {
 };
 
 export default ProjectManager;
-
-// import React, { useState } from "react";
-// import {
-//   Accordion,
-//   AccordionItem,
-//   Avatar,
-//   Button,
-//   Spacer,
-// } from "@nextui-org/react";
-
-// const ProjectManager: React.FC = () => {
-//   const isInternal = true;
-//   const isClient = true;
-
-//   const projectMetadata = (
-//     <div>
-//       {isInternal && <span className="badge badge-primary">Internal</span>}
-//       {isClient && <span className="badge badge-secondary">Client</span>}
-//     </div>
-//   );
-
-//   const memberCards = (
-//     <div className="grid grid-cols-2 gap-2">
-//       <div>
-//         <Avatar size="sm" src="/avatar1.png">
-//           J
-//         </Avatar>
-//         Project Lead: John Doe
-//         <Button onClick={() => handleRemoveMember("John Doe")}>Remove</Button>
-//       </div>
-//       <div>
-//         <Avatar size="sm" src="/avatar2.png">
-//           J
-//         </Avatar>
-//         Project Lead: Jane Smith
-//         <Button onClick={() => handleRemoveMember("Jane Smith")}>Remove</Button>
-//       </div>
-//       {/* Other member cards go here */}
-//       <div>
-//         <Button onClick={() => handleAddMember()}>
-//           + Add Member
-//         </Button>
-//       </div>
-//     </div>
-//   );
-
-//   const handleRemoveMember = (memberName: string) => {
-//     // Handle removing a member from the project
-//   };
-
-//   const handleAddMember = () => {
-//     // Handle adding a member to the project
-//   };
-
-//   return (
-//     <Accordion selectionMode="multiple" variant="shadow">
-//       <AccordionItem key="1" aria-label="Project Details" title="Project Name">
-//         {projectMetadata}
-//       </AccordionItem>
-//       <AccordionItem
-//         key="2"
-//         aria-label="Project Members"
-//         title="Project Members"
-//       >
-//         {memberCards}
-//       </AccordionItem>
-//     </Accordion>
-//   );
-// };
-
-// export default ProjectManager;

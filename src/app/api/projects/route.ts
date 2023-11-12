@@ -48,8 +48,17 @@ export async function POST(
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<Project[]>> {
+  const searchParams = request.nextUrl.searchParams;
+  const includeMembers = searchParams.get("members");
+  const includeLeads = searchParams.get("leads");
+
   // Get all projects
-  const projects: Project[] = await prisma.project.findMany();
+  const projects: Project[] = await prisma.project.findMany({
+    include: {
+      members: includeMembers ? true : false,
+      leads: includeLeads ? true : false,
+    },
+  });
 
   // If the projects exist, return the projects with a 200 status code
   return NextResponse.json(projects, { status: 200 });
