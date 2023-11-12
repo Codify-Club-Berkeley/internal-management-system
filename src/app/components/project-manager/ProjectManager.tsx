@@ -41,37 +41,53 @@ const ProjectManager = () => {
     },
   });
 
-  const [projectMembers, setProjectMembers] = useState<string[]>([]);
+  const [projectMembers, setProjectMembers] = useState<string[][]>([]);
 
   const prisma = new PrismaClient();
-  const getProjectMembers = async (projectId: string): Promise<string[]> => {
-    try {
-      const project = await prisma.project.findUnique({
-        where: { id: projectId },
-        include: { members: true, leads: true },
-      });
 
-      // Access project members through project.members
-      if (project) {
-        const memberName: string[] = project.members.map((member, index) => {
-          return member.firstName + " " + member.lastName;
+  useEffect(() => {
+    const fetchProjectMembers = async (projectId: string) => {
+      try {
+        const project = await prisma.project.findUnique({
+          where: { id: projectId },
+          include: { members: true, leads: true },
         });
-        const leadName: string[] = project.leads.map((lead, index) => {
-          return lead.firstName + " " + lead.lastName;
-        });
-        return leadName.concat(memberName);
-      } else {
-        console.log("Project not found.");
-        return [];
+
+        if (project) {
+          const memberName: string[] = project.members.map(
+            (member) => member.firstName + " " + member.lastName,
+          );
+          const leadName: string[] = project.leads.map(
+            (lead) => lead.firstName + " " + lead.lastName,
+          );
+
+          setProjectMembers((prev) => [...prev, leadName.concat(memberName)]);
+        } else {
+          console.log("Project not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching project members:", error);
       }
-    } catch (error) {
-      console.error("Error fetching project members:", error);
-      throw error;
-    } finally {
-      // Close the Prisma Client connection
-      await prisma.$disconnect();
-    }
-  };
+    };
+
+    const fetchAllProjectMembers = async () => {
+      if (projects) {
+        // Reset projectMembers before fetching new data
+        setProjectMembers([]);
+        // Use Promise.all to await multiple promises concurrently
+        await Promise.all(
+          projects.map((project) => fetchProjectMembers(project.id)),
+        );
+      }
+    };
+
+    fetchAllProjectMembers();
+
+    //return () => {
+    // Cleanup function to disconnect Prisma client
+    //prisma.$disconnect();
+    //};
+  });
 
   //need to be added to the database as a property for projects
   const tags = ["client", "unpaid"];
@@ -97,10 +113,7 @@ const ProjectManager = () => {
               <div className="mx-3"></div> {/* Horizontal spacing */}
               <div>
                 <MemberChips
-                  membersofProject={useQuery({
-                    queryKey: ["projectMembers", project.id],
-                    queryFn: () => getProjectMembers(project.id),
-                  })}
+                  membersofProject={projectMembers[index] || []}
                   membertoRemove=""
                 />
                 <AddMemberDropdown allMembers={users ? users : []} />
