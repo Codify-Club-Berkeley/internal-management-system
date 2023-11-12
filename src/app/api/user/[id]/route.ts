@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, User } from "@prisma/client";
-import { updateUserValidator } from "@/lib/validators";
+import { updateUserValidator } from "@/utils/validators";
 const prisma = new PrismaClient();
 
 /**

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
@@ -22,13 +22,14 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import { useProfileStore } from "./pageState";
 import { useForm, Path, set } from "react-hook-form";
 import { z } from "zod";
-import { updateUserValidator } from "@/lib/validators";
+import { updateUserValidator } from "@/utils/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type DataRow = {
   displayName: string;
   prismaName: Path<UpdateUserSchema>; // This needs the types from User
   editable: boolean;
+  startPrefix?: string; // Some inputs need a prefix, like a linkedin url
   // If the data is a select input, it will have these value, otherwise it will be a text input
   selectKeys?: string[];
   multiple?: boolean; // If the select input allows multiple values, this will be true
@@ -59,12 +60,12 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
         setEditing(false);
       },
       // Failure
-      () => {
+      (error) => {
+        console.log("Error: ", error);
         console.log("Invalid Input");
       },
     )();
     setSubmitting(false);
-    console.log("Submitting: ", submitting);
   }, [handleSubmit, setEditing, setSubmitting, submitting]);
 
   const queryClient = useQueryClient();
@@ -81,6 +82,26 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
       console.log("Success");
     },
   });
+
+  // This function is used to convert null values to empty strings for display
+  function toString(value: any): string {
+    if (value === null) {
+      return "";
+    }
+    return String(value);
+  }
+
+  // Parses a comma separated string into an array of strings with no whitespace for use in key selection
+  function parseCommaSeparatedString(input: string | null): string[] {
+    // If the input is null, return an empty array
+    if (input === null) {
+      return [];
+    }
+
+    // Use the split method to split the input string by commas
+    const values = input.split(",").map((value) => value.trim());
+    return values;
+  }
 
   return (
     <div className="bg-content1">
@@ -112,7 +133,9 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
                       <Select
                         label={row.prismaName}
                         {...register(row.prismaName)}
-                        defaultSelectedKeys={[userData[row.prismaName]]}
+                        defaultSelectedKeys={parseCommaSeparatedString(
+                          userData[row.prismaName],
+                        )}
                         selectionMode={row.multiple ? "multiple" : "single"}
                       >
                         {row.selectKeys.map((value: string) => (
@@ -127,12 +150,21 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
                         errorMessage={errors[row.prismaName]?.message}
                         {...register(row.prismaName)}
                         defaultValue={String(userData[row.prismaName])}
+                        startContent={
+                          row.startPrefix !== undefined ? (
+                            <div className="pointer-events-none flex items-center">
+                              <span className="text-default-400 text-small">
+                                {row.startPrefix}
+                              </span>
+                            </div>
+                          ) : null
+                        }
                       />
                     )
                   ) : (
                     <div className="flex flex-row place-content-between">
                       <h1 className="text-xl">
-                        {String(userData[row.prismaName])}
+                        {toString(userData[row.prismaName])}
                       </h1>{" "}
                       <Button
                         isIconOnly
@@ -155,6 +187,7 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
 }
 
 // This array controls the order in which the data fields are displayed
+// It also dictates what options are available for each field
 const displayData: DataRow[] = [
   {
     displayName: "First Name",
@@ -180,6 +213,7 @@ const displayData: DataRow[] = [
     displayName: "GitHub Username",
     prismaName: "githubUsername",
     editable: true,
+    startPrefix: "github.com/",
   },
   {
     displayName: "Graduation Year",
@@ -202,6 +236,7 @@ const displayData: DataRow[] = [
     displayName: "LinkedIn",
     prismaName: "linkedInUrl",
     editable: true,
+    startPrefix: "linkedin.com/in/",
   },
   {
     displayName: "Major(s)",
@@ -218,7 +253,14 @@ const displayData: DataRow[] = [
     displayName: "Dietary Restrictions",
     prismaName: "dietaryRestrictions",
     editable: true,
-    selectKeys: ["None", "Vegetarian", "Vegan", "Gluten Free"],
+    selectKeys: [
+      "None",
+      "Vegetarian",
+      "Vegan",
+      "Gluten Free",
+      "Lactose Intolerant",
+      "Nut Allergy",
+    ],
     multiple: true,
   },
 ];

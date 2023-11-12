@@ -22,8 +22,14 @@ export const createProjectValidator = z.object({
 export const updateUserValidator = z.object({
   email: z.string().email().optional(),
   // Regex for names that allows for hyphens, periods, and apostrophes
-  firstName: z.string().regex(/^[A-Za-z \-\.\']+$/),
-  lastName: z.string().regex(/^[A-Za-z \-\.\']+$/),
+  firstName: z
+    .string()
+    .regex(/^[A-Za-z \-\.\']+$/)
+    .optional(),
+  lastName: z
+    .string()
+    .regex(/^[A-Za-z \-\.\']+$/)
+    .optional(),
   bio: z.string().optional(),
   linkedInUrl: z.string().optional(),
   githubUsername: z.string().optional(),
@@ -31,7 +37,7 @@ export const updateUserValidator = z.object({
   pronouns: z.string().optional(),
   graduationYear: z.string().optional(),
   major: z.string().optional(),
-  dietaryRestrictions: z.string().optional(),
+  dietaryRestrictions: z.any().optional(), // The multi select sometimes returns an array and sometimes returns a string, this is a temporary fix
 });
 
 // POST /api/meeting
