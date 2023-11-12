@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -15,7 +15,7 @@ import MemberChips from "./MemberChips";
 import AddMemberDropdown from "./AddMemberDropdown";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { User, Project } from "@prisma/client";
+import { User, Project, PrismaClient } from "@prisma/client";
 
 const ProjectManager = () => {
   const {
@@ -41,12 +41,44 @@ const ProjectManager = () => {
     },
   });
 
+  const [projectMembers, setProjectMembers] = useState<string[]>([]);
+
+  const prisma = new PrismaClient();
+  const getProjectMembers = async (projectId: string): Promise<string[]> => {
+    try {
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        include: { members: true, leads: true },
+      });
+
+      // Access project members through project.members
+      if (project) {
+        const memberName: string[] = project.members.map((member, index) => {
+          return member.firstName + " " + member.lastName;
+        });
+        const leadName: string[] = project.leads.map((lead, index) => {
+          return lead.firstName + " " + lead.lastName;
+        });
+        return leadName.concat(memberName);
+      } else {
+        console.log("Project not found.");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching project members:", error);
+      throw error;
+    } finally {
+      // Close the Prisma Client connection
+      await prisma.$disconnect();
+    }
+  };
+
   //need to be added to the database as a property for projects
   const tags = ["client", "unpaid"];
 
   return (
     <Accordion selectionMode="multiple" variant="shadow">
-      {!projectsLoading &&
+      {projects ? (
         projects.map((project, index) => (
           <AccordionItem
             key={index}
@@ -57,26 +89,28 @@ const ProjectManager = () => {
               <div>
                 <ProjectFlagsCard tags={tags} />
                 <ul>
-                  <li>Project created at {project.createdAt}</li>
-                  <li>Project updated on {project.updatedAt}</li>
+                  <li>Project created at {project.createdAt.toString()}</li>
+                  <li>Project updated at {project.updatedAt.toString()}</li>
                   <li>Other information</li>
                 </ul>
               </div>
               <div className="mx-3"></div> {/* Horizontal spacing */}
               <div>
                 <MemberChips
-                  membersofProject={project.leads}
+                  membersofProject={useQuery({
+                    queryKey: ["projectMembers", project.id],
+                    queryFn: () => getProjectMembers(project.id),
+                  })}
                   membertoRemove=""
                 />
-                <MemberChips
-                  membersofProject={project.members}
-                  membertoRemove=""
-                />
-                <AddMemberDropdown allMembers={users} />
+                <AddMemberDropdown allMembers={users ? users : []} />
               </div>
             </div>
           </AccordionItem>
-        ))}
+        ))
+      ) : (
+        <AccordionItem />
+      )}
     </Accordion>
   );
 };

@@ -21,7 +21,7 @@ const AddMemberDropdown: React.FC<{
           //should add an onPress event to this DropdownItem
           //when pressed, should add the selected member to the project team via backend
           <DropdownItem key={index}>
-            {member.firstName}+{member.lastName}
+            {member.firstName} {member.lastName}
           </DropdownItem>
         ))}
       </DropdownMenu>
