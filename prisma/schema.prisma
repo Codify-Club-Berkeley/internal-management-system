@@ -36,6 +36,7 @@ model User {
     meetingsPresent     Meeting[] @relation("Present")
     meetingsAbsent      Meeting[] @relation("Absent")
     meetingsExcused     Meeting[] @relation("Excused")
+    // projectHistory      Project[] @relation("Project Member") // The projects a member has been part of
 }
 
 model Project {
@@ -49,6 +50,11 @@ model Project {
     projectPictureUrl String?
     projectPictureKey String?
     meetings          Meeting[]
+    clientName        String?
+    clientEmail       String?
+    clientPhoneNum    String?
+    techStack         String? //Eventually we may want to store the tech stack as a list of strings
+    semester          String? // The year the project was active, formatted as Fall YYYY or Spring YYYY
 }
 
 model Meeting {
