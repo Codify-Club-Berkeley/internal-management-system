@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -7,26 +7,42 @@ import {
   Button,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
+import SearchBarInput from "./SearchBarInput";
+import NameDropdown from "./NameDropdown";
 
-const AddMemberDropdown: React.FC<{
-  allMembers: User[];
+const initialState = {
+  name: "",
+};
+
+const AddMember: React.FC<{
+  allMembers: string[];
 }> = ({ allMembers }) => {
+  const [name, setName] = useState(initialState);
+
+  function onNameSearch(event: ChangeEvent<HTMLInputElement>) {
+    setName({ ...name, [event.target.name]: event.target.value });
+  }
+
+  const filteredMembers = allMembers.filter((member) => {
+    "" || member.includes(name.name);
+  });
+
   return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button variant="bordered">+ Add Member</Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Dynamic Actions" items={allMembers}>
-        {allMembers.map((member, index) => (
-          //should add an onPress event to this DropdownItem
-          //when pressed, should add the selected member to the project team via backend
-          <DropdownItem key={index}>
-            {member.firstName} {member.lastName}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
+    <>
+      <div>
+        <SearchBarInput
+          type="text"
+          id="Name"
+          placeholder="Name..."
+          name="name"
+          onChange={onNameSearch}
+        />
+      </div>
+      <div>
+        <NameDropdown allMembers={filteredMembers} />
+      </div>
+    </>
   );
 };
 
-export default AddMemberDropdown;
+export default AddMember;

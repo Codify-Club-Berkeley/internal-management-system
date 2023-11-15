@@ -1,7 +1,7 @@
 import React from "react";
 import ProjectFlagsCard from "../components/project-manager/ProjectFlagsCard";
 import MemberChips from "../components/project-manager/MemberChips";
-import AddMemberDropdown from "../components/project-manager/AddMemberDropdown";
+import AddMember from "../components/project-manager/AddMember";
 
 type ProjectSectionProps = {
   project: any;
@@ -34,7 +34,11 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
               })}
               membertoRemove=""
             />
-            <AddMemberDropdown allMembers={users ? users : []} />
+            <AddMember
+              allMembers={users.map((user: any) => {
+                return user.firstName + " " + user.lastName;
+              })}
+            />
           </div>
         </div>
       ) : (
