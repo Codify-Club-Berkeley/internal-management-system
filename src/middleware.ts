@@ -8,20 +8,9 @@ export default authMiddleware({
   // "/" will be accessible to all users
   // TODO make routes private in production
   publicRoutes: [
-    "/api/meeting/9bc408d2-39bd-4d20-8eda-d1d2cdbda12a",
-    "/api/meeting/9bc408d2-39bd-4d20-8eda-d1d2cdbda12a/users",
-    "/api/meeting/17a6fb82-75df-4612-94f3-ad59e9402129",
-    "/api/meeting/",
-    "/api/meeting",
-    "/profile/validate",
-    "/dashboard",
-    "/api/user",
     "/api-doc",
     "/api/user/validate",
-    "/roster",
-    "/api/user/[id]",
     "/",
-    "/api/user/elaineshu",
     "/api/uploadthing", // For some reason, this route complains when not public, so we just check authentication in the route
   ],
 });

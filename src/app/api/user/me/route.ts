@@ -26,6 +26,9 @@ export async function GET(
     where: {
       id: userId,
     },
+    include: {
+      projects: true,
+    }
   });
 
   // If the user does not exist, return a 400 error

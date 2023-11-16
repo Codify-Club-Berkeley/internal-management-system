@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Project } from "@prisma/client";
-import { updateProjectValidator } from "@/lib/validators";
+import { updateProjectValidator } from "@/utils/validators";
 import { z } from "zod";
 const prisma = new PrismaClient();
 
@@ -8,33 +8,54 @@ const prisma = new PrismaClient();
  * @swagger
  * /api/projects/{id}:
  *  get:
- *   description: Get a project by id
+ *   description: Get a project by id, can also use the title if we pass title=true in the query params
  *
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Project | null>> {
-  // Get the current Project
-  // Include the members of the project
-  const project: Project | null = await prisma.project.findUnique({
-    where: {
-      id: params.id,
-    },
-    include: {
-      members: true,
-    },
-  });
+  const searchParams = request.nextUrl.searchParams;
+  const title = searchParams.get("title");
 
-  // If the project does not exist, return a 400 error
-  if (!project) {
-    return NextResponse.json(project, {
-      status: 400,
-    });
+  try {
+    // If the title query param is set, search by title
+    let project: Project | null;
+    if (title) {
+      project = await prisma.project.findUnique({
+        where: {
+          title: title,
+        },
+        include: {
+          members: true,
+        },
+      });
+    } else {
+      project = await prisma.project.findUnique({
+        where: {
+          id: params.id,
+        },
+        include: {
+          members: true,
+        },
+      });
+    }
+
+    // Get the current Project
+    // Include the members of the project
+
+    // If the project does not exist, return a 404 error
+    if (!project) {
+      return NextResponse.json(project, {
+        status: 404,
+      });
+    }
+
+    // If the project exists, return the project with a 200 status code
+    return NextResponse.json(project, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(error, { status: 400 });
   }
-
-  // If the project exists, return the project with a 200 status code
-  return NextResponse.json(project, { status: 200 });
 }
 
 /**
@@ -69,7 +90,7 @@ export async function PATCH(
       ? body.removeUsers.map((userId: string) => ({ id: userId }))
       : [];
 
-      const addLeads = body.addLeads
+    const addLeads = body.addLeads
       ? body.addLeads.map((userId: string) => ({ id: userId }))
       : [];
 
