@@ -18,7 +18,6 @@ const AddMember: React.FC<{
   allMembers: string[];
 }> = ({ allMembers }) => {
   const [name, setName] = useState(initialState);
-
   function onNameSearch(event: ChangeEvent<HTMLInputElement>) {
     setName({ ...name, [event.target.name]: event.target.value });
   }
@@ -26,6 +25,10 @@ const AddMember: React.FC<{
   const filteredMembers = allMembers.filter((member) => {
     "" || member.includes(name.name);
   });
+
+  const objectAllMembers = filteredMembers.map((member) => ({
+    fullname: member,
+  }));
 
   return (
     <>
@@ -39,7 +42,18 @@ const AddMember: React.FC<{
         />
       </div>
       <div>
-        <NameDropdown allMembers={filteredMembers} />
+        <Dropdown>
+          <DropdownTrigger>
+            <Button variant="bordered">+ Add Member</Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Dynamic Actions" items={objectAllMembers}>
+            {objectAllMembers.map((member, index) => (
+              //should add an onPress event to this DropdownItem
+              //when pressed, should add the selected member to the project team via backend
+              <DropdownItem key={index}>{member.fullname}</DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
       </div>
     </>
   );
