@@ -1,8 +1,7 @@
-//Project page
+// Project page
 "use client";
 
 import React from "react";
-// import ProjectCard from "./components/ProjectCard";
 import { projectNameStringFormatter } from "../../../utils/helpers";
 import AttendanceTracker from "../../components/AttendanceTracker";
 import { UploadButton } from "../../../utils/uploadthing";
@@ -25,10 +24,20 @@ export default function Page({ params }: { params: { title: string } }) {
   return (
     <div className="container">
       <div className="flex flex-row">
-        <div className="flex flex-col">
+        <div className="flex-grow">
+          <h1 className="text-2xl font-bold">
+            {projectNameStringFormatter(params.title)}
+          </h1>
+
+          <div className="p-4">
+            <AttendanceTracker />
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center">
           <img
             src={projectData?.projectPictureUrl}
-            className="h-40 w-40 rounded-full"
+            className="m-3 h-40 w-40 border bg-gray-200 object-contain p-2 shadow-md "
             alt="Project Image"
           />
           <UploadButton
@@ -48,12 +57,6 @@ export default function Page({ params }: { params: { title: string } }) {
             }}
           />
         </div>
-        <h1 className="text-2xl font-bold">
-          {projectNameStringFormatter(params.title)}
-        </h1>
-      </div>
-      <div className="p-4">
-        <AttendanceTracker />
       </div>
     </div>
   );
