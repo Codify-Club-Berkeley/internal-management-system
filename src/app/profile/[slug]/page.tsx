@@ -1,6 +1,5 @@
-"use client";
-
 // The page in which you view a user's profile.
+"use client";
 import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { toastDefaultConfig } from "../../../utils/constants";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import MeetingInfoCard from "@/app/components/MeetingInfoCard";
 
 export default function Page({ params }: { params: { title: string } }) {
   const { data: projectData, isLoading } = useQuery({
@@ -31,6 +32,7 @@ export default function Page({ params }: { params: { title: string } }) {
 
           <div className="p-4">
             <AttendanceTracker />
+            <MeetingInfoCard/>
           </div>
         </div>
 
