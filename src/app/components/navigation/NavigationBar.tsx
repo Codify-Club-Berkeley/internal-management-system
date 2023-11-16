@@ -35,11 +35,6 @@ export default function NavigationBar() {
   if (isLoaded && !isSignedIn) return null;
   const size = currentUser?.projects.length || 0;
 
-  const hasTwoProjects = currentUser?.projects && currentUser.projects.length >= 2;
-  const projectPath1 = hasTwoProjects ? `/project/${currentUser.projects[0].title}` : '/project';
-  const projectPath2 = hasTwoProjects ? `/project/${currentUser.projects[1].title}` : '/project';
-
-
   return (
     <Navbar className="bg-primary">
       <NavbarBrand>
@@ -54,20 +49,14 @@ export default function NavigationBar() {
       </NavbarBrand>
       <NavbarContent justify="end">
       {/* Project Links */}
-      {hasTwoProjects && (
-          <>
-            <NavbarItem>
-              <Link color="foreground" href={projectPath1}>
-                {projectNameStringFormatter(currentUser.projects[0].title)}
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link color="foreground" href={projectPath2}>
-                {projectNameStringFormatter(currentUser.projects[1].title)}
-              </Link>
-            </NavbarItem>
-          </>
-        )}
+          {currentUser?.projects.map((project) => (
+      <NavbarItem key={project.id}> {/* Assuming each project has a unique 'id' property */}
+        <Link color="foreground" href= {`/project/${project.title}`}>
+          {projectNameStringFormatter(project.title)}
+        </Link>
+      </NavbarItem>
+    ))}
+
         <NavbarItem>
           <Link color="foreground" href="/admin">
             Admin
