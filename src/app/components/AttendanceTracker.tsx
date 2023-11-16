@@ -75,14 +75,15 @@ const AttendanceTracker: React.FC = () => {
   };
 
   const renderDatePicker = (dateIndex: number) => (
-    // Set z-index to 999 to ensure the datepicker is on top of the dropdown
-    // <div style={{ position: "relative", zIndex: 999 }}>
-      <DatePicker
-        selected={dates[dateIndex]}
-        onChange={(date: Date | null) => handleDateChange(date, dateIndex)}
-      />
-    // </div>
+    <DatePicker
+      selected={dates[dateIndex]}
+      onChange={(date: Date | null) => handleDateChange(date, dateIndex)}
+      withPortal  // Add this prop to render the date picker in a portal
+    />
   );
+  
+  
+  
 
   const handleDateChange = (date: Date | null, dateIndex: number) => {
     if (date !== null) {
