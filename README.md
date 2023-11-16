@@ -27,7 +27,8 @@ and, run the development server:
 ```bash
 pnpm dev
 ```
-To manually edit the information in the database, run 
+
+To manually edit the information in the database, run
 
 ```bash
 pnpx prisma studio
@@ -84,3 +85,9 @@ pnpx prisma migrate dev --name <migration-name>
 And it will add a new migration to the migrations folder. Committing changes to the schema will not automatically run migrations, so make sure to run this command before pushing to GitHub.
 
 Also, keep in mind that regardless of what branch you are on, running a migration will update the same single database we are using, possibly creating breaking changes in other branches. If you are deleting any data, or making major changes to the schema, make sure to communicate with the rest of the team to make sure you don't break anything.
+
+After running a migration, you will need to regenerate all of the prisma typescript types so that they represent the new schema. Do this with
+
+```bash
+pnpx prisma generate
+```
