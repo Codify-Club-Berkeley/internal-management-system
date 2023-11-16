@@ -18,20 +18,27 @@ import { useUser } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import CodifyLogo from "../../../../assets/Codify Berkeley.png";
 import { User } from "@prisma/client";
-
+import { projectNameStringFormatter } from "../../../utils/helpers"
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
 
-  const { data } = useQuery({
+ 
+  const { data: currentUser, isLoading: userLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: async () => {
       const response = await axios.get("/api/user/me");
-      return response.data as User;
+      return response.data;
     },
   });
 
   // Only load the Nav bar if someone is signed in
   if (isLoaded && !isSignedIn) return null;
+  const size = currentUser?.projects.length || 0;
+
+  const hasTwoProjects = currentUser?.projects && currentUser.projects.length >= 2;
+  const projectPath1 = hasTwoProjects ? `/project/${currentUser.projects[0].title}` : '/project';
+  const projectPath2 = hasTwoProjects ? `/project/${currentUser.projects[1].title}` : '/project';
+
 
   return (
     <Navbar className="bg-primary">
@@ -46,13 +53,28 @@ export default function NavigationBar() {
         </Link>
       </NavbarBrand>
       <NavbarContent justify="end">
+      {/* Project Links */}
+      {hasTwoProjects && (
+          <>
+            <NavbarItem>
+              <Link color="foreground" href={projectPath1}>
+                {projectNameStringFormatter(currentUser.projects[0].title)}
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link color="foreground" href={projectPath2}>
+                {projectNameStringFormatter(currentUser.projects[1].title)}
+              </Link>
+            </NavbarItem>
+          </>
+        )}
         <NavbarItem>
           <Link color="foreground" href="/admin">
             Admin
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href={"/profile/" + data?.slug}>
+          <Link color="foreground" href={"/profile/" + currentUser?.slug}>
             Profile
           </Link>
         </NavbarItem>
