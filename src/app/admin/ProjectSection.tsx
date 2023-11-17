@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import ProjectFlagsCard from "../components/project-manager/ProjectFlagsCard";
 import MemberChips from "../components/project-manager/MemberChips";
-import AddMember from "../components/project-manager/AddMember";
+import { SearchBar } from "../components/project-manager/searchbar/SearchBar";
+import { SearchResultsList } from "../components/project-manager/searchbar/SearchResultList";
+import { SaveAdd } from "../components/project-manager/searchbar/SaveAdd";
 
 type ProjectSectionProps = {
   project: any;
@@ -12,6 +14,10 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
   project,
   users,
 }) => {
+  const [searchResults, setSearchResults] = useState([""]);
+  const [searchResultsChecked, setSearchResultsChecked] = useState([""]);
+  const [projectMembers, setProjectMembers] = useState(project);
+
   return (
     <>
       {project && users ? (
@@ -29,15 +35,27 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
           <div className="mx-3"></div>
           <div>
             <MemberChips
-              membersofProject={project.members.map((member: any) => {
+              membersofProject={projectMembers.members.map((member: any) => {
                 return member.firstName + " " + member.lastName;
               })}
               membertoRemove=""
+              setProjectMembers={setProjectMembers}
             />
-            <AddMember
-              allMembers={users.map((user: any) => {
+            <SearchBar
+              items={users.map((user: any) => {
                 return user.firstName + " " + user.lastName;
               })}
+              setSearchResults={setSearchResults}
+            />
+            <SearchResultsList
+              results={searchResults}
+              searchResultsChecked={searchResultsChecked}
+              setSearchResultsChecked={setSearchResultsChecked}
+            />
+            <SaveAdd
+              searchResultsChecked={searchResultsChecked}
+              projectMembers={projectMembers}
+              setSavedValues={setProjectMembers}
             />
           </div>
         </div>

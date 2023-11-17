@@ -5,11 +5,13 @@ import { User } from "@prisma/client";
 const MemberChips: React.FC<{
   membersofProject: string[];
   membertoRemove: string;
-}> = ({ membersofProject, membertoRemove }) => {
+  setProjectMembers: (results: Array<string>) => void;
+}> = ({ membersofProject, membertoRemove, setProjectMembers }) => {
   const [members, setMembers] = React.useState(membersofProject);
 
   const handleClose = (membertoRemove: string) => {
     setMembers(members.filter((member) => member !== membertoRemove));
+    //setProjectMembers(members);
   };
 
   return (
