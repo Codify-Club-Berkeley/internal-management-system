@@ -23,7 +23,11 @@ export const SearchResult = ({
   }
 
   return (
-    <Checkbox color="warning" onChange={(e) => setChecked(e.target.checked)}>
+    <Checkbox
+      className="m-1"
+      color="warning"
+      onChange={(e) => setChecked(e.target.checked)}
+    >
       {result}
     </Checkbox>
   );

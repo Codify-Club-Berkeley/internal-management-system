@@ -12,21 +12,19 @@ export const SearchResultsList = ({
   setSearchResultsChecked,
 }: SearchResultsListProps) => {
   return (
-    <>
-      <div>
-        {results.map((result, index) => {
-          if (result != "") {
-            return (
-              <SearchResult
-                result={result}
-                key={index}
-                searchResultsChecked={searchResultsChecked}
-                setSearchResultsChecked={setSearchResultsChecked}
-              />
-            );
-          }
-        })}
-      </div>
-    </>
+    <div>
+      {results.map((result, index) => {
+        if (result != "") {
+          return (
+            <SearchResult
+              result={result}
+              key={index}
+              searchResultsChecked={searchResultsChecked}
+              setSearchResultsChecked={setSearchResultsChecked}
+            />
+          );
+        }
+      })}
+    </div>
   );
 };

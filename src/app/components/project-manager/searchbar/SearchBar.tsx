@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Input } from "@nextui-org/react";
 
 type SearchBarProps = {
   items: string[];
@@ -10,12 +11,7 @@ export const SearchBar = ({ items, setSearchResults }: SearchBarProps) => {
 
   const filterData = (value: string) => {
     const filteredResults = items.filter((item: string) => {
-      return (
-        value &&
-        item &&
-        item &&
-        item.toLowerCase().includes(value.toLowerCase())
-      );
+      return value && item && item.toLowerCase().includes(value.toLowerCase());
     });
     setSearchResults(filteredResults);
   };
@@ -27,7 +23,8 @@ export const SearchBar = ({ items, setSearchResults }: SearchBarProps) => {
 
   return (
     <div>
-      <input
+      <Input
+        className="w-48"
         placeholder="Add Member..."
         value={input}
         onChange={(e) => handleChange(e.target.value)}

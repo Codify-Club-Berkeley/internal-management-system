@@ -23,13 +23,14 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
       {project && users ? (
         <div className="flex">
           <div>
-            <ul>
-              <li>
+            <ul className="space-y-2">
+              <li className="flex">
                 <ProjectFlagsCard tags={["static", "temp", "tags"]} />
               </li>
               <li>Project created at {project.createdAt.toString()}</li>
               <li>Project updated at {project.updatedAt.toString()}</li>
               <li>Other information</li>
+              <br />
             </ul>
           </div>
           <div className="mx-3"></div>
