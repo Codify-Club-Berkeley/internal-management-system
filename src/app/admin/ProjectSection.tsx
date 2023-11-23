@@ -23,6 +23,7 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
       {project && users ? (
         <div className="flex">
           <div>
+
             <ul className="space-y-2">
               <li className="flex">
                 <ProjectFlagsCard tags={["static", "temp", "tags"]} />

@@ -8,7 +8,6 @@ const MemberChips: React.FC<{
   setProjectMembers: (results: Array<string>) => void;
 }> = ({ membersofProject, membertoRemove, setProjectMembers }) => {
   const [members, setMembers] = React.useState(membersofProject);
-
   const handleClose = (membertoRemove: string) => {
     setMembers(members.filter((member) => member !== membertoRemove));
     //setProjectMembers(members);

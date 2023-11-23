@@ -20,7 +20,8 @@ model User {
     roles               Role[]    @default([USER])
     createdAt           DateTime  @default(now()) // For debugging purposes
     updatedAt           DateTime  @updatedAt
-    projects            Project[] @relation("Project Member") // The projects a member is part of
+    pastProjects        Project[] @relation("Past Project Member") // The projects a member was part of in the past
+    projects            Project[] @relation("Project Member") // The projects a member is part of currently
     leading             Project[] @relation("Project Lead") // The projects a member is leading
     bio                 String?
     linkedInUrl         String?
@@ -32,7 +33,7 @@ model User {
     profilePictureKey   String?
     major               String?
     pronouns            String?
-    dietaryRestrictions String? // A comma seperated list of dietary restrictions the possible values are stored on the frontend
+    dietaryRestrictions String? // A comma separated list of dietary restrictions the possible values are stored on the frontend
     meetingsPresent     Meeting[] @relation("Present")
     meetingsAbsent      Meeting[] @relation("Absent")
     meetingsExcused     Meeting[] @relation("Excused")
@@ -41,14 +42,21 @@ model User {
 model Project {
     id                String    @id @default(uuid())
     title             String    @unique
+    active            Boolean   @default(true)
     description       String?
-    members           User[]    @relation("Project Member")
+    pastMembers       User[]    @relation("Past Project Member") // The members from a previous semester
+    members           User[]    @relation("Project Member") // The members from the current semester
     leads             User[]    @relation("Project Lead")
     createdAt         DateTime  @default(now()) // For debugging purposes
     updatedAt         DateTime  @updatedAt
     projectPictureUrl String?
     projectPictureKey String?
     meetings          Meeting[]
+    clientName        String?
+    clientEmail       String?
+    clientPhoneNum    String?
+    techStack         String[] // Eventually we may want to store the tech stack as a list of strings
+    semesters         String[] // The semesters a project was active, formatted as Fall YYYY or Spring YYYY
 }
 
 model Meeting {
@@ -58,6 +66,7 @@ model Meeting {
     end       DateTime
     project   Project? @relation(fields: [projectId], references: [id])
     projectId String?
+    location  String?
     present   User[]   @relation("Present")
     absent    User[]   @relation("Absent")
     excused   User[]   @relation("Excused")

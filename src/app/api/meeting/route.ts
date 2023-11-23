@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Meeting } from "@prisma/client";
 const prisma = new PrismaClient();
-import { createMeetingValidator } from "@/lib/validators";
+import { createMeetingValidator } from "@/utils/validators";
 
 /**
  * @swagger
