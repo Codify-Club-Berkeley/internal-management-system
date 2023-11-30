@@ -84,6 +84,7 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
           </Button>
         </TableColumn>
         <TableColumn>PHONE NUMBER</TableColumn>
+        <TableColumn>GRAD YEAR</TableColumn>
         <TableColumn>PROJECTS</TableColumn>
       </TableHeader>
       <TableBody emptyContent={<p>loading...</p>}>
@@ -101,21 +102,25 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
                     description={
                       <>
                         <Link href={"/profile/" + user.slug}>
-                          {" "}
                           <AccountBoxIcon fontSize="small" />
                         </Link>
-                        <Link
-                          href={"https://github.com/" + user.githubUsername}
-                          target="_blank"
-                        >
-                          <GitHubIcon fontSize="small" />
-                        </Link>
-                        <Link
-                          href={"https://linkedin.com/in/" + user.linkedInUrl}
-                          target="_blank"
-                        >
-                          <LinkedInIcon fontSize="small" />
-                        </Link>
+                        {user.githubUsername && (
+                          <Link
+                            href={"https://github.com/" + user.githubUsername}
+                            target="_blank"
+                          >
+                            <GitHubIcon fontSize="small" />
+                          </Link>
+                        )}
+
+                        {user.linkedInUrl && (
+                          <Link
+                            href={"https://linkedin.com/in/" + user.linkedInUrl}
+                            target="_blank"
+                          >
+                            <LinkedInIcon fontSize="small" />
+                          </Link>
+                        )}
                       </>
                     }
                     avatarProps={{
@@ -127,6 +132,7 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
                 <TableCell>{user.email}</TableCell>
 
                 <TableCell>{user.phoneNum}</TableCell>
+                <TableCell>{user.graduationYear}</TableCell>
                 <TableCell>
                   {user.projects.map((project: any) => (
                     <p key={project.id}>{project.title}</p>

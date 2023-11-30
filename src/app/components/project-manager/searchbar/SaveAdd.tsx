@@ -8,6 +8,8 @@ type SaveAddProps = {
   setSavedValues: (results: Array<string>) => void;
 };
 
+// this button doesn't currently work yet because the checked SearchResult components
+// are not being passed back up to be saved so this still needs to be fixed
 export const SaveAdd = ({
   searchResultsChecked,
   projectMembers,
@@ -31,7 +33,7 @@ export const SaveAdd = ({
 
   return (
     <button
-      className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded"
+      className="rounded bg-purple-500 px-3 py-2 font-bold text-white hover:bg-purple-700"
       onClick={onClick}
     >
       Add

@@ -6,6 +6,8 @@ type SearchResultsListProps = {
   setSearchResultsChecked: (results: Array<string>) => void;
 };
 
+// this is the list of search results that is filtered based on the input value
+// and each result is displayed as a SearchResult component
 export const SearchResultsList = ({
   results,
   searchResultsChecked,

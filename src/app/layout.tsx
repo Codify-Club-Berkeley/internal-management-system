@@ -7,7 +7,8 @@ import Providers from "./components/providers/Providers";
 import NavigationBar from "./components/navigation/NavigationBar";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ourFileRouter } from "./api/uploadthing/core";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -38,6 +39,7 @@ export default function RootLayout({
             />
             <NavigationBar />
             {children}
+            <ToastContainer />
           </Providers>
         </body>
       </html>
