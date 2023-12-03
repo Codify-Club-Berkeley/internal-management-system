@@ -19,12 +19,10 @@ import { UserButton } from "@clerk/nextjs";
 import CodifyLogo from "../../../../assets/Codify Berkeley.png";
 import { User } from "@prisma/client";
 import { projectNameStringFormatter } from "../../../utils/helpers";
+
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
-
-  {
-    /*This gets the current user's data in currentUser and thte isLoading in userLoading*/
-  }
+  
   const { data: currentUser, isLoading: userLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: async () => {
@@ -64,7 +62,6 @@ export default function NavigationBar() {
         ))}
 
         {/*The other reference links in the taskbar*/}
-
         <NavbarItem>
           <Link color="foreground" href="/admin">
             Admin
