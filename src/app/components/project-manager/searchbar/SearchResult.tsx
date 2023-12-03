@@ -7,6 +7,8 @@ type SearchResultsProps = {
   setSearchResultsChecked: (results: Array<string>) => void;
 };
 
+// this is a single checkbox that is displayed based on the SearchResultList component
+// each SearchResult is supposed to have a local state of whether it's being checked
 export const SearchResult = ({
   result,
   searchResultsChecked,

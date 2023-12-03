@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import { Chip } from "@nextui-org/react";
 import { User } from "@prisma/client";
@@ -8,6 +10,7 @@ const MemberChips: React.FC<{
   setProjectMembers: (results: Array<string>) => void;
 }> = ({ membersofProject, membertoRemove, setProjectMembers }) => {
   const [members, setMembers] = React.useState(membersofProject);
+
   const handleClose = (membertoRemove: string) => {
     setMembers(members.filter((member) => member !== membertoRemove));
     //setProjectMembers(members);
