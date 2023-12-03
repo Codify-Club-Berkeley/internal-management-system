@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Meeting } from "@prisma/client";
+import { updateMeetingValidator } from "@/utils/validators";
 const prisma = new PrismaClient();
 
 // TODO: Add query parameter to get attendance of users
@@ -27,14 +28,13 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null | any>> {
-
   try {
     const meeting = await prisma.meeting.findUnique({
       where: { id: params.id },
     });
 
     if (!meeting) {
-      return NextResponse.json(null, { status: 400 });
+      return NextResponse.json("No Meeting Found", { status: 404 });
     }
 
     return NextResponse.json(meeting, { status: 200 });
@@ -43,7 +43,6 @@ export async function GET(
     return NextResponse.json(error, { status: 400 });
   }
 }
-
 
 /**
  * @swagger
@@ -67,7 +66,6 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null | any>> {
-
   try {
     const deletedMeeting = await prisma.meeting.delete({
       where: { id: params.id },
@@ -105,11 +103,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null | any>> {
-  
-  // TODO: Needs data validation
   const body = await request.json();
 
   try {
+    updateMeetingValidator.parse(body);
     const updatedMeeting = await prisma.meeting.update({
       where: { id: params.id },
       data: body,

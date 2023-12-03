@@ -19,8 +19,6 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null | any>> {
-  
-  // TODO: Needs data validation
   const body = await request.json();
 
   try {
@@ -34,6 +32,6 @@ export async function POST(
     console.error(error);
     return NextResponse.json(error, {
       status: 400,
-    });  
+    });
   }
 }
