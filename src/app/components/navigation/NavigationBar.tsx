@@ -18,11 +18,11 @@ import { useUser } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import CodifyLogo from "../../../../assets/Codify Berkeley.png";
 import { User } from "@prisma/client";
-import { projectNameStringFormatter } from "../../../utils/helpers"
+import { projectNameStringFormatter } from "../../../utils/helpers";
+
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
-
- 
+  
   const { data: currentUser, isLoading: userLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: async () => {
@@ -48,15 +48,20 @@ export default function NavigationBar() {
         </Link>
       </NavbarBrand>
       <NavbarContent justify="end">
-      {/* Project Links */}
-          {currentUser?.projects.map((project) => (
-      <NavbarItem key={project.id}> {/* Assuming each project has a unique 'id' property */}
-        <Link color="foreground" href= {`/project/${project.title}`}>
-          {projectNameStringFormatter(project.title)}
-        </Link>
-      </NavbarItem>
-    ))}
+        {/*Maps the user's current projects to their teams and puts navigation hrefs on the task bar*/}
 
+        {/* Project Links */}
+        {currentUser?.projects.map((project) => (
+          <NavbarItem key={project.id}>
+            {" "}
+            {/* Assuming each project has a unique 'id' property */}
+            <Link color="foreground" href={`/project/${project.title}`}>
+              {projectNameStringFormatter(project.title)}
+            </Link>
+          </NavbarItem>
+        ))}
+
+        {/*The other reference links in the taskbar*/}
         <NavbarItem>
           <Link color="foreground" href="/admin">
             Admin
