@@ -1,27 +1,122 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Meeting } from "@prisma/client";
+import { updateMeetingValidator } from "@/utils/validators";
 const prisma = new PrismaClient();
 
+// TODO: Add query parameter to get attendance of users
+
+/**
+ * @swagger
+ * /api/meeting/{id}:
+ *   get:
+ *     description: Get a meeting by its ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the meeting to be retrieved
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: The meeting was successfully retrieved
+ *       400:
+ *         description: There was a problem with the request
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
-): Promise<NextResponse<Meeting | null>> {
-  let meeting: Meeting | null;
+): Promise<NextResponse<Meeting | null | any>> {
+  try {
+    const meeting = await prisma.meeting.findUnique({
+      where: { id: params.id },
+    });
 
-  // Get the current meeting by the id
-  meeting = await prisma.meeting.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+    if (!meeting) {
+      return NextResponse.json("No Meeting Found", { status: 404 });
+    }
 
-  // If the meeting does not exist, return a 400 error
-  if (!meeting) {
-    return NextResponse.json(meeting, {
+    return NextResponse.json(meeting, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(error, { status: 400 });
+  }
+}
+
+/**
+ * @swagger
+ * /api/meeting/{id}:
+ *   delete:
+ *     description: Delete a meeting
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the meeting to be deleted
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: The meeting was successfully deleted
+ *       400:
+ *         description: There was a problem with the request
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse<Meeting | null | any>> {
+  try {
+    const deletedMeeting = await prisma.meeting.delete({
+      where: { id: params.id },
+    });
+
+    return NextResponse.json(deletedMeeting, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(error, {
       status: 400,
     });
   }
+}
 
-  // If the meeting exists, return the meeting with a 200 status code
-  return NextResponse.json(meeting, { status: 200 });
+/**
+ * @swagger
+ * /api/meeting/{id}:
+ *   patch:
+ *     description: Update an existing meeting
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the meeting to be updated
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: The meeting was successfully updated
+ *       400:
+ *         description: There was a problem with the request
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse<Meeting | null | any>> {
+  const body = await request.json();
+
+  try {
+    updateMeetingValidator.parse(body);
+    const updatedMeeting = await prisma.meeting.update({
+      where: { id: params.id },
+      data: body,
+    });
+
+    return NextResponse.json(updatedMeeting, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(error, {
+      status: 400,
+    });
+  }
 }

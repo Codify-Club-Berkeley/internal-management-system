@@ -46,3 +46,11 @@ export const createMeetingValidator = z.object({
   start: z.string().datetime(),
   end: z.string().datetime(),
 });
+
+// PATCH /api/meeting/{id}
+// Todo add support for updating the meeting's users and project
+export const updateMeetingValidator = z.object({
+  title: z.string().optional(),
+  start: z.string().datetime().optional(),
+  end: z.string().datetime().optional(),
+});
