@@ -91,3 +91,8 @@ After running a migration, you will need to regenerate all of the prisma typescr
 ```bash
 pnpx prisma generate
 ```
+
+## Troubleshooting Common Errors
+
+1. ⨯ Error: Cannot find module '.prisma/client/index'
+   - This error occurs when you try to run the project without generating the prisma client. Run `pnpx prisma generate` to fix it.

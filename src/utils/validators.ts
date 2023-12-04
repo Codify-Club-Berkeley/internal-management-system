@@ -2,6 +2,10 @@ import { z } from "zod";
 
 // Request body validators for API routes
 
+// * All values with the prefix "add" or "remove" are arrays of ids
+// * that will be connected or disconnected from the model
+// * See the function formatModelConnections in src/utils/helpers.ts
+
 // PATCH  /api/projects/{id}
 export const updateProjectValidator = z.object({
   title: z.string().optional(),
@@ -45,12 +49,21 @@ export const createMeetingValidator = z.object({
   title: z.string(),
   start: z.string().datetime(),
   end: z.string().datetime(),
+  location: z.string().optional(),
+  projectId: z.string().optional(),
 });
 
 // PATCH /api/meeting/{id}
-// Todo add support for updating the meeting's users and project
 export const updateMeetingValidator = z.object({
   title: z.string().optional(),
   start: z.string().datetime().optional(),
   end: z.string().datetime().optional(),
+  location: z.string().optional(),
+  projectId: z.string().optional(),
+  addPresent: z.array(z.string()).optional(),
+  removePresent: z.array(z.string()).optional(),
+  addAbsent: z.array(z.string()).optional(),
+  removeAbsent: z.array(z.string()).optional(),
+  addExcused: z.array(z.string()).optional(),
+  removeExcused: z.array(z.string()).optional(),
 });

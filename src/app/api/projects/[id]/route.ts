@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Project } from "@prisma/client";
 import { updateProjectValidator } from "@/utils/validators";
+import { formatModelConnections } from "@/utils/helpers";
 import { z } from "zod";
 const prisma = new PrismaClient();
 
@@ -80,23 +81,7 @@ export async function PATCH(
     updateProjectValidator.parse(body);
 
     // Format the body to be used in the update
-    // https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record
-    const addUsers = body.addUsers
-      ? body.addUsers.map((userId: string) => ({ id: userId }))
-      : [];
-
-    // Perform the exact same formatting for the removeUsers
-    const removeUsers = body.removeUsers
-      ? body.removeUsers.map((userId: string) => ({ id: userId }))
-      : [];
-
-    const addLeads = body.addLeads
-      ? body.addLeads.map((userId: string) => ({ id: userId }))
-      : [];
-
-    const removeLeads = body.removeLeads
-      ? body.removeLeads.map((userId: string) => ({ id: userId }))
-      : [];
+    const formattedBody = formatModelConnections(body);
 
     // Todo verify that the user is an admin or the project owner
 
@@ -105,17 +90,7 @@ export async function PATCH(
       where: {
         id: params.id,
       },
-      data: {
-        title: body.title,
-        members: {
-          connect: addUsers,
-          disconnect: removeUsers,
-        },
-        leads: {
-          connect: addLeads,
-          disconnect: removeLeads,
-        },
-      },
+      data: formattedBody,
     });
 
     // If the project was not updated successfully, return a 400 error
