@@ -19,6 +19,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import copy from "copy-to-clipboard";
+import { projectNameStringFormatter } from "@/utils/helpers";
 
 export default function RosterTable({ filters }: { filters: Set<string> }) {
   const {
@@ -135,7 +136,9 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
                 <TableCell>{user.graduationYear}</TableCell>
                 <TableCell>
                   {user.projects.map((project: any) => (
-                    <p key={project.id}>{project.title}</p>
+                    <p key={project.id}>
+                      {projectNameStringFormatter(project.title)}
+                    </p>
                   ))}
                 </TableCell>
               </TableRow>

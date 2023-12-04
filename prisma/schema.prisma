@@ -34,6 +34,7 @@ model User {
     major               String?
     pronouns            String?
     dietaryRestrictions String? // A comma separated list of dietary restrictions the possible values are stored on the frontend
+    birthday            String? // The user's birthday formatted as MM/DD/YYYY
     meetingsPresent     Meeting[] @relation("Present")
     meetingsAbsent      Meeting[] @relation("Absent")
     meetingsExcused     Meeting[] @relation("Excused")
@@ -55,6 +56,7 @@ model Project {
     clientName        String?
     clientEmail       String?
     clientPhoneNum    String?
+    tags              String[] // The tags are stored as a list of strings
     techStack         String[] // Eventually we may want to store the tech stack as a list of strings
     semesters         String[] // The semesters a project was active, formatted as Fall YYYY or Spring YYYY
 }

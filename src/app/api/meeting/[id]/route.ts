@@ -1,9 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient, Meeting } from "@prisma/client";
 import { updateMeetingValidator } from "@/utils/validators";
+import { formatModelConnections } from "@/utils/helpers";
 const prisma = new PrismaClient();
-
-// TODO: Add query parameter to get attendance of users
 
 /**
  * @swagger
@@ -24,6 +23,7 @@ const prisma = new PrismaClient();
  *       400:
  *         description: There was a problem with the request
  */
+// Get a meeting by its ID, includes the present, absent, and excused users by default
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -31,6 +31,11 @@ export async function GET(
   try {
     const meeting = await prisma.meeting.findUnique({
       where: { id: params.id },
+      include: {
+        present: true,
+        absent: true,
+        excused: true,
+      },
     });
 
     if (!meeting) {
@@ -107,9 +112,13 @@ export async function PATCH(
 
   try {
     updateMeetingValidator.parse(body);
+
+    // Use the helper function to format the body with all of the connections
+    const formattedBody = formatModelConnections(body);
+
     const updatedMeeting = await prisma.meeting.update({
       where: { id: params.id },
-      data: body,
+      data: formattedBody,
     });
 
     return NextResponse.json(updatedMeeting, { status: 200 });

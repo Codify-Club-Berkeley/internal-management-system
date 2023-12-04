@@ -22,7 +22,7 @@ export default function Home() {
     <div className="container">
       <SignedIn>
         <h1 className="text-2xl font-bold">My Teams</h1>
-        <div className=" grid grid-cols-3 gap-5">
+        <div className=" grid grid-cols-3 gap-5 ">
           {userLoading ? (
             <h1>loading</h1>
           ) : (
