@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -8,20 +11,25 @@ import {
 } from "@nextui-org/react";
 
 const AttendanceTracker: React.FC = () => {
-  const dates: string[] = [
-    "10/25/2023",
-    "10/18/2023",
-    "10/11/2023",
-    // Add more dates
-  ];
+  const [dates, setDates] = useState<Date[]>([
+    new Date("2023-10-25"),
+    new Date("2023-10-18"),
+    new Date("2023-10-11"),
+  ]);
 
-  const members: string[] = ["Member 1", "Member 2", "Member 3",];
+  const members: string[] = ["Member 1", "Member 2", "Member 3"];
 
   const initialAttendanceData: (string | null)[] = members.map(() => null); // Initialize to null
 
   const [attendance, setAttendance] = useState<(string | null)[][]>(
     dates.map(() => [...initialAttendanceData]),
   );
+
+  const [newMeetingDate, setNewMeetingDate] = useState<Date | null>(new Date());
+  const [editableCell, setEditableCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
 
   const handleAttendanceChange = (
     dateIndex: number,
@@ -44,6 +52,46 @@ const AttendanceTracker: React.FC = () => {
     }
     // Update the state with the modified attendance data
     setAttendance(updatedAttendance);
+  };
+
+  const addMeeting = () => {
+    if (newMeetingDate) {
+      setDates([newMeetingDate, ...dates]);
+
+      const newAttendanceRow: (string | null)[] = members.map(() => null);
+      setAttendance([newAttendanceRow, ...attendance]);
+
+      setNewMeetingDate(null);
+    }
+  };
+
+  const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      month: "numeric",
+      day: "numeric",
+      year: "numeric",
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
+
+  const renderDatePicker = (dateIndex: number) => (
+    <DatePicker
+      selected={dates[dateIndex]}
+      onChange={(date: Date | null) => handleDateChange(date, dateIndex)}
+      withPortal  // Add this prop to render the date picker in a portal
+    />
+  );
+  
+  
+  
+
+  const handleDateChange = (date: Date | null, dateIndex: number) => {
+    if (date !== null) {
+      const updatedDates = [...dates];
+      updatedDates[dateIndex] = date;
+      setDates(updatedDates);
+    }
+    setEditableCell(null);
   };
 
   const renderDropdown = (dateIndex: number, memberIndex: number) => {
@@ -92,17 +140,18 @@ const AttendanceTracker: React.FC = () => {
     );
   };
 
-
   return (
-    <div className="p-4 bg-black rounded-lg shadow-md inline-block">
+    <div className="inline-block rounded-lg bg-black p-4 shadow-md">
       <Button onClick={markAllAsPresent}>Mark All as Present</Button>
+
+      <Button onClick={addMeeting}>Add Meeting</Button>
 
       <table>
         <thead>
           <tr>
-            <th className="py-2 px-3">Date</th>
+            <th className="px-3 py-2">Date</th>
             {members.map((member, memberIndex) => (
-              <th className="py-2 px-3" key={memberIndex}>
+              <th className="px-3 py-2" key={memberIndex}>
                 {member}
               </th>
             ))}
@@ -111,9 +160,9 @@ const AttendanceTracker: React.FC = () => {
         <tbody>
           {dates.map((date, dateIndex) => (
             <tr key={dateIndex}>
-              <td className="py-2 px-3">{date}</td>
+              <td className="px-3 py-2">{renderDatePicker(dateIndex)}</td>
               {members.map((member, memberIndex) => (
-                <td className="py-2 px-3" key={memberIndex}>
+                <td className="px-3 py-2" key={memberIndex}>
                   {renderDropdown(dateIndex, memberIndex)}
                 </td>
               ))}
