@@ -78,12 +78,9 @@ const AttendanceTracker: React.FC = () => {
     <DatePicker
       selected={dates[dateIndex]}
       onChange={(date: Date | null) => handleDateChange(date, dateIndex)}
-      withPortal  // Add this prop to render the date picker in a portal
+      withPortal // Add this prop to render the date picker in a portal
     />
   );
-  
-  
-  
 
   const handleDateChange = (date: Date | null, dateIndex: number) => {
     if (date !== null) {

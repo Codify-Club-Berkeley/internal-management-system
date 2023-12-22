@@ -1,5 +1,5 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "prettier"],
   "overrides": [
     {
       // Force the setting of a swagger description on each api endpoint
