@@ -88,3 +88,23 @@ export function formatModelConnections(input: any): any {
 
   return formatted;
 }
+
+export type UserMinimized = {
+  id: string;
+  name: string;
+};
+
+//* Minimizers: Reduce large objects to a smaller size for easier use in the frontend
+
+// Minimize a user object to only the id and condensed name
+export function userMinimizer(user: any): UserMinimized {
+  return {
+    id: user.id,
+    name: user.firstName + " " + user.lastName,
+  };
+}
+
+// Minimize an array of users to only the id and condensed name
+export function usersMinimizer(users: any[]): UserMinimized[] {
+  return users.map((user) => userMinimizer(user));
+}

@@ -3,6 +3,8 @@ import { Accordion, AccordionItem } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ProjectSection } from "./ProjectSection";
+import { User, Project } from "@prisma/client";
+import { usersMinimizer } from "@/utils/helpers";
 
 const ProjectManager = () => {
   const {
@@ -13,7 +15,7 @@ const ProjectManager = () => {
     queryKey: ["allUsers"],
     queryFn: async () => {
       const response = await axios.get("/api/user");
-      return response.data;
+      return response.data as User[];
     },
   });
 
@@ -25,7 +27,7 @@ const ProjectManager = () => {
     queryKey: ["allProjects"],
     queryFn: async () => {
       const response = await axios.get("/api/projects?members=true&leads=true");
-      return response.data;
+      return response.data as Project[];
     },
   });
 
@@ -35,13 +37,14 @@ const ProjectManager = () => {
   return (
     <Accordion selectionMode="multiple" variant="shadow">
       {projects && projects.length > 0 ? (
-        projects.map((project: any, index: number) => (
+        projects.map((project: Project, index: number) => (
           <AccordionItem
             key={index}
             aria-label={project.id}
             title={project.title}
           >
-            <ProjectSection project={project} users={users} />
+            <h1>{index}</h1>
+            <ProjectSection project={project} users={usersMinimizer(users)} />
           </AccordionItem>
         ))
       ) : (

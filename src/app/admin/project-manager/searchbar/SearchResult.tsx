@@ -1,36 +1,25 @@
 import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
-
-type SearchResultsProps = {
-  result: string;
-  searchResultsChecked: string[];
-  setSearchResultsChecked: (results: Array<string>) => void;
-};
+import { UserMinimized } from "@/utils/helpers";
+import { useAdmin } from "../../adminContext";
 
 // this is a single checkbox that is displayed based on the SearchResultList component
 // each SearchResult is supposed to have a local state of whether it's being checked
-export const SearchResult = ({
-  result,
-  searchResultsChecked,
-  setSearchResultsChecked,
-}: SearchResultsProps) => {
-  const [checked, setChecked] = useState(false);
-  let originalResultsChecked = searchResultsChecked;
-  if (checked) {
-    originalResultsChecked.push(result);
-    setSearchResultsChecked(originalResultsChecked);
-  } else {
-    originalResultsChecked.splice(originalResultsChecked.indexOf(result), 1);
-    setSearchResultsChecked(originalResultsChecked);
-  }
+export const SearchResult = ({ result }: { result: UserMinimized }) => {
+  const { state, dispatch } = useAdmin();
 
   return (
     <Checkbox
       className="m-1"
       color="warning"
-      onChange={(e) => setChecked(e.target.checked)}
+      onChange={() =>
+        dispatch({
+          type: "TOGGLE_SEARCH_RESULT",
+          payload: result,
+        })
+      }
     >
-      {result}
+      {result.name}
     </Checkbox>
   );
 };
