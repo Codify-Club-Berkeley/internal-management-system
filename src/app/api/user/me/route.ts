@@ -28,7 +28,8 @@ export async function GET(
     },
     include: {
       projects: true,
-    }
+      leading: true,
+    },
   });
 
   // If the user does not exist, return a 400 error

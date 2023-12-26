@@ -27,13 +27,15 @@ export default function Home() {
             <h1>loading</h1>
           ) : (
             <div>
-              {currentUser.projects.map((project: any, index: number) => (
-                <ProjectCard
-                  key={index}
-                  imageUrl={project.projectPictureUrl}
-                  projectTitle={project.title}
-                />
-              ))}
+              {currentUser.leading
+                .concat(currentUser.projects)
+                .map((project: any, index: number) => (
+                  <ProjectCard
+                    key={index}
+                    imageUrl={project.projectPictureUrl}
+                    projectTitle={project.title}
+                  />
+                ))}
             </div>
           )}
         </div>
