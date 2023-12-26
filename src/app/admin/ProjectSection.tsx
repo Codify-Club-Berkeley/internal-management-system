@@ -3,9 +3,8 @@ import ProjectFlagsCard from "./project-manager/ProjectFlagsCard";
 import MemberChips from "./project-manager/MemberChips";
 import { SearchBar } from "./project-manager/searchbar/SearchBar";
 import { SearchResultsList } from "./project-manager/searchbar/SearchResultList";
-import { SaveAdd } from "./project-manager/searchbar/SaveAdd";
-import { set } from "zod";
-import { useEffect } from "react";
+import { AddButton } from "./project-manager/searchbar/AddButton";
+import { SaveButton } from "./project-manager/searchbar/SaveButton";
 import { Project } from "@prisma/client";
 import { UserMinimized, usersMinimizer } from "@/utils/helpers";
 import { AdminProvider } from "./adminContext";
@@ -20,7 +19,10 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
   users,
 }) => {
   return (
-    <AdminProvider members={usersMinimizer(project.members)}>
+    <AdminProvider
+      members={usersMinimizer(project.members)}
+      leads={usersMinimizer(project.leads)}
+    >
       {project && users ? (
         <div className="flex">
           <div>
@@ -35,11 +37,12 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
             </ul>
           </div>
           <div className="mx-3"></div>
-          <div>
+          <div className="space-y-3">
             <MemberChips />
             <SearchBar items={users} />
             <SearchResultsList />
-            <SaveAdd />
+            <AddButton />
+            <SaveButton projectId={project.id} />
           </div>
         </div>
       ) : (

@@ -6,7 +6,7 @@ export type UserMinimized = {
   name: string;
 };
 
-type AdminStateType = {
+export type AdminStateType = {
   members: UserMinimized[];
   leads: UserMinimized[];
   searchResults: UserMinimized[];
@@ -32,6 +32,10 @@ function adminReducer(
 ): AdminStateType {
   switch (action.type) {
     case "ADD_MEMBER":
+      const isMemberAlreadyAdded = state.members.some(
+        (member) => member.id === action.payload.id,
+      );
+      if (isMemberAlreadyAdded) return state;
       return {
         ...state,
         members: [...state.members, action.payload],
@@ -73,10 +77,13 @@ function adminReducer(
         edited: true,
       };
     case "ADD_MEMBERS":
-      // Adds all checked search results to the members array
+      const uniqueNewMembers = state.searchResultsChecked.filter(
+        (searchResult) =>
+          !state.members.some((member) => member.id === searchResult.id),
+      );
       return {
         ...state,
-        members: [...state.members, ...state.searchResultsChecked],
+        members: [...state.members, ...uniqueNewMembers],
         searchResultsChecked: [],
         edited: true,
       };
@@ -93,11 +100,11 @@ const AdminContext = createContext<
 >(undefined);
 
 // Provider component
-const AdminProvider: React.FC = ({ children, members }: any) => {
+const AdminProvider: React.FC = ({ children, members, leads }: any) => {
   // Initial state
   const initialState: AdminStateType = {
     members: members,
-    leads: [],
+    leads: leads,
     searchResults: [],
     searchResultsChecked: [],
     edited: false,
