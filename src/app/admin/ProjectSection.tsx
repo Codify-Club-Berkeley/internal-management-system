@@ -1,29 +1,31 @@
-import React, { useState } from "react";
-import ProjectFlagsCard from "../components/project-manager/ProjectFlagsCard";
-import MemberChips from "../components/project-manager/MemberChips";
-import { SearchBar } from "../components/project-manager/searchbar/SearchBar";
-import { SearchResultsList } from "../components/project-manager/searchbar/SearchResultList";
-import { SaveAdd } from "../components/project-manager/searchbar/SaveAdd";
+import React, { use, useState } from "react";
+import ProjectFlagsCard from "./project-manager/ProjectFlagsCard";
+import MemberChips from "./project-manager/MemberChips";
+import { SearchBar } from "./project-manager/searchbar/SearchBar";
+import { SearchResultsList } from "./project-manager/searchbar/SearchResultList";
+import { AddButton } from "./project-manager/searchbar/AddButton";
+import { SaveButton } from "./project-manager/searchbar/SaveButton";
+import { Project } from "@prisma/client";
+import { UserMinimized, usersMinimizer } from "@/utils/helpers";
+import { AdminProvider } from "./adminContext";
 
 type ProjectSectionProps = {
-  project: any;
-  users: any;
+  project: Project;
+  users: UserMinimized[];
 };
 
 export const ProjectSection: React.FC<ProjectSectionProps> = ({
   project,
   users,
 }) => {
-  const [searchResults, setSearchResults] = useState([""]);
-  const [searchResultsChecked, setSearchResultsChecked] = useState([""]);
-  const [projectMembers, setProjectMembers] = useState(project);
-
   return (
-    <>
+    <AdminProvider
+      members={usersMinimizer(project.members)}
+      leads={usersMinimizer(project.leads)}
+    >
       {project && users ? (
         <div className="flex">
           <div>
-
             <ul className="space-y-2">
               <li className="flex">
                 <ProjectFlagsCard tags={["static", "temp", "tags"]} />
@@ -35,35 +37,17 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
             </ul>
           </div>
           <div className="mx-3"></div>
-          <div>
-            <MemberChips
-              membersofProject={projectMembers.members.map((member: any) => {
-                return member.firstName + " " + member.lastName;
-              })}
-              membertoRemove=""
-              setProjectMembers={setProjectMembers}
-            />
-            <SearchBar
-              items={users.map((user: any) => {
-                return user.firstName + " " + user.lastName;
-              })}
-              setSearchResults={setSearchResults}
-            />
-            <SearchResultsList
-              results={searchResults}
-              searchResultsChecked={searchResultsChecked}
-              setSearchResultsChecked={setSearchResultsChecked}
-            />
-            <SaveAdd
-              searchResultsChecked={searchResultsChecked}
-              projectMembers={projectMembers}
-              setSavedValues={setProjectMembers}
-            />
+          <div className="space-y-3">
+            <MemberChips />
+            <SearchBar items={users} />
+            <SearchResultsList />
+            <AddButton />
+            <SaveButton projectId={project.id} />
           </div>
         </div>
       ) : (
         <h1>null</h1>
       )}
-    </>
+    </AdminProvider>
   );
 };

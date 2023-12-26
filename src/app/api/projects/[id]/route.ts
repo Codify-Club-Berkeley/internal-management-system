@@ -72,13 +72,34 @@ export async function PATCH(
 ): Promise<NextResponse<Project | null | any>> {
   // Given a project name, a list of userIDs to add, and a list of userIDs to remove
   // Update the project with the given id
+  const searchParams = request.nextUrl.searchParams;
+  const replaceAllMembers = searchParams.get("replaceAllMembers");
 
   // Todo only admins or the project owner should be allowed to update the project's data
 
   const body = await request.json();
+
   try {
     // Validate the request body
     updateProjectValidator.parse(body);
+
+    if (replaceAllMembers == "true") {
+      // Delete all members and leads so they can be added back
+      // Todo this is an inefficient way to do this, we should be able to do this in one query
+      const project = await prisma.project.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          members: {
+            set: [],
+          },
+          leads: {
+            set: [],
+          },
+        },
+      });
+    }
 
     // Format the body to be used in the update
     const formattedBody = formatModelConnections(body);
@@ -103,6 +124,8 @@ export async function PATCH(
     // If the project was updated successfully, return the project with a 200 status code
     return NextResponse.json(project, { status: 200 });
   } catch (error: any) {
+    console.log(error);
+
     if (error instanceof z.ZodError)
       return NextResponse.json(error.issues[0], { status: 400 });
     return NextResponse.json(error, { status: 400 });
