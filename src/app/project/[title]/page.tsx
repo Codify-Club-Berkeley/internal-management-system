@@ -31,8 +31,8 @@ export default function Page({ params }: { params: { title: string } }) {
           </h1>
 
           <div className="p-4">
+            <MeetingInfoCard />
             <AttendanceTracker />
-            <MeetingInfoCard/>
           </div>
         </div>
 

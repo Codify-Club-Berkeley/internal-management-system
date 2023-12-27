@@ -29,6 +29,7 @@ export async function GET(
         },
         include: {
           members: true,
+          meetings: true,
         },
       });
     } else {
