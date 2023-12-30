@@ -16,13 +16,13 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
-import CodifyLogo from "../../../../assets/Codify Berkeley.png";
+import CodifyLogo from "../../../assets/Codify Berkeley.png";
 import { User } from "@prisma/client";
-import { projectNameStringFormatter } from "../../../utils/helpers";
+import { projectNameStringFormatter } from "../../utils/helpers";
 
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
-  
+
   const { data: currentUser, isLoading: userLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: async () => {

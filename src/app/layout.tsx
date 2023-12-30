@@ -3,8 +3,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import Providers from "./components/providers/Providers";
-import NavigationBar from "./components/navigation/NavigationBar";
+import Providers from "@/components/providers/Providers";
+import NavigationBar from "../components/navigation/NavigationBar";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ToastContainer } from "react-toastify";
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="h-full">
-        <body className="h-full dark text-foreground bg-background">
+        <body className="h-full bg-background text-foreground dark">
           <Providers>
             <NextSSRPlugin
               /**
@@ -39,7 +39,15 @@ export default function RootLayout({
             />
             <NavigationBar />
             {children}
-            <ToastContainer />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={true}
+              closeOnClick={true}
+              pauseOnHover={true}
+              draggable={true}
+              theme="dark"
+            />
           </Providers>
         </body>
       </html>

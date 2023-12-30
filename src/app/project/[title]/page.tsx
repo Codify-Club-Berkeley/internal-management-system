@@ -3,13 +3,12 @@
 
 import React from "react";
 import { projectNameStringFormatter } from "../../../utils/helpers";
-import AttendanceTracker from "../../components/AttendanceTracker";
+import AttendanceTracker from "../../../components/AttendanceTracker";
 import { UploadButton } from "../../../utils/uploadthing";
 import { toast } from "react-toastify";
-import { toastDefaultConfig } from "../../../utils/constants";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import MeetingInfoCard from "@/app/components/MeetingInfoCard";
+import MeetingInfoCard from "@/components/MeetingInfoCard";
 
 export default function Page({ params }: { params: { title: string } }) {
   const { data: projectData, isLoading } = useQuery({
@@ -48,14 +47,11 @@ export default function Page({ params }: { params: { title: string } }) {
             className="ut-button:color-primary pt-4"
             onClientUploadComplete={(res) => {
               // Do something with the response
-              toast.success("Uploaded successfully!", toastDefaultConfig);
+              toast.success("Uploaded successfully!");
             }}
             onUploadError={(error: Error) => {
               // Do something with the error.
-              toast.error(
-                `Upload failed with error ${error.message}`,
-                toastDefaultConfig,
-              );
+              toast.error(`Upload failed with error ${error.message}`);
             }}
           />
         </div>

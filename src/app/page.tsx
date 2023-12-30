@@ -3,7 +3,7 @@
 import React from "react";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import SignInPrompt from "./sign-in/SignInPrompt";
-import ProjectCard from "./components/ProjectCard";
+import ProjectCard from "../components/ProjectCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "@prisma/client";

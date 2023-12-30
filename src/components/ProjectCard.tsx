@@ -1,5 +1,5 @@
 import React from "react";
-import { projectNameStringFormatter } from "../../utils/helpers";
+import { projectNameStringFormatter } from "../utils/helpers";
 
 import {
   Card,
