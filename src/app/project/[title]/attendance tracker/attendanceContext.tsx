@@ -1,5 +1,6 @@
 // AttendanceContext.tsx
 import React, { createContext, useReducer, useContext } from "react";
+import { Meeting } from "@prisma/client";
 import { UserMinimized } from "@/utils/types";
 
 type AttendanceStatus = "present" | "absent" | "excused";
@@ -8,6 +9,7 @@ type AttendanceStatus = "present" | "absent" | "excused";
 type AttendanceState = {
   attendance: Record<string, AttendanceStatus>;
   edited: boolean;
+  meeting: Meeting;
 };
 
 // Actions for the attendance context
@@ -61,11 +63,12 @@ const AttendanceContext = createContext<
 >(undefined);
 
 // Provider component for the AttendanceContext
-const AttendanceProvider: React.FC = ({ children, members }: any) => {
+const AttendanceProvider: React.FC = ({ children, members, meeting }: any) => {
   // Initial state for the context
   const initialState: AttendanceState = {
     attendance: {},
     edited: false,
+    meeting: meeting,
   };
 
   const [state, dispatch] = useReducer(attendanceReducer, initialState);

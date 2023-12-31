@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import MeetingInfoCard from "@/components/MeetingInfoCard";
+import AttendanceTable from "./attendance tracker/AttendanceTable";
+import MeetingEntryWrapper from "./attendance tracker/meeting entries/MeetingEntryWrapper";
 
 export default function Page({ params }: { params: { title: string } }) {
   const { data: projectData, isLoading } = useQuery({
@@ -32,6 +34,12 @@ export default function Page({ params }: { params: { title: string } }) {
           <div className="p-4">
             <MeetingInfoCard />
             <AttendanceTracker />
+            {isLoading ? null : (
+              <AttendanceTable
+                Meetings={projectData.meetings}
+                Members={projectData.members}
+              />
+            )}
           </div>
         </div>
 
