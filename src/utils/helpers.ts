@@ -1,3 +1,6 @@
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+
 // Simple helper functions used throughout the app
 
 // Formats project name strings to be more readable in the frontend
@@ -107,4 +110,25 @@ export function userMinimizer(user: any): UserMinimized {
 // Minimize an array of users to only the id and condensed name
 export function usersMinimizer(users: any[]): UserMinimized[] {
   return users.map((user) => userMinimizer(user));
+}
+
+// Given a start and end datetime for a meeting, extract the date and time in a readable format
+// Returns a tuple of two strings: [date, time]
+export function meetingDateExtract(
+  start: string,
+  end: string,
+): [string, string] {
+  // Define the Pacific Time Zone
+  const timeZone = "America/Los_Angeles";
+
+  // Parse out the date from the start and end times, assume the date is the same for both
+  // Format the date in the format, "Monday December 31, 2021"
+  const date = dayjs(start).format("dddd MMMM D, YYYY");
+
+  // Parse out the time from the start and end times, return in the format "start - end"
+  const time = `${dayjs(start).format("h:mm A")} - ${dayjs(end).format(
+    "h:mm A",
+  )}`;
+
+  return [date, time];
 }

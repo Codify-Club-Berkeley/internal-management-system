@@ -52,7 +52,8 @@ model Project {
     updatedAt         DateTime  @updatedAt
     projectPictureUrl String?
     projectPictureKey String?
-    meetings          Meeting[]
+    meetingDefaults   Meeting?  @relation("Project Default Meetings")
+    meetings          Meeting[] @relation("Project Meetings")
     clientName        String?
     clientEmail       String?
     clientPhoneNum    String?
@@ -62,16 +63,18 @@ model Project {
 }
 
 model Meeting {
-    id        String   @id @default(uuid())
-    title     String
-    start     DateTime
-    end       DateTime
-    project   Project? @relation(fields: [projectId], references: [id])
-    projectId String?
-    location  String?
-    present   User[]   @relation("Present")
-    absent    User[]   @relation("Absent")
-    excused   User[]   @relation("Excused")
+    id               String   @id @default(uuid())
+    title            String
+    start            DateTime
+    end              DateTime
+    project          Project? @relation("Project Meetings", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    projectId        String?
+    projectDefault   Project? @relation("Project Default Meetings", fields: [projectDefaultId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    projectDefaultId String?  @unique
+    location         String?
+    present          User[]   @relation("Present")
+    absent           User[]   @relation("Absent")
+    excused          User[]   @relation("Excused")
 
     @@index([projectId])
 }

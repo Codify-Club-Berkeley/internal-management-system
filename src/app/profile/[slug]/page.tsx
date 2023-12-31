@@ -9,7 +9,6 @@ import { Button } from "@nextui-org/react";
 import ProfileDataTable from "./ProfileDataTable";
 import { useProfileStore } from "./pageState";
 import { toast } from "react-toastify";
-import { toastDefaultConfig } from "../../../utils/constants";
 
 export default function Page({ params }: { params: { slug: string } }) {
   // Get the editing and submitting state from the shared store
@@ -74,14 +73,11 @@ export default function Page({ params }: { params: { slug: string } }) {
                   className="ut-button:color-primary pt-4"
                   onClientUploadComplete={(res) => {
                     // Do something with the response
-                    toast.success("Uploaded successfully!", toastDefaultConfig);
+                    toast.success("Uploaded successfully!");
                   }}
                   onUploadError={(error: Error) => {
                     // Do something with the error.
-                    toast.error(
-                      `Upload failed with error ${error.message}`,
-                      toastDefaultConfig,
-                    );
+                    toast.error(`Upload failed with error ${error.message}`);
                   }}
                 />
               )}

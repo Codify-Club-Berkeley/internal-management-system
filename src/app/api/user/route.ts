@@ -41,6 +41,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<User[]>> {
     users = await prisma.user.findMany({
       include: {
         projects: true,
+        leading: true,
       },
     });
   }

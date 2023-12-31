@@ -29,6 +29,13 @@ export async function GET(
         },
         include: {
           members: true,
+          meetings: {
+            include: {
+              present: true,
+              absent: true,
+              excused: true,
+            },
+          },
         },
       });
     } else {

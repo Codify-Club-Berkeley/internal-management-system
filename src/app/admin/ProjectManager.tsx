@@ -43,7 +43,6 @@ const ProjectManager = () => {
             aria-label={project.id}
             title={project.title}
           >
-            <h1>{index}</h1>
             <ProjectSection project={project} users={usersMinimizer(users)} />
           </AccordionItem>
         ))

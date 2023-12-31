@@ -135,11 +135,13 @@ export default function RosterTable({ filters }: { filters: Set<string> }) {
                 <TableCell>{user.phoneNum}</TableCell>
                 <TableCell>{user.graduationYear}</TableCell>
                 <TableCell>
-                  {user.projects.map((project: any) => (
-                    <p key={project.id}>
-                      {projectNameStringFormatter(project.title)}
-                    </p>
-                  ))}
+                  {user.projects
+                    .concat(user.leading || [])
+                    .map((project: any) => (
+                      <p key={project.id}>
+                        {projectNameStringFormatter(project.title)}
+                      </p>
+                    ))}
                 </TableCell>
               </TableRow>
             ))}
