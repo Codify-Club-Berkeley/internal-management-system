@@ -121,9 +121,6 @@ export function meetingDateExtract(
   // Define the Pacific Time Zone
   const timeZone = "America/Los_Angeles";
 
-  // Load dayjs plugin for timezones
-  dayjs.extend(timezone);
-
   // Parse out the date from the start and end times, assume the date is the same for both
   // Format the date in the format, "Monday December 31, 2021"
   const date = dayjs(start).format("dddd MMMM D, YYYY");

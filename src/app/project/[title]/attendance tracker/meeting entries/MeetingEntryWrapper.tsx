@@ -13,8 +13,10 @@ export default function MeetingEntryWrapper({
 }) {
   return (
     <AttendanceProvider meeting={meeting} members={members}>
-      <MeetingData />
-      <MeetingAttendance />
+      <div className="flex flex-row">
+        <MeetingData />
+        <MeetingAttendance />
+      </div>
     </AttendanceProvider>
   );
 }

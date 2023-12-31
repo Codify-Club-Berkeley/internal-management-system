@@ -1,15 +1,17 @@
 // AttendanceContext.tsx
 import React, { createContext, useReducer, useContext } from "react";
-import { Meeting } from "@prisma/client";
-import { UserMinimized } from "@/utils/types";
+import { Meeting, User } from "@prisma/client";
+import { UserMinimized } from "@/utils/helpers";
+import { usersMinimizer } from "@/utils/helpers";
 
-type AttendanceStatus = "present" | "absent" | "excused";
+export type AttendanceStatus = "present" | "absent" | "excused" | "undefined";
 
 // The state will map user IDs to their attendance status
 type AttendanceState = {
   attendance: Record<string, AttendanceStatus>;
   edited: boolean;
   meeting: Meeting;
+  members: UserMinimized[];
 };
 
 // Actions for the attendance context
@@ -63,12 +65,40 @@ const AttendanceContext = createContext<
 >(undefined);
 
 // Provider component for the AttendanceContext
-const AttendanceProvider: React.FC = ({ children, members, meeting }: any) => {
+const AttendanceProvider: React.FC = ({
+  children,
+  members,
+  meeting,
+}: {
+  children: React.ReactNode;
+  members: UserMinimized[];
+  meeting: Meeting;
+}) => {
+  // Iterate through the absent, present, and excused arrays within the meeting and add them to the attendance object
+  const attendance: Record<string, AttendanceStatus> = {};
+  meeting.absent.forEach((user) => {
+    attendance[user.id] = "absent";
+  });
+  meeting.present.forEach((user) => {
+    attendance[user.id] = "present";
+  });
+  meeting.excused.forEach((user) => {
+    attendance[user.id] = "excused";
+  });
+
+  // Any member that is not in the attendance object is marked with their attendance status as "undefined"
+  members.forEach((user) => {
+    if (!attendance[user.id]) {
+      attendance[user.id] = "undefined";
+    }
+  });
+
   // Initial state for the context
   const initialState: AttendanceState = {
-    attendance: {},
+    attendance,
     edited: false,
-    meeting: meeting,
+    meeting,
+    members: usersMinimizer(members),
   };
 
   const [state, dispatch] = useReducer(attendanceReducer, initialState);

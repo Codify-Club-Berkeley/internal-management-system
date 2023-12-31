@@ -17,14 +17,14 @@ export default function MeetingData() {
   return (
     <Card>
       <CardBody>
-        <h3>Meeting Data</h3>
         <p>{state.meeting?.title}</p>
-        <p>
-          {meetingDate} {meetingTime}
-        </p>
-        <SaveIcon />
-        <EditIcon />
-        <CheckIcon />
+        <p>{meetingDate}</p>
+        <p>{meetingTime}</p>
+        <div>
+          <SaveIcon />
+          <EditIcon />
+          <CheckIcon />
+        </div>
       </CardBody>
     </Card>
   );
