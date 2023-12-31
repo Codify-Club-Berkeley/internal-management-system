@@ -109,9 +109,29 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ): Promise<NextResponse<Meeting | null | any>> {
   const body = await request.json();
+  const searchParams = request.nextUrl.searchParams;
+  const replaceAllMembers = searchParams.get("replaceAllAttendanceData");
 
   try {
     updateMeetingValidator.parse(body);
+
+    // Todo this is an inefficient way to do this, we should be able to do this in one query
+    if (replaceAllMembers) {
+      const updatedMeeting = await prisma.meeting.update({
+        where: { id: params.id },
+        data: {
+          present: {
+            set: [],
+          },
+          absent: {
+            set: [],
+          },
+          excused: {
+            set: [],
+          },
+        },
+      });
+    }
 
     // Use the helper function to format the body with all of the connections
     const formattedBody = formatModelConnections(body);

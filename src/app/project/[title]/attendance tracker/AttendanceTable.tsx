@@ -27,7 +27,13 @@ export default function AttendanceTable({
 
   return (
     <>
-      <MeetingEntryWrapper meeting={Meetings[0]} members={sortedMembers} />
+      {Meetings.map((meeting, index) => (
+        <MeetingEntryWrapper
+          key={index}
+          meeting={meeting}
+          members={sortedMembers}
+        />
+      ))}
     </>
   );
 }

@@ -20,7 +20,8 @@ type AttendanceAction =
       type: "MARK_STATUS";
       payload: { userId: string; status: AttendanceStatus };
     }
-  | { type: "MARK_ALL_AS_PRESENT"; payload: UserMinimized[] };
+  | { type: "MARK_ALL_AS_PRESENT" }
+  | { type: "RESET_EDITED" };
 
 // The reducer function for attendance changes
 function attendanceReducer(
@@ -38,17 +39,22 @@ function attendanceReducer(
         edited: true,
       };
     case "MARK_ALL_AS_PRESENT":
-      const allPresent = action.payload.reduce(
-        (acc, user) => {
-          acc[user.id] = "present";
+      const allMembersPresent = Object.keys(state.attendance).reduce(
+        (acc, userId) => {
+          acc[userId] = "present";
           return acc;
         },
         {} as Record<string, AttendanceStatus>,
       );
       return {
         ...state,
-        attendance: allPresent,
+        attendance: allMembersPresent,
         edited: true,
+      };
+    case "RESET_EDITED":
+      return {
+        ...state,
+        edited: false,
       };
     default:
       return state;
