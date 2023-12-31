@@ -7,15 +7,14 @@ const MemberChips: React.FC<{}> = () => {
 
   const handleClose = (membertoRemove: any) => {
     dispatch({ type: "REMOVE_MEMBER", payload: membertoRemove });
+    dispatch({ type: "REMOVE_LEAD", payload: membertoRemove });
   };
 
   const handlePromote = (membertoPromote: any) => {
     dispatch({ type: "ADD_LEAD", payload: membertoPromote });
-    dispatch({ type: "REMOVE_MEMBER", payload: membertoPromote });
   };
 
   const handleDemote = (leadtoDemote: any) => {
-    dispatch({ type: "ADD_MEMBER", payload: leadtoDemote });
     dispatch({ type: "REMOVE_LEAD", payload: leadtoDemote });
   };
 
@@ -30,15 +29,17 @@ const MemberChips: React.FC<{}> = () => {
           onAction={() => handleDemote(lead)}
         />
       ))}
-      {state.members.map((member, index) => (
-        <MemberChip
-          key={index}
-          name={member.name}
-          isLead={false}
-          onDelete={() => handleClose(member)}
-          onAction={() => handlePromote(member)}
-        />
-      ))}
+      {state.members
+        .filter((member) => !state.leads.some((lead) => lead.id === member.id))
+        .map((member, index) => (
+          <MemberChip
+            key={index}
+            name={member.name}
+            isLead={false}
+            onDelete={() => handleClose(member)}
+            onAction={() => handlePromote(member)}
+          />
+        ))}
     </div>
   );
 };

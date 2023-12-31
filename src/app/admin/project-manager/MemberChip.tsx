@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "@nextui-org/react";
 
 export const MemberChip = ({
   name,
@@ -16,12 +17,17 @@ export const MemberChip = ({
       <p className={"text-white " + (isLead ? "font-bold" : "font-normal")}>
         {name}
       </p>
-      <button
-        onClick={onAction}
-        className="bg-grey-400 ml-2 rounded-full px-2 py-1 text-xs font-semibold leading-normal text-white transition duration-300 hover:bg-blue-700"
+      <Tooltip
+        content={isLead ? "Demote to Member" : "Promote to Lead"}
+        delay={1500}
       >
-        ^
-      </button>
+        <button
+          onClick={onAction}
+          className="bg-grey-400 ml-2 rounded-full px-2 py-1 text-xs font-semibold leading-normal text-white transition duration-300 hover:bg-blue-700"
+        >
+          {isLead ? "⌄" : "^"}
+        </button>
+      </Tooltip>
       <button
         onClick={onDelete}
         className="bg-grey-400 ml-2 rounded-full px-2 py-1 text-xs font-semibold leading-normal text-white transition duration-300 hover:bg-red-700"

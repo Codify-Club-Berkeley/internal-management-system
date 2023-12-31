@@ -18,7 +18,6 @@ export const SaveButton = ({ projectId }: { projectId: string }) => {
         addMembers: state.members.map((member) => member.id),
         addLeads: state.leads.map((lead) => lead.id),
       };
-      console.log(body);
       await axios.patch(
         "/api/projects/" + projectId + "?replaceAllMembers=true",
         body,

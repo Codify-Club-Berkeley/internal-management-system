@@ -74,7 +74,6 @@ function adminReducer(
               (user) => user.id !== action.payload.id,
             )
           : [...state.searchResultsChecked, action.payload],
-        edited: true,
       };
     case "ADD_MEMBERS":
       const uniqueNewMembers = state.searchResultsChecked.filter(

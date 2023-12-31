@@ -28,12 +28,11 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
           <div>
             <ul className="space-y-2">
               <li className="flex">
-                <ProjectFlagsCard tags={["static", "temp", "tags"]} />
+                <ProjectFlagsCard tags={project.tags} />
               </li>
-              <li>Project created at {project.createdAt.toString()}</li>
-              <li>Project updated at {project.updatedAt.toString()}</li>
-              <li>Other information</li>
-              <br />
+              <li>Client Name: {project.clientName}</li>
+              <li>Client Email: {project.clientEmail}</li>
+              <li>Client Phone: {project.clientPhoneNum}</li>
             </ul>
           </div>
           <div className="mx-3"></div>
