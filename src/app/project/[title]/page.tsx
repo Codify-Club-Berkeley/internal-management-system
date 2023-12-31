@@ -10,7 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import MeetingInfoCard from "@/components/MeetingInfoCard";
 import AttendanceTable from "./attendance tracker/AttendanceTable";
-import MeetingEntryWrapper from "./attendance tracker/meeting entries/MeetingEntryWrapper";
+import DefaultMeetingSetter from "./default meetings/DefaultMeetingSetter";
+import DefaultMeetingDisplay from "./default meetings/DefaultMeetingDisplay";
 
 export default function Page({ params }: { params: { title: string } }) {
   const { data: projectData, isLoading } = useQuery({
@@ -32,8 +33,14 @@ export default function Page({ params }: { params: { title: string } }) {
           </h1>
 
           <div className="p-4">
-            <MeetingInfoCard />
-            <AttendanceTracker />
+            <DefaultMeetingDisplay
+              startTime={"09:00 AM"}
+              endTime={"10:00 AM"}
+              dayOfWeek={"Wednesday"}
+              location={"Main Conference Hall"}
+              name={"Weekly Project Status Meeting"}
+            />
+            <DefaultMeetingSetter />
             {isLoading ? null : (
               <AttendanceTable
                 Meetings={projectData.meetings}

@@ -30,10 +30,10 @@ export default function MeetingAttendance() {
   }
 
   return (
-    <>
+    <div className="flex grow justify-around border">
       {state.members.map((member, index) => (
-        <>
-          <Dropdown key={index}>
+        <div key={index} className="flex-col border">
+          <Dropdown>
             <DropdownTrigger>
               <Button variant="bordered" className={colorBackground(member.id)}>
                 {state.attendance[member.id]}
@@ -49,8 +49,8 @@ export default function MeetingAttendance() {
             </DropdownMenu>
           </Dropdown>
           <p>{member.name}</p>
-        </>
+        </div>
       ))}
-    </>
+    </div>
   );
 }

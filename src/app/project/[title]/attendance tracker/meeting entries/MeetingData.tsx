@@ -1,6 +1,6 @@
 import React from "react";
 import { useAttendance } from "../attendanceContext";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card, CardBody, Button, Tooltip } from "@nextui-org/react";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
@@ -68,17 +68,21 @@ export default function MeetingData() {
         <p>{meetingDate}</p>
         <p>{meetingTime}</p>
         <div>
-          {/* <EditIcon /> */}
-          <Button
-            isIconOnly
-            onPress={() => {
-              dispatch({
-                type: "MARK_ALL_AS_PRESENT",
-              });
-            }}
-          >
-            <CheckIcon />
+          <Button isIconOnly>
+            <EditIcon />
           </Button>
+          <Tooltip content="Mark All Present" delay={1500}>
+            <Button
+              isIconOnly
+              onPress={() => {
+                dispatch({
+                  type: "MARK_ALL_AS_PRESENT",
+                });
+              }}
+            >
+              <CheckIcon />
+            </Button>
+          </Tooltip>
           {state.edited && (
             <Button
               isIconOnly
