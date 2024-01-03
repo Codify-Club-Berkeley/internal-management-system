@@ -1,8 +1,10 @@
-import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, Project } from "@prisma/client";
-import { updateProjectValidator } from "@/utils/validators";
-import { formatModelConnections } from "@/utils/helpers";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+import { formatModelConnections } from "@/utils/helpers";
+import { updateProjectValidator } from "@/utils/validators";
+import { PrismaClient, Project } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 /**
@@ -135,6 +137,35 @@ export async function PATCH(
 
     if (error instanceof z.ZodError)
       return NextResponse.json(error.issues[0], { status: 400 });
+    return NextResponse.json(error, { status: 400 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+): Promise<NextResponse<Project | null | any>> {
+  try {
+    // Todo verify that the user is an admin or the project owner
+
+    // Delete the project
+    const project: Project | null = await prisma.project.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    // If the project was not updated successfully, return a 400 error
+    if (!project) {
+      return NextResponse.json(project, {
+        status: 404,
+      });
+    }
+
+    // If the project was updated successfully, return the project with a 200 status code
+    return NextResponse.json(project, { status: 200 });
+  } catch (error: any) {
+    console.log(error);
     return NextResponse.json(error, { status: 400 });
   }
 }

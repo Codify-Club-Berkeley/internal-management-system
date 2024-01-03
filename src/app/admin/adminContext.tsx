@@ -1,10 +1,6 @@
-import React, { createContext, useReducer, useContext, Dispatch } from "react";
+import React, { createContext, Dispatch, useContext, useReducer } from "react";
 
-// Given types
-export type UserMinimized = {
-  id: string;
-  name: string;
-};
+import { UserMinimized } from "../../utils/types";
 
 export type AdminStateType = {
   members: UserMinimized[];

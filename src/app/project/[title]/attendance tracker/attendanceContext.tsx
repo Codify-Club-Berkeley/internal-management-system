@@ -1,8 +1,8 @@
 // AttendanceContext.tsx
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useContext, useReducer } from "react";
+
+import { UserMinimized } from "@/utils/types";
 import { Meeting, User } from "@prisma/client";
-import { UserMinimized } from "@/utils/helpers";
-import { usersMinimizer } from "@/utils/helpers";
 
 export type AttendanceStatus = "present" | "absent" | "excused" | "undefined";
 

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useAdmin } from "../adminContext";
 import { MemberChip } from "./MemberChip";
 
@@ -23,7 +24,7 @@ const MemberChips: React.FC<{}> = () => {
       {state.leads.map((lead, index) => (
         <MemberChip
           key={index}
-          name={lead.name}
+          name={lead.firstName + " " + lead.lastName}
           isLead={true}
           onDelete={() => handleClose(lead)}
           onAction={() => handleDemote(lead)}
@@ -34,7 +35,7 @@ const MemberChips: React.FC<{}> = () => {
         .map((member, index) => (
           <MemberChip
             key={index}
-            name={member.name}
+            name={member.firstName + " " + member.lastName}
             isLead={false}
             onDelete={() => handleClose(member)}
             onAction={() => handlePromote(member)}

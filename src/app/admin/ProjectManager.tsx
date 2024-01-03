@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+import { Accordion, AccordionItem } from "@nextui-org/react";
+import { Project, User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+
+import { ProjectWithMembersAndLeads, UserMinimized } from "../../utils/types";
 import { ProjectSection } from "./ProjectSection";
-import { User, Project } from "@prisma/client";
-import { usersMinimizer } from "@/utils/helpers";
 
 const ProjectManager = () => {
   const {
@@ -12,10 +14,12 @@ const ProjectManager = () => {
     isLoading: usersLoading,
     isError: usersError,
   } = useQuery({
-    queryKey: ["allUsers"],
+    queryKey: ["minimizedUsers"],
     queryFn: async () => {
-      const response = await axios.get("/api/user");
-      return response.data as User[];
+      const response = await axios.get(
+        "/api/user?minimized=true&projects=false",
+      );
+      return response.data as UserMinimized[];
     },
   });
 
@@ -27,7 +31,7 @@ const ProjectManager = () => {
     queryKey: ["allProjects"],
     queryFn: async () => {
       const response = await axios.get("/api/projects?members=true&leads=true");
-      return response.data as Project[];
+      return response.data as ProjectWithMembersAndLeads[];
     },
   });
 
@@ -36,17 +40,18 @@ const ProjectManager = () => {
 
   return (
     <Accordion selectionMode="multiple" variant="shadow">
-      {projects && projects.length > 0 ? (
-        projects.map((project: Project, index: number) => (
+      {!projectsLoading &&
+      !usersLoading &&
+      projects &&
+      users &&
+      projects.length > 0 ? (
+        projects.map((project: ProjectWithMembersAndLeads, index: number) => (
           <AccordionItem
             key={index}
             aria-label={project.id}
             title={project.title}
           >
-            <ProjectSection
-              project={project}
-              users={usersLoading ? [] : usersMinimizer(users)}
-            />
+            <ProjectSection project={project} users={users} />
           </AccordionItem>
         ))
       ) : (

@@ -1,6 +1,8 @@
-import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
-import { UserMinimized } from "@/utils/helpers";
+
+import { Checkbox } from "@nextui-org/react";
+
+import { UserMinimized } from "../../../../utils/types";
 import { useAdmin } from "../../adminContext";
 
 // this is a single checkbox that is displayed based on the SearchResultList component
@@ -19,7 +21,7 @@ export const SearchResult = ({ result }: { result: UserMinimized }) => {
         })
       }
     >
-      {result.name}
+      {result.firstName + " " + result.lastName}
     </Checkbox>
   );
 };

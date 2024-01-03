@@ -1,24 +1,19 @@
 "use client";
 
-import React from "react";
+import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+
+import { UserButton, useUser } from '@clerk/nextjs';
 import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-} from "@nextui-org/react";
-import Link from "next/link";
-import Image from "next/image";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { useUser } from "@clerk/nextjs";
-import { UserButton } from "@clerk/nextjs";
-import CodifyLogo from "../../../assets/Codify Berkeley.png";
-import { User } from "@prisma/client";
-import { projectNameStringFormatter } from "../../utils/helpers";
+    Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle
+} from '@nextui-org/react';
+import { User } from '@prisma/client';
+import { useQuery } from '@tanstack/react-query';
+
+import CodifyLogo from '../../../assets/Codify Berkeley.png';
+import { projectNameStringFormatter } from '../../utils/helpers';
 
 export default function NavigationBar() {
   const { isSignedIn, user, isLoaded } = useUser();
