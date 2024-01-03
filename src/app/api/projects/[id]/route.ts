@@ -21,6 +21,7 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams;
   const title = searchParams.get("title");
 
+  // Todo refactor this code to be more specific with the fetched data using query params
   try {
     // If the title query param is set, search by title
     let project: Project | null;
@@ -31,6 +32,7 @@ export async function GET(
         },
         include: {
           members: true,
+          leads: true,
           meetings: {
             include: {
               present: true,

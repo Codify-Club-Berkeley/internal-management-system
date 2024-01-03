@@ -1,19 +1,19 @@
 import React from "react";
+
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
 } from "@nextui-org/react";
-import { useAttendance } from "../attendanceContext";
-import { UserMinimized } from "@/utils/helpers";
-import { AttendanceStatus } from "../attendanceContext";
+
+import { AttendanceStatus, useAttendance } from "../attendanceContext";
 
 export default function MeetingAttendance() {
   const { state, dispatch } = useAttendance();
 
-  function handleAttendanceChange(key: React.Key, member: UserMinimized) {
+  function handleAttendanceChange(key: React.Key, member: any) {
     console.log("handleAttendanceChange: " + key);
     dispatch({
       type: "MARK_STATUS",
@@ -48,7 +48,7 @@ export default function MeetingAttendance() {
               <DropdownItem key="excused">Excused</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <p>{member.name}</p>
+          <p>{member.firstName + " " + member.lastName}</p>
         </div>
       ))}
     </div>

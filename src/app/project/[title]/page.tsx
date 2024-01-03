@@ -1,16 +1,16 @@
 // Project page
 "use client";
 
-import React from "react";
-import { projectNameStringFormatter } from "../../../utils/helpers";
-import AttendanceTracker from "../../../components/AttendanceTracker";
-import { UploadButton } from "../../../utils/uploadthing";
-import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import MeetingInfoCard from "@/components/MeetingInfoCard";
+import React from "react";
+import { toast } from "react-toastify";
+
+import { ProjectWithMembersLeadsAndFullMeetings } from "@/utils/types";
+import { useQuery } from "@tanstack/react-query";
+
+import { projectNameStringFormatter } from "../../../utils/helpers";
+import { UploadButton } from "../../../utils/uploadthing";
 import AttendanceTable from "./attendance tracker/AttendanceTable";
-import DefaultMeetingSetter from "./default meetings/DefaultMeetingSetter";
 import DefaultMeetingDisplay from "./default meetings/DefaultMeetingDisplay";
 
 export default function Page({ params }: { params: { title: string } }) {
@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { title: string } }) {
       const response = await axios.get(
         "/api/projects/id?title=" + params.title,
       );
-      return response.data;
+      return response.data as ProjectWithMembersLeadsAndFullMeetings;
     },
   });
 
@@ -40,8 +40,7 @@ export default function Page({ params }: { params: { title: string } }) {
               location={"Main Conference Hall"}
               name={"Weekly Project Status Meeting"}
             />
-            <DefaultMeetingSetter />
-            {isLoading ? null : (
+            {isLoading || !projectData ? null : (
               <AttendanceTable
                 Meetings={projectData.meetings}
                 Members={projectData.members}

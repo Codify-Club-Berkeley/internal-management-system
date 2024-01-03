@@ -1,7 +1,16 @@
 // DisplayMeetingSettings.tsx
 
 import React from "react";
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from "@nextui-org/react";
+
+import MeetingEditor from "./MeetingEditor";
 
 type MeetingSettingsProps = {
   startTime: string;
@@ -20,8 +29,13 @@ const DefaultMeetingDisplay: React.FC<MeetingSettingsProps> = ({
 }) => {
   return (
     <Card className="mx-auto my-8">
-      <CardHeader>
-        <h2>Meeting Settings</h2>
+      <CardHeader className="justify-between">
+        <div className="flex flex-grow items-center">
+          <h2>Meeting Settings</h2>
+          <div className="ml-auto">
+            <MeetingEditor />
+          </div>
+        </div>
       </CardHeader>
       <CardBody className="space-y-2">
         <p>

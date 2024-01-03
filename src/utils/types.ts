@@ -27,3 +27,21 @@ const projectWithMembersAndLeads =
 export type ProjectWithMembersAndLeads = Prisma.ProjectGetPayload<
   typeof projectWithMembersAndLeads
 >;
+
+const meetingWithPresentAbsentAndExcused =
+  Prisma.validator<Prisma.MeetingDefaultArgs>()({
+    include: {
+      present: true,
+      absent: true,
+      excused: true,
+    },
+  });
+
+export type MeetingWithPresentAbsentAndExcused = Prisma.MeetingGetPayload<
+  typeof meetingWithPresentAbsentAndExcused
+>;
+
+export type ProjectWithMembersLeadsAndFullMeetings =
+  ProjectWithMembersAndLeads & {
+    meetings: MeetingWithPresentAbsentAndExcused[];
+  };

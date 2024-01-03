@@ -1,7 +1,10 @@
 // AttendanceContext.tsx
 import React, { createContext, useContext, useReducer } from "react";
 
-import { UserMinimized } from "@/utils/types";
+import {
+  MeetingWithPresentAbsentAndExcused,
+  UserMinimized,
+} from "@/utils/types";
 import { Meeting, User } from "@prisma/client";
 
 export type AttendanceStatus = "present" | "absent" | "excused" | "undefined";
@@ -10,7 +13,7 @@ export type AttendanceStatus = "present" | "absent" | "excused" | "undefined";
 type AttendanceState = {
   attendance: Record<string, AttendanceStatus>;
   edited: boolean;
-  meeting: Meeting;
+  meeting: MeetingWithPresentAbsentAndExcused;
   members: UserMinimized[];
 };
 
@@ -104,7 +107,7 @@ const AttendanceProvider: React.FC = ({
     attendance,
     edited: false,
     meeting,
-    members: usersMinimizer(members),
+    members,
   };
 
   const [state, dispatch] = useReducer(attendanceReducer, initialState);

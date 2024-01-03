@@ -1,14 +1,7 @@
 import React from "react";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/react";
-import { User, Meeting } from "@prisma/client";
+import { MeetingWithPresentAbsentAndExcused } from "@/utils/types";
+import { Meeting, User } from "@prisma/client";
 
 import MeetingEntryWrapper from "./meeting entries/MeetingEntryWrapper";
 
@@ -17,7 +10,7 @@ export default function AttendanceTable({
   Meetings,
 }: {
   Members: User[];
-  Meetings: Meeting[];
+  Meetings: MeetingWithPresentAbsentAndExcused[];
 }) {
   // Sort the members alphabetically by first name to keep a consistent ordering
   // Assume first names are defined
