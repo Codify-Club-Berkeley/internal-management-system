@@ -15,7 +15,9 @@ export const SearchResultsList = () => {
         .map((result, index) => {
           return <SearchResult result={result} key={index} />;
         })}
-      {state.searchResults.length === 0 && <p>No results found</p>}
+      {state.searchResults.length === 0 && state.searchInput.length > 0 && (
+        <p>No results found</p>
+      )}
     </div>
   );
 };

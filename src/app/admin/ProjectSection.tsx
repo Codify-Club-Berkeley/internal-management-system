@@ -24,8 +24,8 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
       leads={usersMinimizer(project.leads)}
     >
       {project && users ? (
-        <div className="flex">
-          <div>
+        <div className="flex w-full">
+          <div className="w-1/5">
             <ul className="space-y-2">
               <li className="flex">
                 <ProjectFlagsCard tags={project.tags} />
@@ -35,8 +35,10 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
               <li>Client Phone: {project.clientPhoneNum}</li>
             </ul>
           </div>
-          <div className="mx-3"></div>
-          <div className="space-y-3">
+          <div className="w-1/5">
+            <p>{project.description}</p>
+          </div>
+          <div className="w-3/5 space-y-3">
             <MemberChips />
             <SearchBar items={users} />
             <SearchResultsList />

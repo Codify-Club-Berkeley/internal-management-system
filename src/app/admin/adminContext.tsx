@@ -11,6 +11,7 @@ export type AdminStateType = {
   leads: UserMinimized[];
   searchResults: UserMinimized[];
   searchResultsChecked: UserMinimized[];
+  searchInput: string;
   edited: boolean;
 };
 
@@ -21,6 +22,7 @@ type AdminAction =
   | { type: "ADD_LEAD"; payload: UserMinimized }
   | { type: "REMOVE_LEAD"; payload: UserMinimized }
   | { type: "SET_SEARCH_RESULTS"; payload: UserMinimized[] }
+  | { type: "SET_SEARCH_INPUT"; payload: string }
   | { type: "TOGGLE_SEARCH_RESULT"; payload: UserMinimized } // user object
   | { type: "ADD_MEMBERS" }
   | { type: "RESET_EDITED" };
@@ -86,6 +88,8 @@ function adminReducer(
         searchResultsChecked: [],
         edited: true,
       };
+    case "SET_SEARCH_INPUT":
+      return { ...state, searchInput: action.payload };
     case "RESET_EDITED":
       return { ...state, edited: false };
     default:
@@ -106,6 +110,7 @@ const AdminProvider: React.FC = ({ children, members, leads }: any) => {
     leads: leads,
     searchResults: [],
     searchResultsChecked: [],
+    searchInput: "",
     edited: false,
   };
 

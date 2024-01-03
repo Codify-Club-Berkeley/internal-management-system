@@ -17,7 +17,7 @@ export const updateProjectValidator = z.object({
 
 // PATCH /api/projects
 export const createProjectValidator = z.object({
-  title: z.string(),
+  title: z.string().min(3),
   description: z.string().optional(),
 });
 
