@@ -1,15 +1,9 @@
-import React from "react";
-import { projectNameStringFormatter } from "../utils/helpers";
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Image,
-  Link,
-} from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { Card, CardBody, CardFooter, CardHeader, Image, Link } from '@nextui-org/react';
+
+import { projectNameStringFormatter } from '../utils/helpers';
 
 interface ProjectCardProps {
   // teamName: strxing;

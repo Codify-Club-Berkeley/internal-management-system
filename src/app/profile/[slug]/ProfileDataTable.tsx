@@ -1,29 +1,31 @@
 "use client";
 
-import React, { use, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import copy from "copy-to-clipboard";
+import React, { use, useEffect } from "react";
+import { Path, set, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { updateUserValidator } from "@/utils/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
   Button,
+  Input,
   Select,
   SelectItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   toIterator,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
-import copy from "copy-to-clipboard";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useProfileStore } from "./pageState";
-import { useForm, Path, set } from "react-hook-form";
-import { z } from "zod";
-import { updateUserValidator } from "@/utils/validators";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 type DataRow = {
   displayName: string;
@@ -34,7 +36,6 @@ type DataRow = {
   selectKeys?: string[];
   multiple?: boolean; // If the select input allows multiple values, this will be true
 };
-
 type UpdateUserSchema = z.infer<typeof updateUserValidator>;
 
 // Email, GH username, Grad year, Member Since, LinkedIn, Phone Number
@@ -121,12 +122,12 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
             {displayData.map((row: DataRow, index: number) => (
               <TableRow
                 key={row.displayName}
-                className="flex border-1 border-divider h-20"
+                className="flex h-20 border-1 border-divider"
               >
-                <TableCell className="border-1 w-1/3">
+                <TableCell className="w-1/3 border-1">
                   <h1 className="text-xl">{row.displayName + ":"}</h1>
                 </TableCell>
-                <TableCell className="border-1 w-2/3">
+                <TableCell className="w-2/3 border-1">
                   {/* Todo pass the editing */}
                   {editing && row.editable ? (
                     row.selectKeys !== undefined ? (
@@ -153,7 +154,7 @@ export default function ProfileDataTable({ userData }: { userData: User }) {
                         startContent={
                           row.startPrefix !== undefined ? (
                             <div className="pointer-events-none flex items-center">
-                              <span className="text-default-400 text-small">
+                              <span className="text-small text-default-400">
                                 {row.startPrefix}
                               </span>
                             </div>

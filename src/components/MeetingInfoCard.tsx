@@ -1,5 +1,8 @@
-import React from "react";
-import { Input, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import React from 'react';
+
+import {
+    Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input
+} from '@nextui-org/react';
 
 const MeetingInfoCard = () => {
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
