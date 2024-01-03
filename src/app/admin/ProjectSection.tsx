@@ -2,6 +2,7 @@ import React, { use, useState } from "react";
 
 import { ProjectWithMembersAndLeads, UserMinimized } from "../../utils/types";
 import { AdminProvider } from "./adminContext";
+import DeleteProjectModal from "./project-manager/DeleteProjectModal";
 import MemberChips from "./project-manager/MemberChips";
 import ProjectFlagsCard from "./project-manager/ProjectFlagsCard";
 import { AddButton } from "./project-manager/searchbar/AddButton";
@@ -27,6 +28,10 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
               <li className="flex">
                 <ProjectFlagsCard tags={project.tags} />
               </li>
+              <DeleteProjectModal
+                projectId={project.id}
+                projectTitle={project.title}
+              />
               <li>Client Name: {project.clientName}</li>
               <li>Client Email: {project.clientEmail}</li>
               <li>Client Phone: {project.clientPhoneNum}</li>
