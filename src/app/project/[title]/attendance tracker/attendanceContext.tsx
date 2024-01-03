@@ -10,7 +10,7 @@ import { Meeting, User } from "@prisma/client";
 export type AttendanceStatus = "present" | "absent" | "excused" | "undefined";
 
 // The state will map user IDs to their attendance status
-type AttendanceState = {
+export type AttendanceState = {
   attendance: Record<string, AttendanceStatus>;
   edited: boolean;
   meeting: MeetingWithPresentAbsentAndExcused;

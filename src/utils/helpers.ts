@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 
+import { daysOfWeek } from "./constants";
+
 // Simple helper functions used throughout the app
 
 // Formats project name strings to be more readable in the frontend
@@ -111,4 +113,55 @@ export function meetingDateExtract(
   )}`;
 
   return [date, time];
+}
+
+// Given form inputs, return a formatted object to be used in the API call
+export function getMeetingStartEndDates(
+  meetingDate: string,
+  startTime: string,
+  endTime: string,
+): { start: Date; end: Date } {
+  const startDate = new Date(`${meetingDate}T${startTime}:00-08:00`); // Assuming PST is -8 hours
+  const endDate = new Date(`${meetingDate}T${endTime}:00-08:00`);
+
+  return { start: startDate, end: endDate };
+}
+
+// Extract meeting details given start and end dates
+export function extractMeetingDetails(
+  startDate: string,
+  endDate: string,
+): {
+  dayOfWeek: string;
+  meetingDate: string;
+  startTime: string;
+  endTime: string;
+} {
+  const meetingDate = startDate.toString().split("T")[0]; // Extract date part
+  const dayOfWeek = dayjs(startDate).format("dddd");
+  const startTime = String(startDate).split("T")[1].substring(3, 8); // Extract time part
+  const endTime = String(endDate).split("T")[1].substring(3, 8); // Extract time part
+
+  return { dayOfWeek, meetingDate, startTime, endTime };
+}
+
+function getFirstDateOfWeekIn1970(dayOfWeek: string) {
+  // Convert the dayOfWeek string to a number that corresponds with JavaScript's getDay() method
+  const dayIndex = daysOfWeek.indexOf(dayOfWeek);
+
+  // Check if the dayOfWeek is valid
+  if (dayIndex === -1) {
+    throw new Error("Invalid day of the week");
+  }
+
+  // Create a date object for January 1, 1970
+  const date = new Date("1970-01-01T00:00:00Z");
+  date.setUTCHours(0, 0, 0, 0); // Ensure it's the very start of the day
+
+  // Loop through the days of 1970 until the first occurrence of the given day of the week is found
+  while (date.getUTCDay() !== dayIndex) {
+    date.setUTCDate(date.getUTCDate() + 1); // Increment the day by one
+  }
+
+  return date;
 }

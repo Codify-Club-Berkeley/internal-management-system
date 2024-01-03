@@ -1,12 +1,15 @@
+import axios from "axios";
 import React from "react";
-import { useAttendance } from "../attendanceContext";
-import { Card, CardBody, Button, Tooltip } from "@nextui-org/react";
-import SaveIcon from "@mui/icons-material/Save";
+
+import { meetingDateExtract } from "@/utils/helpers";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-import { meetingDateExtract } from "@/utils/helpers";
+import SaveIcon from "@mui/icons-material/Save";
+import { Button, Card, CardBody, Tooltip } from "@nextui-org/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+
+import MeetingEditor from "../../default meetings/MeetingEditor";
+import { useAttendance } from "../attendanceContext";
 
 export default function MeetingData() {
   const { state, dispatch } = useAttendance();
@@ -68,9 +71,11 @@ export default function MeetingData() {
         <p>{meetingDate}</p>
         <p>{meetingTime}</p>
         <div>
-          <Button isIconOnly>
-            <EditIcon />
-          </Button>
+          <MeetingEditor
+            meetingId={state.meeting?.id}
+            isDefault={false}
+            state={state}
+          />
           <Tooltip content="Mark All Present" delay={1500}>
             <Button
               isIconOnly

@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import { daysOfWeek } from "@/utils/constants";
+import {
+  extractMeetingDetails,
+  getMeetingStartEndDates,
+} from "@/utils/helpers";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Button,
@@ -15,36 +20,71 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
+import { AttendanceState } from "../attendance tracker/attendanceContext";
+
 type FormValues = {
   startTime: string;
   endTime: string;
+  date: string;
   dayOfWeek: string;
   location: string;
   name: string;
 };
 
-const DaysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-export default function MeetingEditor() {
+export default function MeetingEditor({
+  meetingId,
+  isDefault,
+  state,
+}: {
+  meetingId: string;
+  isDefault: boolean;
+  state: AttendanceState;
+}) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+    reset,
+  } = useForm<FormValues>({});
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  console.log(state);
+
+  const onSubmit = (close: () => void) => {
     // Handle submission, e.g., update context or send to an API
+    handleSubmit(
+      (data: FormValues) => {
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      },
+    )();
   };
+
+  //! This is a hacky solution that I'm not proud of
+  // When the modal is opened, set the default values of the form
+  useEffect(() => {
+    if (state != undefined) {
+      console.log(state.meeting);
+      const { dayOfWeek, meetingDate, startTime, endTime } =
+        extractMeetingDetails(
+          String(state.meeting.start),
+          String(state.meeting.end),
+        );
+      console.log(dayOfWeek, meetingDate, startTime, endTime);
+
+      reset({
+        startTime: startTime,
+        endTime: endTime,
+        date: meetingDate,
+        dayOfWeek: dayOfWeek,
+        location: (state.meeting?.location || "") as string,
+        name: state.meeting?.title,
+      });
+    }
+  }, [isOpen]);
+
   return (
     <>
       <Button onPress={onOpen} isIconOnly>
@@ -55,74 +95,81 @@ export default function MeetingEditor() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Edit Meeting
               </ModalHeader>
               <ModalBody>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className=" border border-gray-300  p-8"
-                >
-                  <h2 className="mb-4 text-lg font-medium leading-6 ">
-                    Default Meeting Settings
-                  </h2>
-
+                <form className=" border border-gray-300  p-8">
                   <div className="grid gap-4">
                     <div className="flex flex-row">
                       {/* Time inputs */}
 
                       <Input
-                        label="Default Start Time"
+                        label="Start Time"
                         labelPlacement="outside-left"
                         type="time"
                         {...register("startTime")}
                       />
                       <Input
-                        label="Default End Time"
+                        label="End Time"
                         labelPlacement="outside-left"
                         type="time"
                         {...register("endTime")}
                       />
                     </div>
 
-                    {/* Day of the Week Dropdown */}
-                    <Select
-                      {...register("dayOfWeek")}
-                      label="Default Day of the Week"
-                    >
-                      {DaysOfWeek.map((day, index) => (
-                        <SelectItem key={index} value={day}>
-                          {day}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                    <div className="flex flex-row">
+                      {/* Day of the Week Dropdown */}
+                      <Select
+                        {...register("dayOfWeek")}
+                        label="Default Day of the Week"
+                        className="pr-2"
+                        isDisabled={!isDefault}
+                      >
+                        {daysOfWeek.map((day, index) => (
+                          <SelectItem key={index} value={day}>
+                            {day}
+                          </SelectItem>
+                        ))}
+                      </Select>
+
+                      {/* Date Input */}
+                      <Input
+                        label="Date"
+                        type="date"
+                        isDisabled={isDefault}
+                        {...register("date")}
+                        placeholder="Enter date"
+                        className="pl-2"
+                      />
+                    </div>
 
                     {/* Text inputs for location and name */}
                     <Input
-                      label="Default Location"
+                      label="Location"
                       isClearable
                       {...register("location")}
                       placeholder="Enter location"
                     />
                     <Input
-                      label="Default Meeting Name"
+                      label="Meeting Title"
                       isClearable
                       {...register("name")}
-                      placeholder="Enter meeting name"
+                      placeholder="Enter meeting title"
                     />
-
-                    {/* Submit button */}
-                    <Button type="submit" color="primary">
-                      Save Settings
-                    </Button>
                   </div>
                 </form>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Cancel
                 </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
+                <Button
+                  color="primary"
+                  onPress={() => {
+                    onSubmit(onClose);
+                  }}
+                >
+                  Save
                 </Button>
               </ModalFooter>
             </>

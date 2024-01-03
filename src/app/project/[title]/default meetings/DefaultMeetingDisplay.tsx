@@ -33,7 +33,8 @@ const DefaultMeetingDisplay: React.FC<MeetingSettingsProps> = ({
         <div className="flex flex-grow items-center">
           <h2>Meeting Settings</h2>
           <div className="ml-auto">
-            <MeetingEditor />
+            {/* //state={{attendance:{}, members: [], edited: false, meeting: }} */}
+            <MeetingEditor meetingId="temp" isDefault={true} />
           </div>
         </div>
       </CardHeader>
