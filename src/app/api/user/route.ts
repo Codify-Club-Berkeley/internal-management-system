@@ -1,5 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, User, Project } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+
+import { PrismaClient, Project, User } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 /**
@@ -27,24 +29,41 @@ export async function GET(request: NextRequest): Promise<NextResponse<User[]>> {
   // if projects=true, then also get all of the projects for all of the users (this is the default)
   // if projects=false, then do not get all of the projects for all of the users
 
+  // If minimized=true, then only return the id, firstName, and lastName of each user
+  // If minimized=false, then return the entire user object
+
+  //! Using include and select at the same time causes an error within Prisma, we need
+  // Todo find a workaround for this
   const searchParams = request.nextUrl.searchParams;
   const projects = searchParams.get("projects");
+  const minimized = searchParams.get("minimized");
 
-  // The users to return
-  let users: User[];
+  // The params to pass into the findMany function
+  let params = {};
 
-  // Get all users without their projects
-  if (projects === "false") {
-    users = await prisma.user.findMany();
-  } else {
-    // Get all users including their projects
-    users = await prisma.user.findMany({
+  if (minimized === "true") {
+    params = {
+      ...params,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
+
+  if (projects === "true") {
+    params = {
+      ...params,
       include: {
         projects: true,
         leading: true,
       },
-    });
+    };
   }
+
+  // Get all users without their projects
+  const users = await prisma.user.findMany(params);
 
   // Return the users
   return NextResponse.json(users, { status: 200 });

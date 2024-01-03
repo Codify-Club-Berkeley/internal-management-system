@@ -1,16 +1,16 @@
 import React, { use, useState } from "react";
-import ProjectFlagsCard from "./project-manager/ProjectFlagsCard";
+
+import { ProjectWithMembersAndLeads, UserMinimized } from "../../utils/types";
+import { AdminProvider } from "./adminContext";
 import MemberChips from "./project-manager/MemberChips";
-import { SearchBar } from "./project-manager/searchbar/SearchBar";
-import { SearchResultsList } from "./project-manager/searchbar/SearchResultList";
+import ProjectFlagsCard from "./project-manager/ProjectFlagsCard";
 import { AddButton } from "./project-manager/searchbar/AddButton";
 import { SaveButton } from "./project-manager/searchbar/SaveButton";
-import { Project } from "@prisma/client";
-import { UserMinimized, usersMinimizer } from "@/utils/helpers";
-import { AdminProvider } from "./adminContext";
+import { SearchBar } from "./project-manager/searchbar/SearchBar";
+import { SearchResultsList } from "./project-manager/searchbar/SearchResultList";
 
 type ProjectSectionProps = {
-  project: Project;
+  project: ProjectWithMembersAndLeads;
   users: UserMinimized[];
 };
 
@@ -19,10 +19,7 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({
   users,
 }) => {
   return (
-    <AdminProvider
-      members={usersMinimizer(project.members)}
-      leads={usersMinimizer(project.leads)}
-    >
+    <AdminProvider members={project.members} leads={project.leads}>
       {project && users ? (
         <div className="flex w-full">
           <div className="w-1/5">
