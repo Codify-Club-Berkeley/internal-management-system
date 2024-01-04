@@ -44,4 +44,4 @@ export type MeetingWithPresentAbsentAndExcused = Prisma.MeetingGetPayload<
 export type ProjectWithMembersLeadsAndFullMeetings =
   ProjectWithMembersAndLeads & {
     meetings: MeetingWithPresentAbsentAndExcused[];
-  };
+  } & { meetingDefaults: MeetingWithPresentAbsentAndExcused };

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { daysOfWeek } from "@/utils/constants";
 import {
   extractMeetingDetails,
+  getFirstDateOfWeekIn1970,
   getMeetingStartEndDates,
 } from "@/utils/helpers";
 import EditIcon from "@mui/icons-material/Edit";
@@ -54,8 +55,24 @@ export default function MeetingEditor({
       // Then add them to the body of the request in addPresent, addAbsent, or addExcused
 
       const { startTime, endTime, date, dayOfWeek, location, name } = data;
-      console.log(startTime, endTime, date, dayOfWeek, location, name);
-      // todo handle default meeting case later
+
+      // If the meeting is the default meeting, then we need to update the start and end times
+      if (isDefault) {
+        const { start, end } = getMeetingStartEndDates(
+          getFirstDateOfWeekIn1970(dayOfWeek),
+          startTime,
+          endTime,
+        );
+        const body = {
+          start: start,
+          end: end,
+          location: location,
+          title: name,
+        };
+        await axios.patch("/api/meeting/" + meeting.id, body);
+        return;
+      }
+
       const { start, end } = getMeetingStartEndDates(date, startTime, endTime);
       const body = {
         start: new Date(start),
@@ -147,8 +164,8 @@ export default function MeetingEditor({
                         className="pr-2"
                         isDisabled={!isDefault}
                       >
-                        {daysOfWeek.map((day, index) => (
-                          <SelectItem key={index} value={day}>
+                        {daysOfWeek.map((day) => (
+                          <SelectItem key={day} value={day}>
                             {day}
                           </SelectItem>
                         ))}

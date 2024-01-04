@@ -202,7 +202,7 @@ export function extractMeetingDetails(
   return { dayOfWeek, meetingDate, startTime, endTime };
 }
 
-function getFirstDateOfWeekIn1970(dayOfWeek: string) {
+export function getFirstDateOfWeekIn1970(dayOfWeek: string): string {
   // Convert the dayOfWeek string to a number that corresponds with JavaScript's getDay() method
   const dayIndex = daysOfWeek.indexOf(dayOfWeek);
 
@@ -220,5 +220,5 @@ function getFirstDateOfWeekIn1970(dayOfWeek: string) {
     date.setUTCDate(date.getUTCDate() + 1); // Increment the day by one
   }
 
-  return date;
+  return date.toISOString().split("T")[0]; // Return the date in YYYY-MM-DD format
 }

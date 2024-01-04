@@ -33,7 +33,7 @@ export default function Page({ params }: { params: { title: string } }) {
           </h1>
 
           <div className="p-4">
-            {/* <DefaultMeetingDisplay meeting={projectData?.defaultMeeting} /> */}
+            <DefaultMeetingDisplay meeting={projectData?.meetingDefaults} />
             {isLoading || !projectData ? null : (
               <AttendanceTable
                 Meetings={projectData.meetings}
