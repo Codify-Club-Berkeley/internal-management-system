@@ -94,25 +94,82 @@ export function formatModelConnections(input: any): any {
   return formatted;
 }
 
-// Given a start and end datetime for a meeting, extract the date and time in a readable format
-// Returns a tuple of two strings: [date, time]
-export function meetingDateExtract(
-  start: string,
-  end: string,
-): [string, string] {
-  // Define the Pacific Time Zone
-  const timeZone = "America/Los_Angeles";
+// Given two strings in the form hh:mm, return 3:00 - 5:00 PM as a string to be displayed in the frontend
+export function formatStartEndTimes(
+  startTime: string,
+  endTime: string,
+): string {
+  // Define a helper function to convert 24-hour time to 12-hour format with AM/PM
+  function convertTo12Hour(time: string) {
+    // Extract hours and minutes from the time string
+    const [hours, minutes] = time.split(":").map(Number);
 
-  // Parse out the date from the start and end times, assume the date is the same for both
-  // Format the date in the format, "Monday December 31, 2021"
-  const date = dayjs(start).format("dddd MMMM D, YYYY");
+    // Determine AM or PM
+    const period = hours >= 12 ? "PM" : "AM";
 
-  // Parse out the time from the start and end times, return in the format "start - end"
-  const time = `${dayjs(start).format("h:mm A")} - ${dayjs(end).format(
-    "h:mm A",
-  )}`;
+    // Convert hours from 24-hour to 12-hour format
+    const adjustedHours = hours % 12 || 12; // Adjust 0 or 12 hours to 12 for 12-hour time format
 
-  return [date, time];
+    // Format the time string
+    return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+  }
+
+  // Convert both start and end times
+  const formattedStartTime = convertTo12Hour(startTime);
+  const formattedEndTime = convertTo12Hour(endTime);
+
+  // Return the formatted string
+  return `${formattedStartTime} - ${formattedEndTime}`;
+}
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+
+  // Define arrays for days and months
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // Extract components from the date
+  const dayOfWeek = days[date.getUTCDay()];
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+
+  // Determine the ordinal indicator
+  let ordinalIndicator;
+  if (day % 10 === 1 && day !== 11) {
+    ordinalIndicator = "st";
+  } else if (day % 10 === 2 && day !== 12) {
+    ordinalIndicator = "nd";
+  } else if (day % 10 === 3 && day !== 13) {
+    ordinalIndicator = "rd";
+  } else {
+    ordinalIndicator = "th";
+  }
+
+  // Construct the formatted date string
+  return `${dayOfWeek}, ${month} ${day}${ordinalIndicator}, ${year}`;
 }
 
 // Given form inputs, return a formatted object to be used in the API call
@@ -120,9 +177,9 @@ export function getMeetingStartEndDates(
   meetingDate: string,
   startTime: string,
   endTime: string,
-): { start: Date; end: Date } {
-  const startDate = new Date(`${meetingDate}T${startTime}:00-08:00`); // Assuming PST is -8 hours
-  const endDate = new Date(`${meetingDate}T${endTime}:00-08:00`);
+): { start: string; end: string } {
+  const startDate = `${meetingDate}T${startTime}:00Z`; // Ignore time zones for now
+  const endDate = `${meetingDate}T${endTime}:00Z`;
 
   return { start: startDate, end: endDate };
 }
@@ -139,8 +196,8 @@ export function extractMeetingDetails(
 } {
   const meetingDate = startDate.toString().split("T")[0]; // Extract date part
   const dayOfWeek = dayjs(startDate).format("dddd");
-  const startTime = String(startDate).split("T")[1].substring(3, 8); // Extract time part
-  const endTime = String(endDate).split("T")[1].substring(3, 8); // Extract time part
+  const startTime = String(startDate).split("T")[1].substring(0, 5); // Extract time part
+  const endTime = String(endDate).split("T")[1].substring(0, 5); // Extract time part
 
   return { dayOfWeek, meetingDate, startTime, endTime };
 }

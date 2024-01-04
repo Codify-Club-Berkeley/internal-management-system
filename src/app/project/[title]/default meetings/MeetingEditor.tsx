@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,8 +20,8 @@ import {
   SelectItem,
   useDisclosure,
 } from "@nextui-org/react";
-
-import { AttendanceState } from "../attendance tracker/attendanceContext";
+import { Meeting } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type FormValues = {
   startTime: string;
@@ -32,13 +33,11 @@ type FormValues = {
 };
 
 export default function MeetingEditor({
-  meetingId,
   isDefault,
-  state,
+  meeting,
 }: {
-  meetingId: string;
   isDefault: boolean;
-  state: AttendanceState;
+  meeting: Meeting;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
@@ -48,13 +47,40 @@ export default function MeetingEditor({
     reset,
   } = useForm<FormValues>({});
 
-  console.log(state);
+  const queryClient = useQueryClient();
+  const { mutate: submitMeetingChanges } = useMutation({
+    mutationFn: async (data: FormValues) => {
+      // Iterate through the member ids to get their attendance status from the state
+      // Then add them to the body of the request in addPresent, addAbsent, or addExcused
+
+      const { startTime, endTime, date, dayOfWeek, location, name } = data;
+      console.log(startTime, endTime, date, dayOfWeek, location, name);
+      // todo handle default meeting case later
+      const { start, end } = getMeetingStartEndDates(date, startTime, endTime);
+      const body = {
+        start: new Date(start),
+        end: new Date(end),
+        location: location,
+        title: name,
+      };
+      await axios.patch("/api/meeting/" + meeting.id, body);
+    },
+    onSuccess: () => {
+      // todo Refetch the current project's data
+
+      console.log("Success");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const onSubmit = (close: () => void) => {
     // Handle submission, e.g., update context or send to an API
     handleSubmit(
       (data: FormValues) => {
-        console.log(data);
+        submitMeetingChanges(data);
+        close();
       },
       (error) => {
         console.log(error);
@@ -65,13 +91,9 @@ export default function MeetingEditor({
   //! This is a hacky solution that I'm not proud of
   // When the modal is opened, set the default values of the form
   useEffect(() => {
-    if (state != undefined) {
-      console.log(state.meeting);
+    if (meeting != undefined) {
       const { dayOfWeek, meetingDate, startTime, endTime } =
-        extractMeetingDetails(
-          String(state.meeting.start),
-          String(state.meeting.end),
-        );
+        extractMeetingDetails(String(meeting.start), String(meeting.end));
       console.log(dayOfWeek, meetingDate, startTime, endTime);
 
       reset({
@@ -79,8 +101,8 @@ export default function MeetingEditor({
         endTime: endTime,
         date: meetingDate,
         dayOfWeek: dayOfWeek,
-        location: (state.meeting?.location || "") as string,
-        name: state.meeting?.title,
+        location: (meeting.location || "") as string,
+        name: meeting?.title,
       });
     }
   }, [isOpen]);

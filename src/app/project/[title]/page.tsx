@@ -33,13 +33,7 @@ export default function Page({ params }: { params: { title: string } }) {
           </h1>
 
           <div className="p-4">
-            <DefaultMeetingDisplay
-              startTime={"09:00 AM"}
-              endTime={"10:00 AM"}
-              dayOfWeek={"Wednesday"}
-              location={"Main Conference Hall"}
-              name={"Weekly Project Status Meeting"}
-            />
+            {/* <DefaultMeetingDisplay meeting={projectData?.defaultMeeting} /> */}
             {isLoading || !projectData ? null : (
               <AttendanceTable
                 Meetings={projectData.meetings}

@@ -33,6 +33,7 @@ export async function GET(
         include: {
           members: true,
           leads: true,
+          meetingDefaults: true,
           meetings: {
             include: {
               present: true,

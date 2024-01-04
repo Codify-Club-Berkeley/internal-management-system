@@ -1,7 +1,12 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
 
-import { meetingDateExtract } from "@/utils/helpers";
+import {
+  extractMeetingDetails,
+  formatDate,
+  formatStartEndTimes,
+} from "@/utils/helpers";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -14,10 +19,11 @@ import { useAttendance } from "../attendanceContext";
 export default function MeetingData() {
   const { state, dispatch } = useAttendance();
 
-  const [meetingDate, meetingTime] = meetingDateExtract(
+  const { dayOfWeek, meetingDate, startTime, endTime } = extractMeetingDetails(
     String(state.meeting?.start),
-    String(state.meeting?.end),
+    String(state.meeting.end),
   );
+
   const queryClient = useQueryClient();
 
   const { mutate: submitMeetingChanges } = useMutation({
@@ -54,7 +60,7 @@ export default function MeetingData() {
     onSuccess: () => {
       // Refetch the current user's data to update the UI
       // queryClient.invalidateQueries({
-      //   queryKey: ["allProjects"],
+      //   queryKey: ["project"],
       // });
 
       console.log("Success");
@@ -68,14 +74,11 @@ export default function MeetingData() {
     <Card>
       <CardBody>
         <p>{state.meeting?.title}</p>
-        <p>{meetingDate}</p>
-        <p>{meetingTime}</p>
+        <p>{formatDate(meetingDate)}</p>
+        <p>{formatStartEndTimes(startTime, endTime)}</p>
+        <p>{state.meeting.location}</p>
         <div>
-          <MeetingEditor
-            meetingId={state.meeting?.id}
-            isDefault={false}
-            state={state}
-          />
+          {state && <MeetingEditor isDefault={false} meeting={state.meeting} />}
           <Tooltip content="Mark All Present" delay={1500}>
             <Button
               isIconOnly
