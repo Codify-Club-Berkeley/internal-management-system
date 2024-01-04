@@ -222,3 +222,13 @@ export function getFirstDateOfWeekIn1970(dayOfWeek: string): string {
 
   return date.toISOString().split("T")[0]; // Return the date in YYYY-MM-DD format
 }
+
+export function getProjectNameFromPath(path: string): string {
+  // Split the path into an array of strings
+  const pathArray = path.split("/");
+
+  // Get the project name from the path
+  const projectName = pathArray[pathArray.length - 1];
+
+  return projectName;
+}

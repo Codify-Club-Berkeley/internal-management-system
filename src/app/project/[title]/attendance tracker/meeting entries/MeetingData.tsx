@@ -1,4 +1,5 @@
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -6,6 +7,7 @@ import {
   extractMeetingDetails,
   formatDate,
   formatStartEndTimes,
+  getProjectNameFromPath,
 } from "@/utils/helpers";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,6 +28,7 @@ export default function MeetingData() {
 
   const queryClient = useQueryClient();
 
+  const pathName = usePathname();
   const { mutate: submitMeetingChanges } = useMutation({
     mutationFn: async (data: any) => {
       // Iterate through the member ids to get their attendance status from the state
@@ -59,9 +62,9 @@ export default function MeetingData() {
     },
     onSuccess: () => {
       // Refetch the current user's data to update the UI
-      // queryClient.invalidateQueries({
-      //   queryKey: ["project"],
-      // });
+      queryClient.invalidateQueries({
+        queryKey: ["project: " + getProjectNameFromPath(pathName)],
+      });
 
       console.log("Success");
     },

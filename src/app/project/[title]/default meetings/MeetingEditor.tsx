@@ -1,5 +1,7 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import path from "node:path/win32";
+import React, { use, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { daysOfWeek } from "@/utils/constants";
@@ -7,6 +9,7 @@ import {
   extractMeetingDetails,
   getFirstDateOfWeekIn1970,
   getMeetingStartEndDates,
+  getProjectNameFromPath,
 } from "@/utils/helpers";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -47,7 +50,7 @@ export default function MeetingEditor({
     formState: { errors },
     reset,
   } = useForm<FormValues>({});
-
+  const pathName = usePathname();
   const queryClient = useQueryClient();
   const { mutate: submitMeetingChanges } = useMutation({
     mutationFn: async (data: FormValues) => {
@@ -83,7 +86,10 @@ export default function MeetingEditor({
       await axios.patch("/api/meeting/" + meeting.id, body);
     },
     onSuccess: () => {
-      // todo Refetch the current project's data
+      console.log(getProjectNameFromPath(pathName));
+      queryClient.invalidateQueries({
+        queryKey: ["project: " + getProjectNameFromPath(pathName)],
+      });
 
       console.log("Success");
     },
@@ -121,6 +127,7 @@ export default function MeetingEditor({
         location: (meeting.location || "") as string,
         name: meeting?.title,
       });
+      console.log(pathName);
     }
   }, [isOpen]);
 
@@ -135,6 +142,7 @@ export default function MeetingEditor({
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Edit Meeting
+                {pathName}
               </ModalHeader>
               <ModalBody>
                 <form className=" border border-gray-300  p-8">
