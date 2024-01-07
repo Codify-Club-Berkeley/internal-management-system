@@ -15,26 +15,26 @@ model User {
     id                  String    @id // Use the clerk id not a uuid
     email               String    @unique
     slug                String    @unique // The slug is the user's first name and last name concatenated, however if there are multiple users with the same name, we append a number to the end of the slug
-    firstName           String?
-    lastName            String?
+    firstName           String    @default("")
+    lastName            String    @default("")
     roles               Role[]    @default([USER])
     createdAt           DateTime  @default(now()) // For debugging purposes
     updatedAt           DateTime  @updatedAt
     pastProjects        Project[] @relation("Past Project Member") // The projects a member was part of in the past
     projects            Project[] @relation("Project Member") // The projects a member is part of currently
     leading             Project[] @relation("Project Lead") // The projects a member is leading
-    bio                 String?
-    linkedInUrl         String?
-    githubUsername      String?
-    phoneNum            String?
-    joinedYear          String? // The year they joined formatted as Fall YYYY or Spring YYYY
-    graduationYear      String? // The year they will graduate formatted as Fall YYYY or Spring YYYY
+    bio                 String    @default("")
+    linkedInUrl         String    @default("")
+    githubUsername      String    @default("")
+    phoneNum            String    @default("")
+    joinedYear          String    @default("") // The year they joined formatted as Fall YYYY or Spring YYYY
+    graduationYear      String    @default("") // The year they will graduate formatted as Fall YYYY or Spring YYYY
     profilePictureUrl   String?
     profilePictureKey   String?
-    major               String?
-    pronouns            String?
-    dietaryRestrictions String? // A comma separated list of dietary restrictions the possible values are stored on the frontend
-    birthday            String? // The user's birthday formatted as MM/DD/YYYY
+    major               String    @default("")
+    pronouns            String    @default("")
+    dietaryRestrictions String    @default("None") // A comma separated list of dietary restrictions the possible values are stored on the frontend
+    birthday            String    @default("") // The user's birthday formatted as MM/DD/YYYY
     meetingsPresent     Meeting[] @relation("Present")
     meetingsAbsent      Meeting[] @relation("Absent")
     meetingsExcused     Meeting[] @relation("Excused")
@@ -44,7 +44,7 @@ model Project {
     id                String    @id @default(uuid())
     title             String    @unique
     active            Boolean   @default(true)
-    description       String?
+    description       String    @default("")
     pastMembers       User[]    @relation("Past Project Member") // The members from a previous semester
     members           User[]    @relation("Project Member") // The members from the current semester
     leads             User[]    @relation("Project Lead")
@@ -54,9 +54,9 @@ model Project {
     projectPictureKey String?
     meetingDefaults   Meeting?  @relation("Project Default Meetings")
     meetings          Meeting[] @relation("Project Meetings")
-    clientName        String?
-    clientEmail       String?
-    clientPhoneNum    String?
+    clientName        String    @default("")
+    clientEmail       String    @default("")
+    clientPhoneNum    String    @default("")
     tags              String[] // The tags are stored as a list of strings
     techStack         String[] // Eventually we may want to store the tech stack as a list of strings
     semesters         String[] // The semesters a project was active, formatted as Fall YYYY or Spring YYYY
@@ -65,13 +65,15 @@ model Project {
 model Meeting {
     id               String   @id @default(uuid())
     title            String
-    start            DateTime
-    end              DateTime
+    location         String   @default("")
+    startTime        String   @default("15:00") // Working with time in prisma is a pain so we store the time as a string
+    endTime          String   @default("16:00")
+    date             String?
+    dayOfWeek        String? // If it is storing a default meeting, this is the day of the week the meeting is on
     project          Project? @relation("Project Meetings", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     projectId        String?
     projectDefault   Project? @relation("Project Default Meetings", fields: [projectDefaultId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     projectDefaultId String?  @unique
-    location         String?
     present          User[]   @relation("Present")
     absent           User[]   @relation("Absent")
     excused          User[]   @relation("Excused")

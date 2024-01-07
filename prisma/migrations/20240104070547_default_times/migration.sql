@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Meeting" ADD COLUMN     "date" STRING;
+ALTER TABLE "Meeting" ADD COLUMN     "dayOfWeek" STRING;
+ALTER TABLE "Meeting" ADD COLUMN     "endTime" STRING NOT NULL DEFAULT '16:00';
+ALTER TABLE "Meeting" ADD COLUMN     "startTime" STRING NOT NULL DEFAULT '15:00';
